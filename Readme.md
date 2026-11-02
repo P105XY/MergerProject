@@ -1,12 +1,14 @@
 # 프로젝트 현황과 과거 메카 작업 기록
 
-- 최종 문서 갱신: 2026-11-01 (Asia/Seoul)
+- 최종 문서 갱신: 2026-11-02 (Asia/Seoul)
 - 현재 프로젝트는 메카 프로젝트가 아니다. 아트 방향은 할로우 나이트를 참고한 스프라이트 기반 2D이며, 구체적인 대상·외형과 애니메이션 동작은 아직 지정되지 않았다.
 - 아래 메카 모델·리그·조립 관련 내용은 과거 작업 기록이며 현재 프로젝트의 아트 방향이나 구현 목표가 아니다.
 - 이 문서는 현재 규격, 파일 위치, 확인된 결과, 남은 작업을 다음 대화에 전달하는 기준이다.
 - 작업 방식은 [AGENTS.md](AGENTS.md)를 따른다. 모델 제작·임포트 및 이전 조립 검증은 과거 보고서다. 기본 조립 기록은 `Artifacts/AssemblyFoundation/`, 개별 교체·해제의 최신 검증은 `Artifacts/AssemblyPartOperations/`에 기록한다.
 
 ## 현재 프로젝트 확인 — 2026-10-30
+
+Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더의 macOS 메타데이터를 제외한다. 기존 추적 파일 3개는 로컬 파일을 보존하고 인덱스에서 제거했다. 이 제거는 다음 커밋에 포함해야 하며 과거 커밋 기록은 유지한다.
 
 현재 작업 폴더의 `Assets/Function/`에는 플레이어·조각 수집과 적 관련 코드가 있다. [PlayerBase.cs](Assets/Function/Player/PlayerBase.cs)는 2D 횡스크롤 좌우 이동·점프, 공격 요청과 조각 수집·특수 사용 관리를 제공한다.
 
@@ -723,3 +725,11 @@ YYYY-MM-DD — 작업명
 - 검증: Unity 6000.6.6f1에서 실제 Play 모드로 이동·오른쪽 공격, 세 TestEnemy 처치와 각 조각 드롭·수집, 특수 횟수 3 표시 후 D 3회로 0 복귀를 화면에서 확인했다. 최초 실행에서는 스프라이트 미지정 시 생성된 Collider 크기가 0.0001이라 바닥을 통과했으며 씬의 Box 크기 1·조각 Circle 반경 0.5로 수정하고 위 과정을 재실행했다. 씬 스크립트 GUID 3종이 모두 실제 `.meta`와 일치함을 확인했다. 테스트 시 콘솔 오류 수는 0이었으나 `referenced script (Unknown) ... missing` 경고 1건이 표시되었고 원인은 확인하지 못했다. 콘솔에는 Unity AI 관련 `NoSubscription` 로그도 있었다.
 - 근거: Unity 공식 [PhysicsScene2D.OverlapBox](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/PhysicsScene2D.OverlapBox.html), [Object.Instantiate](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/Object.Instantiate.html).
 - 범위·인계: 왼쪽 공격, 범위 밖·복수 Collider의 개별 경계, 실제 캐릭터 에셋 및 특수 효과는 PlayMode에서 검증하지 않았다. 저장 전 기존 SampleScene은 dirty=false였으며 테스트 씬을 별도로 열고 종료했다. 표시된 누락 스크립트 경고의 원인은 추가 확인이 필요하다.
+
+### 2026-11-02 — .DS_Store Git 추적 제외
+
+- 요청/목적: macOS `.DS_Store`가 반복해서 커밋 대상에 나타나는 문제 해결.
+- 변경 파일: `.gitignore`, `Readme.md`; 기존 `Assets/.DS_Store`, `ProjectSettings/.DS_Store`, `ProjectSettings/Packages/.DS_Store`는 인덱스에서만 제거.
+- 결정: 경로 구분자 없는 `.DS_Store` 규칙으로 전체 하위 폴더에 적용하고 로컬 파일과 과거 커밋은 보존한다.
+- 검증: `git check-ignore -v`로 루트 및 기존 세 경로의 제외를 확인했고 `git ls-files`에서 추적 항목이 없음을 확인했다. `ls`로 로컬 세 파일 보존, `git diff --check`로 공백 오류 없음을 확인했다.
+- 인계: 추적 제거 3개는 스테이징되어 있다. `.gitignore`와 이 문서를 함께 커밋하면 된다. 커밋·푸시는 수행하지 않았다.
