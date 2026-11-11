@@ -1,0 +1,38 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="TitleMenu.uss" />
+    <ui:VisualElement class="title-screen">
+        <ui:VisualElement class="title-decoration" picking-mode="Ignore">
+            <ui:VisualElement class="title-decoration-inner" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement name="main-menu" class="main-menu">
+            <ui:VisualElement class="title-mark" />
+            <ui:Label text="MERGER" class="game-title" />
+            <ui:VisualElement class="main-actions">
+                <ui:Button name="new-game" text="새 게임" class="menu-button menu-primary" />
+                <ui:Button name="continue-game" text="이어하기" class="menu-button" />
+                <ui:Button name="open-options" text="옵션" class="menu-button" />
+            </ui:VisualElement>
+            <ui:Label name="save-status" class="menu-status" />
+        </ui:VisualElement>
+        <ui:VisualElement name="options-menu" class="options-menu is-hidden">
+            <ui:Label text="옵션" class="options-title" />
+            <ui:ScrollView name="options-scroll" class="options-scroll" horizontal-scroller-visibility="Hidden">
+                <ui:Label text="화면" class="options-section" />
+                <ui:DropdownField name="resolution" label="해상도" class="option-field" />
+                <ui:DropdownField name="display-mode" label="화면 모드" class="option-field" />
+                <ui:DropdownField name="quality" label="그래픽 품질" class="option-field" />
+                <ui:DropdownField name="frame-limit" label="프레임 제한" class="option-field" />
+                <ui:Toggle name="v-sync" label="수직 동기화" class="option-field" />
+                <ui:Label text="소리" class="options-section audio-section" />
+                <ui:Slider name="master-volume" label="전체 볼륨" low-value="0" high-value="1" class="option-field" />
+                <ui:Slider name="music-volume" label="BGM" low-value="0" high-value="1" class="option-field" />
+                <ui:Slider name="effects-volume" label="효과음" low-value="0" high-value="1" class="option-field" />
+            </ui:ScrollView>
+            <ui:Label name="options-status" class="options-status" />
+            <ui:VisualElement class="option-actions">
+                <ui:Button name="back-options" text="뒤로" class="menu-button" />
+                <ui:Button name="apply-options" text="적용 및 저장" class="menu-button menu-primary" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

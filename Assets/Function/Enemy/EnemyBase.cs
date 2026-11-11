@@ -10,7 +10,8 @@ namespace Mech.Function
         Chase,
         Attack,
         Groggy,
-        Dead
+        Dead,
+        Windup
     }
 
     public enum CollectibleType
@@ -29,8 +30,13 @@ namespace Mech.Function
         [SerializeField, Min(0f)] private float attackSpeed = 1f;
         [SerializeField] private CollectibleType heldObjectType = CollectibleType.A;
         [SerializeField] private GameObject heldObject = null;
+        private EnemyWhiteFlash whiteFlash;
 
-        public float MaxHealth => maxHealth;
+        public float MaxHealth
+        {
+            get => maxHealth;
+            protected set => maxHealth = value;
+        }
         public float CurrentHealth { get; private set; }
         public float GroggyValue => groggyValue;
         public float GroggyResistance => groggyResistance;
@@ -40,6 +46,7 @@ namespace Mech.Function
         public GameObject HeldObject => heldObject;
         public EnemyState CurrentState { get; private set; } = EnemyState.Idle;
         public bool IsDefeated { get; private set; }
+        internal bool IsWhiteFlashing => whiteFlash != null && whiteFlash.IsFlashing;
 
         public event Action<EnemyState, EnemyState> StateChanged;
         public event Action<EnemyBase, CollectibleType, GameObject> FragmentDropped;
@@ -54,11 +61,31 @@ namespace Mech.Function
         // 양수 피해를 적용하고 현재 체력을 0 이상으로 유지한다.
         public void ApplyDamage(float damage)
         {
+            ApplyDamage(damage, false);
+        }
+
+        // 플레이어가 준 피해에 피격 플래시를 적용한다.
+        public void ApplyPlayerDamage(float damage)
+        {
+            ApplyDamage(damage, true);
+        }
+
+        // 유효한 피해로 체력을 줄이고 플레이어 공격이면 플래시를 시작한다.
+        private void ApplyDamage(float damage, bool fromPlayer)
+        {
             if (IsDefeated || float.IsNaN(damage) || float.IsInfinity(damage) || damage <= 0f) {
                 return;
             }
 
             CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
+
+            if (fromPlayer && isActiveAndEnabled) {
+                if (whiteFlash == null) {
+                    whiteFlash = gameObject.AddComponent<EnemyWhiteFlash>();
+                }
+
+                whiteFlash.Play(this);
+            }
 
             if (CurrentHealth <= 0f) {
                 Defeat();

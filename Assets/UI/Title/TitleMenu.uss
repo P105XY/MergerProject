@@ -1,0 +1,171 @@
+.title-screen {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: rgb(13, 22, 29);
+    color: rgb(235, 243, 241);
+    padding: 22px;
+}
+
+.title-decoration {
+    position: absolute;
+    right: -190px;
+    bottom: -370px;
+    width: 1000px;
+    height: 1000px;
+    border-radius: 500px;
+    border-width: 1px;
+    border-color: rgb(31, 55, 59);
+    background-color: rgb(16, 31, 38);
+    justify-content: center;
+    align-items: center;
+}
+
+.title-decoration-inner {
+    width: 760px;
+    height: 760px;
+    border-radius: 380px;
+    border-width: 1px;
+    border-color: rgb(38, 64, 65);
+}
+
+.main-menu {
+    width: 420px;
+    max-width: 100%;
+    align-items: stretch;
+}
+
+.title-mark {
+    width: 43px;
+    height: 4px;
+    background-color: rgb(142, 221, 190);
+    margin-bottom: 13px;
+}
+
+.game-title {
+    font-size: 76px;
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+    margin: 0 0 30px 0;
+    padding: 0;
+}
+
+.main-actions {
+    width: 100%;
+}
+
+.menu-button {
+    height: 56px;
+    margin: 0 0 9px 0;
+    padding: 0 18px;
+    background-color: rgb(24, 42, 50);
+    border-color: rgb(51, 77, 80);
+    border-width: 1px;
+    border-radius: 7px;
+    color: rgb(235, 243, 241);
+    font-size: 21px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.menu-button:hover {
+    background-color: rgb(39, 67, 70);
+}
+
+.menu-button:focus {
+    border-color: rgb(170, 242, 215);
+    border-width: 2px;
+}
+
+.menu-primary {
+    color: rgb(12, 36, 35);
+    background-color: rgb(142, 221, 190);
+    border-color: rgb(142, 221, 190);
+}
+
+.menu-primary:hover {
+    background-color: rgb(168, 236, 208);
+}
+
+.menu-button:disabled {
+    color: rgb(130, 151, 152);
+    background-color: rgb(25, 38, 44);
+    border-color: rgb(41, 58, 63);
+    opacity: 1;
+}
+
+.menu-status, .options-status {
+    color: rgb(164, 189, 187);
+    font-size: 15px;
+    min-height: 23px;
+    margin: 3px 0 0 0;
+    white-space: normal;
+}
+
+.options-menu {
+    width: 610px;
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 0;
+    padding: 24px 28px 19px 28px;
+    background-color: rgb(18, 34, 41);
+    border-color: rgb(51, 77, 80);
+    border-width: 1px;
+    border-radius: 12px;
+}
+
+.options-title {
+    color: rgb(235, 243, 241);
+    font-size: 36px;
+    -unity-font-style: bold;
+    margin: 0 0 13px 0;
+    padding: 0;
+}
+
+.options-scroll {
+    flex-shrink: 1;
+    min-height: 0;
+    margin-bottom: 6px;
+}
+
+.options-section {
+    color: rgb(142, 221, 190);
+    font-size: 19px;
+    -unity-font-style: bold;
+    margin: 0 0 6px 0;
+    padding: 0;
+}
+
+.audio-section {
+    margin-top: 12px;
+}
+
+.option-field {
+    margin: 2px 0;
+    min-height: 29px;
+    font-size: 16px;
+}
+
+.option-field .unity-base-field__label {
+    color: rgb(222, 235, 233);
+    min-width: 132px;
+}
+
+.option-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+.option-actions .menu-button {
+    height: 44px;
+    min-width: 113px;
+    margin: 0 0 0 8px;
+    font-size: 17px;
+    -unity-text-align: middle-center;
+}
+
+.is-hidden {
+    display: none;
+}

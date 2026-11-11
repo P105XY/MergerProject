@@ -1,7 +1,8 @@
 # 프로젝트 현황과 과거 메카 작업 기록
 
-- 최종 문서 갱신: 2026-11-02 (Asia/Seoul)
-- 현재 프로젝트는 메카 프로젝트가 아니다. 아트 방향은 할로우 나이트를 참고한 스프라이트 기반 2D이며, 구체적인 대상·외형과 애니메이션 동작은 아직 지정되지 않았다.
+- 최종 문서 갱신: 2026-11-11 (Asia/Seoul)
+- 현재 프로젝트는 메카 프로젝트가 아니다. 아트는 스프라이트 기반 2D이며, 게임 분위기의 참고작은 데드 셀, 할로우 나이트, Hellfurnace다. 할로우 나이트와 Hellfurnace처럼 윤곽선이 있는 그래픽을 게임 전반에 적용한다. 플레이어는 현대 어반 콘셉트의 인간형이며 오른팔과 왼다리가 기계로 대체되어 있고 오른팔로 공격한다. 인게임 스프라이트는 약 5등신을 목표로 한다. [스탠딩 시안 v2](Artifacts/PlayerStandingConcept/PlayerStandingConcept_v2.png)는 검토용이며 외형은 아직 승인되지 않았다.
+- 플레이어 조작감의 참고도 할로우 나이트로 지정되었다. 실제 원작 수치는 측정하지 않았으며, 빠른 반응을 목표로 시험 설정을 비교한다.
 - 아래 메카 모델·리그·조립 관련 내용은 과거 작업 기록이며 현재 프로젝트의 아트 방향이나 구현 목표가 아니다.
 - 이 문서는 현재 규격, 파일 위치, 확인된 결과, 남은 작업을 다음 대화에 전달하는 기준이다.
 - 작업 방식은 [AGENTS.md](AGENTS.md)를 따른다. 모델 제작·임포트 및 이전 조립 검증은 과거 보고서다. 기본 조립 기록은 `Artifacts/AssemblyFoundation/`, 개별 교체·해제의 최신 검증은 `Artifacts/AssemblyPartOperations/`에 기록한다.
@@ -10,36 +11,150 @@
 
 Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더의 macOS 메타데이터를 제외한다. 기존 추적 파일 3개는 로컬 파일을 보존하고 인덱스에서 제거했다. 이 제거는 다음 커밋에 포함해야 하며 과거 커밋 기록은 유지한다.
 
-현재 작업 폴더의 `Assets/Function/`에는 플레이어·조각 수집과 적 관련 코드가 있다. [PlayerBase.cs](Assets/Function/Player/PlayerBase.cs)는 2D 횡스크롤 좌우 이동·점프, 공격 요청과 조각 수집·특수 사용 관리를 제공한다.
+현재 작업 폴더의 `Assets/Function/`에는 플레이어·조각 수집, 적 및 환경 장애물 코드가 있다. [PlayerBase.cs](Assets/Function/Player/PlayerBase.cs)는 2D 횡스크롤 좌우 이동·점프, 공격, 접촉 피해, 조각 수집·특수 사용을 관리한다.
 
-- 방향키 좌우로 이동하고 S를 눌러 지상 점프한다. `Rigidbody2D`와 `Collider2D`가 필요하며 중력·충돌체와 `Ground Layers`를 설정해야 한다. 이동 속도와 점프 속도는 Inspector에서 지정한다. 지면은 아래 방향 0.05 단위 캐스트와 위쪽 법선으로 판정한다.
-- A를 누르고 있으면 `Attacks Per Second` 횟수/초로 마지막 좌우 이동 방향의 사각 범위를 검사하고 각 `EnemyBase`에 `AttackPower`만큼 피해를 한 번씩 적용한 뒤 `AttackRequested` 이벤트를 발생시킨다. 적의 여러 Collider가 겹쳐도 한 공격에서 중복 피해를 주지 않으며 트리거는 검사하지 않는다. `Attack Reach`, `Attack Size`, `Attack Layers`는 Inspector에서 설정한다. 조합이 준비된 동안 D를 누르면 특수 기능을 한 번 사용한다. 특수 효과는 별도 구현해야 한다.
-- 최대 체력은 Inspector에서 지정하고 시작 시 현재 체력으로 초기화한다. `ApplyDamage`는 양수 유한 피해를 적용하며 0 미만으로 내려가지 않는다. 사망 처리는 없다.
+- 방향키 좌우로 가속하고 입력을 놓으면 감속하며 S로 점프한다. `Rigidbody2D`와 `Collider2D`가 필요하고 중력·충돌체와 `Ground Layers`를 설정해야 한다. 지면은 아래 방향 0.05 단위 캐스트와 위쪽 법선으로 판정하며, 상승 중에는 점프 가능 상태를 갱신하지 않는다.
+- `maximumMovementSpeed` 5는 목표 최대 속도(단위/초), `Movement Acceleration` 기본 120과 `Movement Deceleration` 기본 180은 속도 변화량(단위/초²)이다. 입력 시 목표 속도로 가속하고 해제 시 0으로 감속한다. 방향 전환에는 가속도를 사용하며 공중에서도 같은 가속·감속을 적용한다. 가속도·감속도 0은 해당 속도 변화를 멈춘다.
+- `Jump Force`는 점프 시작 시 적용하는 위쪽 속도(단위/초)다. `Maximum Jump Height`는 이륙 당시 Rigidbody2D 위치에서의 상승 높이 상한이다. `PlayerBase` 소스 초기값은 각각 35와 30이다. 실제 높이는 초기 속도·하향 중력·충돌에도 좌우된다. 높이 또는 점프력 0이면 점프하지 않는다. Dynamic 바디와 하향 중력을 사용한다.
+- `Gravity Scale`과 `Movement Friction`을 Awake에서 Rigidbody2D에 적용한다. `PlayerBase`의 코드 중력 배율은 9.8이다. 배율 9.8은 월드 중력 Y=-9.81에 곱해져 플레이어에 약 -96.14 유닛/초²를 적용한다. 마찰 기본값은 0이며 플레이어별 런타임 PhysicsMaterial2D에 기존 바디 재질의 탄성 값을 복사한다. 런타임 재질은 OnDestroy에서 해제한다. 개별 Collider에 별도 재질을 지정한 다른 구성은 추가 확인이 필요하다.
+- `Coyote Time` 기본 0.12초 동안 발판을 벗어난 뒤에도 한 번 점프할 수 있다. 점프에 사용하면 소진하며 공중 재점프는 허용하지 않는다. 착지하면 다시 점프할 수 있고 버튼을 계속 누르는 것만으로 자동 재점프하지 않는다.
+- 상승 중 S를 놓으면 현재 Y 속도에 `jumpReleaseMultiplier` 기본값 -0.75를 점프당 한 번 곱한다. 물리 갱신 사이의 빠른 탭에도 적용하며 하강 중에 놓으면 현재 속도를 유지한다. 점프가 최고점 또는 입력 해제로 하강을 시작하면 `jumpFallGravityMultiplier` 기본값 1.75를 하강 전 Rigidbody2D 중력 배율에 곱한다. 기본값 9.8에서 하강 중 배율은 17.15이며 착지 시 기존 배율을 복원한다. 점프 경로 예측에도 같은 중력 전환을 적용한다.
+- `PlayerBase`의 능력치·이동·점프·공격·특수 목록은 비직렬화 private 필드다. 두 테스트 씬을 불러오면 소스 초기값을 사용한다.
+- 위 이동·점프 수치는 `PlayerBase`와 두 테스트 씬의 공통 기준이다. 사용자가 해당 수치 변경을 명시적으로 요청할 때만 수정한다.
+- A를 누르고 있으면 `Attacks Per Second` 횟수/초로 마지막 좌우 이동 방향의 사각 범위를 검사하고 각 `EnemyBase`에 `AttackPower`만큼 피해를 한 번씩 적용한 뒤 `AttackRequested` 이벤트를 발생시킨다. 적의 여러 Collider가 겹쳐도 한 공격에서 중복 피해를 주지 않으며 트리거는 검사하지 않는다. 공격 범위와 레이어는 `PlayerBase` 코드에서 설정한다. D는 준비된 조합의 특수 시전을 시도한다.
+- 시작 시 현재 체력을 코드의 최대 체력 100으로 초기화한다. `ApplyDamage`로 체력이 처음 0이 되면 사망 상태에서 입력·조각 수집·특수 사용을 멈추고 마지막 체크포인트를 불러온다. 유효한 저장이 없으면 사망 상태로 남는다. 넉백·사망 및 피격 연출은 후속 작업이다.
+- 활성화된 적에 닿으면 적의 `Attack Power`만큼 체력이 줄어든다. 사망 상태이거나 비활성화된 적은 접촉 피해를 주지 않는다. 적과 장애물은 일반 충돌과 트리거를 모두 지원하며, 피해 컴포넌트는 Collider가 달린 오브젝트 또는 그 부모에서 찾는다.
+- 환경에 접촉 피해를 주려면 [DamagedObstacle](Assets/Function/Environment/DamagedObstacle.cs)을 붙이고 Inspector에서 `Damage`(기본 10)를 설정한다. 같은 오브젝트 또는 자식에 `Collider2D`가 필요하며, 플레이어와 장애물의 물리 레이어 간 충돌을 허용해야 한다. `Is Trigger`를 켜면 통과하면서 피해를 받고, 끄면 일반 물리 충돌과 함께 피해를 받는다.
+- 플레이어의 `contactDamageCooldown`은 코드에서 0.75초다. 적과 장애물이 이 간격을 공유하므로 여러 콜라이더에 한꺼번에 닿아도 한 번만 피해를 받는다. 접촉이 이어지면 간격이 지난 뒤 다시 피해를 받고, 접촉이 끝나면 추가 피해를 받지 않는다. 외부의 직접 `ApplyDamage` 호출에는 이 간격을 적용하지 않는다.
 - 드롭된 조각에 닿으면 A/B/C별 개수를 누적한다. `TypeACount`, `TypeBCount`, `TypeCCount`는 아직 조합되지 않은 수집 개수다. 기존 Inspector `GameObject` 배열은 런타임 수집 개수로 대체했으며 배열에 입력했던 참조는 자동 이전되지 않는다. 현재 Assets의 씬·프리팹·데이터 에셋에서 해당 필드 저장은 발견되지 않았다.
 - 총 3개를 모으면 순서와 무관한 `ActiveCombination`의 A/B/C 개수로 조합이 확정되고 수집 개수는 0으로 바뀌며 `SpecialUsesRemaining`이 3이 된다. 준비 중에는 추가 조각을 수집하지 않으며, 조각은 월드에 남는다. 세 번 사용하면 조합이 초기화되고 다시 수집한다. `IsSpecialAvailable`은 UI 활성화에 사용할 수 있다.
-- `SpecialUsed` 이벤트는 사용할 때마다 플레이어와 확정된 `FragmentCombination`을 전달한다. 세 번째 사용에서도 해당 조합을 전달한다. 기존 `SpecialRequested` 이벤트도 유효한 사용마다 발생한다. 조합별 구체적 효과는 이벤트 구독자가 구현해야 하며, 구독자가 없어도 사용 횟수는 소비된다. `TryCollectFragment`와 `TryUseSpecial`은 외부 코드에서 호출할 수 있다.
+- `TryCollectFragment`와 `TryUseSpecial`은 외부 코드에서 호출할 수 있다. `TryUseSpecial`은 효과가 실행에 성공한 뒤에만 횟수를 한 번 줄이고 `SpecialUsed`와 `SpecialRequested`를 발행한다. `SpecialUsed`는 세 번째 사용에도 해당 시전의 `FragmentCombination`을 전달한다. 등록된 조합이나 효과가 없거나 실행이 실패하면 횟수를 보존한다.
 - 새 Input System 키보드를 직접 읽는다. 키 변경, 게임패드, 캐릭터 프리팹 연결 및 애니메이션은 미구현이다. Rigidbody2D는 Dynamic 및 적절한 회전 고정과 지형 충돌 설정이 필요하다.
+
+### 특수 효과와 장비 보정
+
+- `Assets/Function/Special/`의 `SpecialRecipe`는 A/B/C 개수와 기본 효과를 설정하는 에셋이다. Create → Special → Recipe로 생성하고 개수 합을 3으로 지정한다. 플레이어의 비직렬화 `specialRecipes` 목록은 현재 빈 배열이다. 같은 개수 조합을 중복 등록하면 배열의 첫 레시피를 사용한다.
+- `SpecialEffectDefinition`의 파생 클래스는 `CreateCast`에서 매번 새로운 `ISpecialEffect` 인스턴스를 반환한다. `SpecialContext`에는 시전자, 조합, 시전 시점의 위치·방향이 들어간다. `ISpecialEffect.TryExecute`는 실제 효과를 시작했을 때 성공을 반환한다. `SpecialModifierDefinition`은 `ISpecialModifier`를 구현하며 호환되는 시전 인스턴스의 수치나 동작을 변경한다.
+- Create → Special → Equipment로 생성한 장비 에셋은 실행 중 `SetSpecialEquipment`로 장착 목록을 교체한다. `Target Recipe`를 비우면 모든 조합에 적용한다. 교체 효과가 여러 개면 `Replacement Priority`가 가장 높은 장비를 선택하고, 동점이면 장착 목록에서 앞선 장비를 선택한다. 최종 효과를 생성한 뒤 적용 대상인 장비의 보정을 장착 순서와 각 장비의 보정 목록 순서대로 적용한다.
+- 실제 투사체·광선 등 효과 구현, 조합·장비 에셋, 장비 인벤토리·저장 및 특수 UI는 후속 작업이다. 체크포인트는 기존처럼 조각과 사용 횟수를 복원한다.
 
 `Mech.Function.EnemyBase`는 Inspector에서 최대 체력, 그로기 수치, 그로기 저항, 공격력, 공격 속도를 설정한다. 기본값은 각각 100, 0, 0, 10, 1이며 수치 단위와 밸런스는 아직 확정되지 않았다. 현재 체력은 Awake에서 최대 체력으로 초기화하고 `ApplyDamage`는 양수 유한 피해를 적용하여 0 이상으로 제한한다. 파생 클래스에서 Awake를 재정의하면 `base.Awake()`를 호출해야 한다.
 
 적마다 Inspector의 `Held Object Type`에서 A/B/C 중 하나를 선택하고 `Held Object`에 드롭할 조각 프리팹을 지정한다. 체력이 0이 되는 유효한 피해를 받으면 적 위치에 프리팹을 한 번 생성하고, 루트의 `FragmentPickup`을 추가 또는 초기화해 해당 종류를 전달한 뒤 `FragmentDropped` 이벤트를 발생시킨다. 미지정이면 경고하고 드롭하지 않는다. 개발자가 선택한 종류가 수집 종류의 기준이다.
 
-조각 프리팹에는 활성 `Collider2D`가 필요하다. 플레이어와 조각이 겹칠 때 `OnTriggerStay2D`가 호출되도록 적어도 한 Collider를 Trigger로 설정하고, 물리 레이어 충돌 설정도 허용해야 한다. 플레이어의 `Rigidbody2D`는 기존 코드가 요구한다. 수집 성공 시 조각 오브젝트를 제거하며, 특수 기능이 준비된 동안 겹쳐 있는 조각은 사용 종료 후에도 계속 겹쳐 있으면 수집을 다시 시도한다. 실제 프리팹과 물리 설정은 아직 만들어지지 않았다.
+조각 프리팹에는 활성 `Collider2D`가 필요하다. 플레이어와 조각이 겹칠 때 `OnTriggerStay2D`가 호출되도록 적어도 한 Collider를 Trigger로 설정하고, 물리 레이어 충돌 설정도 허용해야 한다. 플레이어의 `Rigidbody2D`는 기존 코드가 요구한다. 수집 성공 시 조각 오브젝트를 제거하며, 특수 기능이 준비된 동안 겹쳐 있는 조각은 사용 종료 후에도 계속 겹쳐 있으면 수집을 다시 시도한다. 보스 테스트 구역에는 B 조각 드롭 프리팹이 연결되어 있다. [BossFragmentB.prefab](Assets/Prefabs/PlayTest/BossFragmentB.prefab)
 
-적 FSM은 초기 `Idle`과 `Patrol`, `Chase`, `Attack`, `Groggy`, `Dead` 상태를 제공한다. `TryChangeState`로 수동 전환하며 정의되지 않은 값과 동일 상태는 거부하고, 성공 시 `StateChanged` 이벤트에 이전·새 상태를 전달한다. 치명적인 피해는 `Dead`로 전환하고 `IsDefeated`를 설정하며 `Defeated` 이벤트를 한 번 발생시킨다. 처치 후 재피해·다른 상태 전환은 거부한다. 단순한 수동 `Dead` 전환은 처치·드롭을 실행하지 않는다. 공통 적 오브젝트 자동 제거, 다른 상태 행동·자동 전환, 그로기 누적·회복·저항 계산은 미구현이다.
+적 FSM은 초기 `Idle`과 `Patrol`, `Chase`, `Attack`, `Groggy`, `Dead`, `Windup` 상태를 제공한다. `TryChangeState`로 수동 전환하며 정의되지 않은 값과 동일 상태는 거부하고, 성공 시 `StateChanged` 이벤트에 이전·새 상태를 전달한다. 치명적인 피해는 `Dead`로 전환하고 `IsDefeated`를 설정하며 `Defeated` 이벤트를 한 번 발생시킨다. 처치 후 재피해·다른 상태 전환은 거부한다. 단순한 수동 `Dead` 전환은 처치·드롭을 실행하지 않는다. 공통 적 오브젝트 자동 제거와 그로기 누적·회복·저항 계산은 미구현이다.
 
-- 적 종류는 `FragmentEnemy`, `NormalEnemy`, `AdvancedEnemy : NormalEnemy`, `BossEnemy`의 네 클래스다. 조각 적은 실제 플레이어 피해를 기준으로 Inspector 체력을 조절해야 한두 번에 처치할 수 있다. 일반과 고급은 공통 데이터·처치를 상속하며 능력치 차이와 행동은 개발자가 설정·구현한다.
+- 플레이어의 근접 공격은 `ApplyPlayerDamage`를 호출한다. 유효한 피해를 받으면 [EnemyWhiteFlash](Assets/Function/Enemy/EnemyWhiteFlash.cs)가 적 소유 스프라이트의 투명도와 실루엣을 유지하며 밝은 회색 sRGB `(230, 230, 230)`을 0.05초간 표시한다. 재피격하면 종료 시각을 갱신하고, 종료 또는 비활성화 시 원래 머티리얼을 복원한다. 플레이어가 사용하는 신규 투사체·특수 효과에서도 같은 메서드로 피해를 전달할 수 있다. 일반 `ApplyDamage`는 체력과 처치만 처리한다.
+- 기존 등급 클래스는 `FragmentEnemy`, `NormalEnemy`, `AdvancedEnemy : NormalEnemy`, `BossEnemy`다. 조각 적은 실제 플레이어 피해를 기준으로 Inspector 체력을 조절해야 한두 번에 처치할 수 있다. 아래 행동 클래스는 별도로 `EnemyBase`의 능력치·처치·조각 드롭을 상속한다.
 - [TestEnemy](Assets/Function/Enemy/TestEnemy.cs)는 `EnemyBase`를 직접 상속한다. Inspector에서 `Held Object Type`과 `Held Object`를 지정하면 Player 공격으로 체력이 0이 될 때 공통 처치 처리로 조각 하나가 드롭된다. 미지정 시 경고만 발생한다.
-- 보스는 `Fragment Enemy Prefab`, 선택적인 `Fragment Spawn Point`, `Fragment Spawn Interval`을 Inspector에서 설정한다. 살아 있는 동안 기본 5초마다 조각 적 하나를 생성하며 지점 미설정 시 보스 위치를 사용한다. 프리팹 미설정 또는 주기 0 이하는 생성을 중단한다. `UpdateBossPattern()`은 파생 클래스에서 구현할 패턴 확장 지점이며 구체적 패턴은 아직 없다.
 - 조합에 필요한 조각 수와 특수 사용 횟수는 현재 각각 코드 상수 3이다. N개로의 확장과 조합별 실제 효과·UI는 후속 작업이다.
 
-이전 기록의 `Assets/Mesh/`, 파츠·조립·무기 코드와 `Artifacts/`는 현재 작업 폴더에서 발견되지 않았다. 이전 적 코드는 없었으며 이번에 새로 작성했다. 차이가 발생한 원인은 확인하지 못했다. 아래 1절의 기존 상태표·파일표, 2절의 디렉터리 예시 및 3–9절의 구현·검증·인계 설명은 **과거 기록과 목표 규격**으로 보존하며 현재 파일의 존재나 구현 완료를 뜻하지 않는다. 2절의 개발·명명·테스트 및 서식 규칙은 계속 적용한다. 과거 보고서는 현재 실행 결과가 아니다. 현재 작업 폴더에는 `.git`이 있다.
+### 보스 패턴
+
+[BossEnemy](Assets/Function/Enemy/BossEnemy.cs)의 최대 체력과 시작 체력은 2250이다. 활성화 3초 뒤 살아 있는 플레이어가 있으면 돌진을 시작한다. 일반 공격은 돌진 → 내려찍기 → 광역 순서로 반복하며, 일반 공격 두 번을 완료할 때마다 다음 패턴으로 조각 적 소환을 실행한다. 패턴을 끝낸 시점부터 일반 공격 뒤에는 3초, 소환 뒤에는 5초를 기다린다.
+
+| 패턴 | 동작 |
+| --- | --- |
+| 돌진 | 사거리 제한 없이 시작 순간 플레이어가 있는 좌우 방향을 정하고 벽까지 수평으로 돌진한다. 기본 속도는 초당 20 Unity 단위다. 경로의 플레이어에게 피해를 주며 적과 트리거를 벽으로 취급하지 않는다. |
+| 내려찍기 | 발밑 높이부터 전방에 기본 2 × 2.5 크기의 공격 트리거를 열어 한 번 판정한다. |
+| 광역 공격 | 같은 방식으로 전방에 기본 6 × 2.5 크기의 공격 트리거를 열어 한 번 판정한다. |
+| 조각 적 소환 | 보스의 발밑 높이에서 벽 안쪽의 빈 바닥을 찾아 조각 적 3마리를 소환한다. 소환 적은 고정된 장애물로 동작하며 접촉 피해를 주고, 처치하면 지정한 조각을 떨어뜨린다. |
+
+보스와 조각 적을 포함한 모든 살아 있는 적은 접촉 시 각자의 `Attack Power`만큼 피해를 준다. 보스의 돌진·내려찍기·광역 공격도 같은 피해량과 플레이어의 공통 재피격 간격을 사용한다. 보스의 Inspector에서 `Fragment Enemy Prefab`에 고체 Collider2D와 `Held Object`·`Held Object Type`이 설정된 조각 적을 연결한다. `Environment Layers`에는 고체 바닥·벽 레이어를 포함하고, `Fragment Spawn Spacing`에 맞춰 세 마리가 설 바닥을 확보한다. 프리팹이 비어 있거나 빈 바닥이 부족하면 경고를 기록한다. PlayTestScene에는 테스트용 보스와 소환 적 프리팹을 연결했다. 확정 외형과 공격 애니메이션은 후속 작업이다.
+
+### 비행 보스
+
+`FlyingBossEnemy`의 시작 체력과 최대 체력은 3400이다. `Arena Bounds`에 연결한 사각 경계의 가로 중앙선에서 좌우로 비행하고, 기본 진폭 0.35만큼 위아래로 움직인다. 경계가 비어 있으면 배치 위치를 중심으로 좌우 8유닛을 사용한다. 다음 다섯 패턴을 순서대로 반복하며, 기본 첫 대기와 각 패턴 종료 후 대기는 3초다. [FlyingBossEnemy.cs](Assets/Function/Enemy/FlyingBossEnemy.cs)
+
+| 패턴 | 동작 |
+| --- | --- |
+| 조각 적 소환 | 바닥 위에 B 조각을 떨어뜨리는 조각 적을 3~5마리 띄운다. 소환된 적은 작은 진폭으로 부유하고 접촉 피해를 준다. |
+| 돌진 적 소환 | 첫 적을 바로 소환하고 2초 간격으로 두 마리를 더 소환한다. 각 적은 생성 순간의 플레이어 방향으로 직진하며 지형 충돌 또는 수명 만료 시 제거된다. |
+| 직접 돌진 | 플레이어의 발진 시점 위치를 향해 2D 방향을 고정한다. 벽·바닥 등 고체 지형과 충돌하면 공중 순찰로 돌아간다. |
+| 포물선 사격 | 플레이어 위치를 조준한 중앙탄과 좌우 15도에 한 발씩, 총 3발을 발사한다. 탄은 낙하 가속도를 받고 지형이나 플레이어에 닿으면 제거된다. |
+| 방사형 사격 | X자로 직선탄 4발을 쏘고 1.5초 뒤 십자로 4발을 쏜다. |
+
+`FlyingBossTestScene`을 열고 Play를 누르면 바로 시험할 수 있다. 경기장에는 바닥·양쪽 벽·천장과 비행 중앙선, 시작 체크포인트가 있다. 좌우 방향키로 이동하고 S로 점프, A로 공격한다. 기존 테스트용 B 조각 적 프리팹을 재사용했으며 보스, 돌진 적, 투사체에는 단색 테스트 외형을 연결했다. [FlyingBossTestScene](Assets/Scenes/TestScene/FlyingBossTestScene.unity), [FlyingTestBoss.prefab](Assets/Prefabs/PlayTest/FlyingTestBoss.prefab)
+
+### 적 행동 클래스
+
+세 클래스는 Inspector의 `Target Player`를 우선 사용한다. 지정하지 않으면 같은 씬에서 체력이 남아 있는 활성 플레이어를 찾는다.
+
+| 클래스 | 동작과 설정 |
+| --- | --- |
+| [MeleeEnemy](Assets/Function/Enemy/MeleeEnemy.cs) | 플레이어의 좌우 위치를 `Move Speed`(기본 3)로 계속 추적한다. 별도 공격 동작 없이 기존 접촉 피해를 준다. 같은 오브젝트에 Dynamic `Rigidbody2D`와 `Collider2D`를 설정한다. |
+| [ChargeEnemy](Assets/Function/Enemy/ChargeEnemy.cs) | 고정 높이에서 정지하다가 `Detection Range`(기본 12) 이내의 플레이어를 탐지하면 0.5초간 `Windup` 상태로 대기한다. 발진 순간 대상의 좌우 방향으로 1초 동안 최대 300 Unity 월드 단위를 이동하며, 돌진 시작은 기본 5초 간격이다. 탐지한 대상이 살아 있고 활성 상태라면 범위를 벗어나도 주기를 이어간다. 바디를 Kinematic으로 설정하고 `Collider2D` 모양으로 경로를 검사해 벽에서 정지하며, 플레이어 접촉 피해에는 공통 재피격 간격을 적용한다. |
+| [FlyingEnemy](Assets/Function/Enemy/FlyingEnemy.cs) | 배치된 위치에서 `Attack Speed`(기본 초당 1회)에 맞춰 한 발씩 쏜다. 발사 순간의 플레이어 위치를 향해 기본 속도 50으로 직진하며, 플레이어 명중 시 `Attack Power`만큼 피해를 준다. 이동은 구현하지 않았으므로 공중에 배치하고 바디가 있다면 중력을 적용하지 않는다. |
+
+`FlyingEnemy`는 `Projectile Spawn Point` 미지정 시 적의 위치에서 발사한다. [EnemyProjectile](Assets/Function/Enemy/EnemyProjectile.cs)은 비행 경로의 플레이어 또는 첫 일반 지형에 닿거나 수명(기본 4초)이 끝나면 제거된다. 기본 투사체는 충돌 판정만 있으며, 화면에 표시하려면 SpriteRenderer 등을 갖춘 투사체 프리팹을 `Projectile Prefab`에 연결한다. 새 적과 투사체 프리팹은 저장된 씬에 배치하지 않았다.
+
+2026-10-30 확인 당시 이전 기록의 `Assets/Mesh/`, 파츠·조립·무기 코드 및 당시 메카 관련 `Artifacts/`는 발견되지 않았다. 아래 1절의 기존 상태표·파일표, 2절의 디렉터리 예시 및 3–9절의 구현·검증·인계 설명은 **과거 기록과 목표 규격**으로 보존하며 현재 파일의 존재나 구현 완료를 뜻하지 않는다. 2절의 개발·명명·테스트 및 서식 규칙은 계속 적용한다. 과거 보고서는 현재 실행 결과가 아니다. 현재 작업 폴더에는 `.git`이 있다.
 
 ### 플레이 테스트 씬
 
-[PlayTestScene](Assets/Scenes/TestScene/PlayTestScene.unity)을 Unity에서 열고 Play를 누른 뒤 Game 화면을 클릭한다. 방향키로 이동, S로 점프, A를 누르고 있으면 정면 공격, 조각 3개 수집 후 D로 특수 요청을 사용할 수 있다. 세 적은 각각 A/B/C 조각을 드롭하고, 테스트 표시에는 수집 개수와 특수 사용 횟수가 나온다. 이 씬은 각 적 체력 30, 플레이어 공격력 10·초당 공격 2회이며, 개발용 단색 도형과 씬 안의 조각 원본을 사용한다. 별도 조각 프리팹이나 확정 아트가 아니다. 씬 전용 [PlayTestDisplay.cs](Assets/Scenes/TestScene/PlayTestDisplay.cs)는 임시 도형·상태 표시와 적 외형 비활성화를 담당한다. 조합별 실제 특수 효과는 없다.
+[PlayTestScene](Assets/Scenes/TestScene/PlayTestScene.unity)을 Unity에서 열고 Play를 누른 뒤 Game 화면을 클릭한다. 방향키로 이동, S로 점프, A를 누르고 있으면 정면 공격, 조각 3개 수집 후 D로 특수 시전을 시도할 수 있다. 현재 씬은 레시피가 연결되기 전이므로 D를 눌러도 준비된 횟수를 보존한다. 시작 구역의 적 세 마리는 각각 체력 30이며 씬 안의 원본에서 A/B/C 조각을 드롭한다. 플레이어의 코드 공격력은 10이며 초당 한 번 공격할 수 있다. 씬 전용 [PlayTestDisplay.cs](Assets/Scenes/TestScene/PlayTestDisplay.cs)는 시작 구역의 임시 도형·상태 표시와 적 외형 비활성화를 담당한다.
 
-다음 작업은 사용자 요청에 따라 조합별 특수 효과와 UI를 구현하고 실제 캐릭터·조각 에셋을 연결하는 것이다. 기존 구현이나 에셋을 별도 요청 없이 복원하지 않는다.
+시작 구역에서 오른쪽으로 이동하면 `BOSS ARENA` 표지와 입구 체크포인트가 나온다. 오른쪽으로 이동하면서 S를 길게 눌러 낮은 입구 벽을 넘는다. 카메라는 플레이어를 수평으로 따라간다. 보스가 벽에서 방 안을 바라볼 때 바닥의 빨간 표식은 내려찍기, 주황 표식은 광역 공격 범위를 가리킨다. 테스트 보스는 씬 시작 뒤 기존 패턴을 자동으로 진행한다.
+
+보스 프리팹은 시작 체력 2250이며, 소환 적은 체력 20·접촉 피해 10으로 설정했다. 소환 적은 기본 공격 두 번에 처치되고 B 조각을 떨어뜨린다. [TestBoss.prefab](Assets/Prefabs/PlayTest/TestBoss.prefab), [BossFragmentEnemy.prefab](Assets/Prefabs/PlayTest/BossFragmentEnemy.prefab)
+
+S로 점프가 시작되면 게임 화면에 민트색 실선으로 지나온 경로를, 노란 점으로 현재 입력 기준의 예상 경로를 표시한다. 방향을 바꾸거나 S를 일찍 놓으면 예측을 갱신하며, 예측은 첫 충돌 또는 최대 1.8초까지만 표시한다. 착지 후 실선은 1.25초 동안 남는다. [점프 경로 코드](Assets/Scenes/TestScene/JumpPathDisplay.cs), [게임 화면 예시](Artifacts/JumpTrajectory/jump_path_centered.png)
+
+테스트 화면 상단의 HP는 현재 체력과 최대 체력을 표시한다. 배치된 A/B/C 적의 접촉 피해는 각 10이며, 적에게 계속 닿아 있으면 기본 0.75초 간격으로 체력이 줄어든다. [피격 화면 예시](Artifacts/PlayTestEnemyContact/contact_damage.png)
+
+플레이어가 적을 처치하면 테스트 표시 코드가 적의 충돌체를 끄고 0.05초 플래시가 끝나면 외형을 숨긴다.
+
+다음 작업은 사망 UI와 오디오 믹서를 연결하는 것이다. 세 적과 위험 장애물의 씬 배치, 투사체 외형, 플레이어 피격·사망 연출, 조합별 특수 효과와 실제 캐릭터·조각 에셋 연결도 남아 있다.
+
+이동 구현 당시의 [C# 대역 검증](Artifacts/PlayerMovement/verification.txt), [이전 비교 측정](Artifacts/PlayerMovementPlayTest/results.json), [설정 적용 후 최신 PlayMode 검증](Artifacts/ResponsiveMovementApplied/verification.json)을 구분한다. 최신 측정은 저장된 씬을 MCP로 실행·일시 정지한 뒤 PlayerBase.FixedUpdate와 실제 PhysicsScene2D를 고정 간격으로 진행한 결과다. OS 키보드·마우스를 사용하지 않았으며 Update의 실제 입력 수신과 사용자의 주관적인 조작감은 검증하지 않았다.
+
+2026-11-07 빠른 반응 설정의 당시 측정에서는 가속도 120·감속도 180·점프력 18.5·중력 배율 5.5·마찰 0에서 가속 0.04초·정지 0.04초·방향 전환 0.10초·높은 점프 체공 0.66초를 기록했다. 해당 점프 측정은 당시 높이 상한 3·해제 배율 0.5의 결과이며, 현재 점프 설정은 위의 플레이어 규격을 따른다.
+
+### 자동 저장·이어하기
+
+살아 있는 플레이어가 [Checkpoint](Assets/Function/Progress/Checkpoint.cs) 트리거에 진입하면 자동 저장을 예약한다. 같은 프레임의 충돌과 아이템 획득을 처리한 뒤 플레이어가 살아 있으면 **진행 슬롯 하나**를 갱신한다. 마지막으로 저장한 씬과 체크포인트 ID, 미조합 A/B/C 조각, 활성 조합과 남은 특수 사용 횟수, 일회성 아이템의 획득 ID를 기록한다.
+
+- 체크포인트 외에도 중요 아이템 획득 직후, 실제 플레이 시간 누적 3분마다, 지역 이동을 마쳤을 때, 플레이 중 정상 종료할 때 같은 슬롯에 저장한다. 주기 타이머는 타이틀·사망·일시 정지·로드 중에는 멈춘다. 정상 종료 저장은 활성 지역에서 살아 있는 플레이어의 진행을 기록한다. [ProgressAutosave.cs](Assets/Function/Progress/ProgressAutosave.cs)
+- 중요 아이템·주기·종료 저장은 현재 지역의 마지막 체크포인트를 복귀 지점으로 사용한다. 현재 지역에서 체크포인트에 닿은 기록이 없으면 지역 시작 위치를 저장한다. 지역 이동은 도착 씬의 지정 체크포인트나 시작 위치를 저장한다.
+- [CheckpointProgress](Assets/Function/Progress/CheckpointProgress.cs)의 `HasSave()`로 저장 유무를 확인하고 `TryContinue()`로 이어하기를 시작한다. `TryContinue()`의 반환값은 로드 요청을 시작했는지 나타내며, 실제 복원 성공 여부는 `LoadFinished`로 받을 수 있다. 사망 후 다시하기도 같은 경로를 자동으로 호출한다.
+- 복원 시 씬을 다시 불러 일반 적을 초기 체력과 위치에 리스폰한다. 체크포인트에 배치한 플레이어는 최대 체력을 얻고 저장 시점의 조각과 특수 횟수를 복원한다. 리스폰한 적의 조각은 다시 획득할 수 있다. 별도 보스 처치나 문 상태를 영구 보관하는 기능은 아직 없다.
+- 진행 파일은 `Application.persistentDataPath/checkpoint.json`이다. 임시 파일로 쓰고 이전 정상 저장은 `checkpoint.json.bak`에 보관한다. 주 파일이 없거나 손상되면 정상 백업을 읽는다. 동일한 스냅샷을 다시 저장할 때는 파일을 교체하지 않는다. 그래픽·사운드 옵션은 별도 저장을 사용한다.
+- 씬에 활성 플레이어 한 명을 두고, 체크포인트마다 씬 내에서 고유한 `Checkpoint Id`와 활성 `BoxCollider2D` 트리거를 지정한다. `Spawn Point`가 없으면 체크포인트 위치에서 시작한다. 씬은 빌드 목록에 등록해야 한다.
+- PlayTestScene에는 시작 부근 X=-3.5, 중간 X=0.5, 보스 입구 X=6.5에 체크포인트가 있다. 빌드 목록에는 `SampleScene`에 이어 `PlayTestScene`을 등록했다. 새 게임에서 첫 자동 저장 전에 사망하면 사망 상태로 남는다. 사망 UI는 후속 작업이다.
+
+지역 출구에는 `RegionTransition`과 `BoxCollider2D` 트리거를 두고 Inspector의 `Destination Scene Path`에 빌드 등록된 지역 씬 경로를 지정한다. `Destination Checkpoint Id`를 비우면 도착 씬에 배치된 플레이어의 시작 위치를 사용한다. 지정할 경우 해당 씬에 활성 플레이어 한 명과 그 ID의 체크포인트를 두고, 도착 위치는 출구 트리거 밖에 배치한다. 이동 중에는 현재 체력을 유지하며 이어하기와 사망 후 다시하기 때는 최대 체력으로 회복한다. 실제 지역 통로는 맵을 구성할 때 배치한다. [RegionTransition.cs](Assets/Function/Progress/RegionTransition.cs)
+
+### 일회성 아이템
+
+아이템 오브젝트에 `OneTimePickup`과 `BoxCollider2D` 트리거를 두고 Inspector의 `Item Id`에 게임 전체에서 고유한 고정 ID를 지정한다. 예를 들어 폐광 열쇠는 `mine.old_key`로 지정한다. 최초 획득 시 아이템을 숨기고 `On Collected`를 한 번 호출한다. 지급이나 연출이 필요하면 이 이벤트에 연결한다. [OneTimePickup.cs](Assets/Function/Progress/OneTimePickup.cs)
+
+자동 저장은 획득한 ID를 `CollectedItemIds`에 기록한다. 중요 아이템은 Inspector에서 `Auto Save On Collect`를 켜면 획득 보상을 처리한 뒤 즉시 저장한다. 이어하기와 사망 후 다시하기는 이 목록으로 복원하며, 저장된 아이템은 숨기고 저장 이후에 주운 아이템은 다시 배치된 상태로 돌아간다. 기존 JSON에 이 필드가 없으면 빈 목록으로 읽는다. 새 게임은 빈 획득 목록으로 시작한다.
+
+### 타이틀 화면
+
+[SampleScene](Assets/Scenes/SampleScene.unity)은 빌드의 첫 씬이며 새 게임·이어하기·옵션 버튼을 표시한다. [TitleMenu.cs](Assets/Function/UI/TitleMenu.cs)가 동작을 연결하고 화면 배치는 [UXML](Assets/UI/Title/TitleMenu.uxml), 모양은 [USS](Assets/UI/Title/TitleMenu.uss)에서 편집한다.
+
+- 새 게임은 PlayTestScene의 기본 위치에서 조각·특수 횟수 없이 시작한다. 기존 슬롯은 새 게임에서 첫 자동 저장이 성공하면 갱신된다. 그 전에 사망해도 이전 게임으로 복원하지 않는다.
+- 이어하기는 유효한 저장이 있을 때 활성화되며 마지막 체크포인트와 저장된 진행을 복원한다.
+- 옵션은 화면 설정과 전체·BGM·효과음 볼륨을 편집한다. 적용 및 저장을 누르면 게임에 반영하고, 뒤로를 누르면 현재 편집값을 버린다. 한글은 운영체제에 설치된 지원 글꼴을 사용한다.
+
+### 게임 옵션 코드
+
+[GameOptions](Assets/Function/Options/GameOptions.cs)는 해상도와 화면 모드, 품질 프리셋, 수직 동기화, 프레임 제한, 전체·BGM·효과음 볼륨을 관리한다. 첫 씬에서 기존 저장 옵션을 불러온다.
+
+- UI에서는 `GetCurrent()`로 편집용 복사본을 받아 값을 바꾸고 `Apply(values)`를 호출한다. `Save()`는 적용한 값을 `PlayerPrefs`에 저장하고 `Load()`는 저장 값으로 복원한다. `ResetToDefaults()`는 시작 시 기록한 기본값을 적용하며 저장은 `Save()`에서 진행한다.
+- 품질 프리셋은 `QualitySettings.names`에서 고르고 이름으로 저장한다. `FrameRateLimit`의 `-1`은 플랫폼 기본값이며, 데스크톱에서 VSync가 켜져 있으면 VSync가 프레임 간격을 결정한다. 화면 모드와 해상도 적용 결과는 플랫폼과 지원 모드에 따라 달라진다.
+- 전체 볼륨은 `AudioListener`에 즉시 적용된다. BGM과 효과음은 AudioMixer 그룹에 소스를 연결하고 노출한 볼륨 파라미터 이름을 각각 `MusicVolume`, `EffectsVolume`으로 지정한다. `Start` 이후 `GameOptions.TryBindAudioMixer(mixer)`를 호출하면 현재 값이 적용된다. 타이틀 옵션에서 개별 값을 저장할 수 있으며 실제 믹서 에셋 연결은 후속 작업이다.
+
+### 현재 Unity MCP 연결 — 2026-11-06
+
+CoplayDev MCP for Unity 10.3.0을 공식 Git 저장소의 `v10.3.0` 태그로 설치했다. `Packages/manifest.json`에 패키지를 추가하고 Unity가 `packages-lock.json`에 커밋 `aa5fc638d623f56178d50329d9ad8c541a57fe66`을 기록했다. MCP 서버도 10.3.0이며 HTTP Local `http://127.0.0.1:8080`으로 연결했다. 편집기 실행 시 자동 연결 옵션을 활성화했으나, 재시작 후 자동 재연결은 아직 검증하지 않았다.
+
+설치 전에는 해당 브리지가 없어 `no_unity_session`이 반환되었다. 설치 후 활성 씬 조회와 C# 실행이 성공했고 `PlayTestScene`, dirty=false, 비Play 상태 및 MCP 어셈블리 로드를 확인했다. 플레이어의 최대 속도 5·점프력 8·코요테 시간 0.12·높이 상한 3·가속도 40·감속도 50도 Unity의 실제 SerializedObject에서 조회했다. 별도 Unity AI Assistant의 `NoSubscription` 예외는 있었으며 MCP 연결과 C# 컴파일 오류는 발견되지 않았다. 근거는 [설치 검증](Artifacts/UnityMcpInstall/verification.json), [공식 설치 안내](https://github.com/CoplayDev/unity-mcp#quickstart)다.
+
+**이후 Unity 작업과 테스트는 MCP·콘솔·CLI로 수행하고 키보드·마우스 조작이나 입력 포커스를 가져가는 UI 자동화는 사용하지 않는다.** 설치 초기에는 창을 사용했으나 사용자의 추가 지시 이후부터는 MCP만 사용했다. 아래 2절의 이전 메카 프로젝트 통신 도구 경로는 현재 설치 경로를 뜻하지 않는다.
 
 ## 1. 현재 상태와 빠른 시작
 
@@ -468,7 +583,9 @@ Unity 공유 검사는 LAHIRE의 세 클립을 두 프리팹에 적용하여 각
 | 조립 기능 확장 | `Assets/Function/PartBase/`와 `Assets/Function/Assembly/MechAssembler.cs`에서 시작. 개별 교체·해제 API를 기반으로 요청에 따라 파생 클래스·모델 바인딩·저장/로드를 추가. 프리팹은 별도 요청 전 생성하지 않음 |
 | 공통 애니메이션 관리 | 기존 모델별 Avatar·Controller를 보존하고, 조립체 모델 바인딩 이후 공유 클립·다리 override를 새로 연결·검증 |
 | 플레이어 확장 | PlayerBase 컴포넌트·파츠 및 무기 참조 설정 후 Animator, 조준, 무기 이펙트·미사일 유도, 실제 게임 씬 연결 |
+| 특수 효과 구현 | `SpecialEffectDefinition`과 `SpecialModifierDefinition`을 상속해 실제 효과를 작성하고 `SpecialRecipe`와 `SpecialEquipment`에 연결 |
 | 적 기능 확장 | EnemyBase의 FSM 상태별 행동·전환 조건, 공격 빈도와 공격 속도의 단위, 무기 연결, 사망 처리 및 적 인스턴스 구성 |
+| 보스 연출 | PlayTestScene의 보스 프리팹과 경기장에서 공격 예고·애니메이션 및 확정 외형을 연결 |
 
 새 대화의 시작 요청 예:
 
@@ -733,3 +850,237 @@ YYYY-MM-DD — 작업명
 - 결정: 경로 구분자 없는 `.DS_Store` 규칙으로 전체 하위 폴더에 적용하고 로컬 파일과 과거 커밋은 보존한다.
 - 검증: `git check-ignore -v`로 루트 및 기존 세 경로의 제외를 확인했고 `git ls-files`에서 추적 항목이 없음을 확인했다. `ls`로 로컬 세 파일 보존, `git diff --check`로 공백 오류 없음을 확인했다.
 - 인계: 추적 제거 3개는 스테이징되어 있다. `.gitignore`와 이 문서를 함께 커밋하면 된다. 커밋·푸시는 수행하지 않았다.
+
+### 2026-11-06 — 가속·감속 이동과 가변 높이 점프
+
+- 요청/목적: 플랫폼 게임 방식의 가속도·최대 속도·감속도 이동, 코요테 타임·점프력·높이 조절 구현. 이번 범위는 이동·점프이며 기존 공격·피해 처리의 추가 구현은 하지 않는다.
+- 변경 파일: `Assets/Function/Player/PlayerBase.cs`, `Artifacts/PlayerMovement/`의 검증 코드·프로젝트·결과, `Readme.md`, `AGENTS.md`.
+- 결정: FixedUpdate의 시간 간격으로 속도를 변경하고 기존 Rigidbody2D 중력을 사용한다. 점프 시작 속도·최대 상승 높이·조기 해제 배율을 분리했다. 코요테 시간은 이륙 시 소진한다. 기존 속도 필드는 FormerlySerializedAs로 연결하고 테스트 씬과 `.meta`는 보존한다.
+- 검증: Unity 6000.6.6f1 CoreModule·Physics2DModule과 프로젝트 Input System DLL을 참조한 임시 .NET 9 컴파일 성공(경고 0·오류 0). [검증 코드](Artifacts/PlayerMovement/MovementChecks.cs)와 [Unity API 대역](Artifacts/PlayerMovement/UnityTestDoubles.cs)으로 실제 PlayerBase 콜백을 호출하여 가속·감속·최대 속도·서로 다른 물리 간격, 코요테 허용·만료, 공중 점프 거부, 빠른 탭·조기 해제, 높이 제한·재착지 등 27/27 assertion 통과. 단순 하향 중력 적분에서 유지 점프 최고점 약 2.996, 탭 점프 약 0.776 단위였다. 이는 Unity 물리 실행값이 아니다.
+- 범위 검증: Attack·ApplyDamage·조각 수집·특수 사용 함수 본문 및 기존 테스트 씬·PlayerBase `.meta`가 HEAD와 동일함을 확인했다. 근거는 [scope_validation.json](Artifacts/PlayerMovement/scope_validation.json). 테스트 재실행은 .NET 9가 설치된 환경에서 `dotnet run --project Artifacts/PlayerMovement/MovementChecks.csproj`를 사용한다.
+- 근거: Unity 6000.6 공식 [Mathf.MoveTowards](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/Mathf.MoveTowards.html), [Rigidbody2D.linearVelocity](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/Rigidbody2D-linearVelocity.html). 새 Input System의 S 키 유지 상태는 설치된 DLL을 참조한 컴파일로 확인했다.
+- 미실행·인계: Unity MCP 세션이 없고 앱 상태 조회도 시간 초과되어 Unity 컴파일·PlayMode·실제 키보드 및 접지·경사면·천장·이동 발판·직렬화 저장 왕복은 검증하지 못했다. 기존 PlayTestScene에서 이동 감각과 새 Inspector 수치를 조정하고 실제 Unity 동작을 확인해야 한다. 새 씬·프리팹·샘플은 생성하지 않았다.
+
+### 2026-11-06 — Unity MCP 연결 진단
+
+- 요청/목적: Unity 도구가 편집기 세션에 연결되지 않는 이유 확인.
+- 변경 파일: `Readme.md`.
+- 확인: 현재 프로젝트의 manifest·lock·Assets와 ScriptAssemblies에서 CoplayDev 브리지 패키지·코드를 발견하지 못했다. 이번 활성 씬 조회도 no_unity_session으로 실패했다. 설치된 Unity AI Assistant의 로컬 공식 문서는 별도 relay·IPC 기반 MCP 연결을 설명한다. 현재 채팅 도구가 요구하는 브리지와 연결 경로가 다르다.
+- 근거: `Packages/manifest.json`, `Packages/packages-lock.json`, 설치 패키지의 `Documentation~/integration/unity-mcp-overview.md`, [CoplayDev 공식 README](https://github.com/CoplayDev/unity-mcp).
+- 인계: 현재 Unity 도구에 맞는 브리지 설치와 세션 연결이 필요하다. 패키지·프로젝트 설정은 변경하지 않았고 앱의 현재 열린 씬·저장 상태는 확인하지 못했다.
+
+### 2026-11-06 — Unity MCP 설치와 연결 완료
+
+- 요청/목적: 앞서 진단한 누락 브리지를 설치하고 Unity 연결을 복구. 추가 지시에 따라 이후 Unity 작업·테스트의 키보드·마우스 조작 금지 규칙을 기록.
+- 변경 파일: `Packages/manifest.json`, Unity 생성 `Packages/packages-lock.json`, `Artifacts/UnityMcpInstall/verification.json`, `Readme.md`, `AGENTS.md`.
+- 결정: 기존 실행 중인 서버와 동일한 공식 10.3.0 태그를 고정 설치하고 localhost HTTP로 연결했다. 자동 시작 옵션도 활성화했다. 패키지·게임 코드의 다른 의존성 버전은 변경하지 않았다.
+- 검증: Unity 6000.6.6f1의 Package Manager 다운로드와 컴파일 완료, MCP 창 Session Active를 확인했다. 사용자 추가 지시 후 MCP로 활성 씬 조회·C# 코드 실행·컴파일 상태와 콘솔을 확인했다. `PlayTestScene` dirty=false/rootCount=10, isPlaying=false, isCompiling=false 및 MCPForUnity.Editor 로드=true. 현재 플레이어 이동 설정값 조회도 성공했다. 상세는 설치 검증 JSON을 따른다.
+- 관찰: 별도 Unity AI Assistant에서 NoSubscription 예외 1건이 조회됐으며 MCP 설치·연결을 막지 않았다. 셸의 초기 GitHub 주소 해석 실패는 승인된 네트워크 접근으로 재시도하여 해결했다. 실제 프로세스 조회에는 Unity Hub·라이선스 프로세스만 있어 대상 프로젝트 편집기를 정상 실행했다.
+- 범위·인계: 플레이 테스트·게임 동작 검증이나 편집기 재시작 후 자동 재연결은 실행하지 않았다. 앞으로 테스트는 Unity MCP 또는 콘솔·CLI로 진행하고 사용자 키보드·마우스 입력을 점유하지 않는다.
+
+### 2026-11-06 — MCP 기반 이동 PlayMode 테스트와 반응 비교
+
+- 요청/목적: 키보드·마우스를 점유하지 않는 플레이 테스트와 사용자 지정 할로우 나이트 조작감 방향의 비교.
+- 변경 파일: `Artifacts/PlayerMovementPlayTest/measure_movement.cs`, `results.json`, `Readme.md`, `AGENTS.md`. 런타임 비교만 수행하고 PlayerBase 소스와 씬·프리팹 설정은 변경하지 않았다.
+- 방법: 저장된 PlayTestScene dirty=false 확인 후 MCP로 PlayMode에 진입해 일시 정지했다. 이동 입력 필드와 버튼 상태를 테스트 코드로 전달하고 실제 PlayerBase.FixedUpdate·PhysicsScene2D.Simulate를 약 0.02초 간격으로 실행했다. 현재 적은 실행 중에만 비활성화했고 코요테 확인용 발판도 메모리에만 만들었다. OS 입력 장치는 사용하지 않았다.
+- 결과: 기본 설정 16/16, 빠른 반응 후보 16/16 assertion 통과. 가속·정지·반대 방향 전환, 유지/조기 해제 점프·착지·높이 상한·공중 재점프 거부·코요테 0.06초 허용과 0.18초 거부를 확인했다. 기본 가속 0.14초/정지 0.10초/반전 0.26초/점프 최고점 0.62초/체공 1.42초, 후보 0.04/0.04/0.10/0.32/0.66초였다. 두 설정의 최고 높이는 약 2.996/2.978 단위다. 전체 수치는 [results.json](Artifacts/PlayerMovementPlayTest/results.json)을 따른다.
+- 시도·수정: 첫 측정 코드의 PhysicsSceneExtensions2D 네임스페이스가 잘못되어 컴파일에 실패했고 reflection으로 확인 후 수정했다. 초기 고중력 후보는 기본 마찰 때문에 속도가 4.568로 낮아져 최대 속도 95% 도달 검사에 실패했다. 플레이어에 임시 마찰 0 재질을 적용한 뒤 같은 검증을 재실행해 통과했다. 이 실패를 통과 건수에 포함하지 않았다.
+- 정리·보존: 임시 발판과 물리 재질을 제거하고 PlayMode를 종료했다. PlayTestScene dirty=false/rootCount=10, isPlaying=false/isPaused=false, 원래 가속 40·감속 50·점프력 8·중력 배율 1·기본 재질을 확인했다. PlayerBase SHA-256은 이전 구현 기록과 동일하고 씬은 HEAD와 바이트 단위로 동일했다.
+- 근거: Unity 공식 [PhysicsScene2D.Simulate](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/PhysicsScene2D.Simulate.html) 및 설치 Unity의 reflection API 조회.
+- 한계·인계: Update 입력 수신·실제 장치 지연, 사용자 주관적 조작감, 경사면·벽/천장·이동 발판은 이번에 확인하지 않았다. 원작 할로우 나이트의 수치를 재현·측정한 결과가 아니며 후보의 영구 적용과 최종 조작감 승인은 아직 진행하지 않았다.
+
+### 2026-11-07 — 빠른 반응 설정 영구 적용과 MCP 재검증
+
+- 요청/목적: 승인된 가속도 120·감속도 180·점프력 18.5·중력 배율 5.5·마찰 0을 PlayerBase와 PlayTestScene에 적용하고 MCP로 재검증.
+- 변경 파일: `Assets/Function/Player/PlayerBase.cs`, `Assets/Scenes/TestScene/PlayTestScene.unity`, `Artifacts/ResponsiveMovementApplied/`, 기존 대역 검증 코드 2개, `Readme.md`, `AGENTS.md`.
+- 결정: PlayerBase의 직렬화 기본값을 변경하고 중력·마찰 설정을 추가했다. Awake에서 바디 중력과 전용 런타임 재질을 적용하며 OnDestroy에서 해당 재질을 해제한다. 씬에도 같은 설정과 바디 중력을 저장했다. 새 프리팹·물리 재질 에셋은 만들지 않았다.
+- 검증: Unity 컴파일 오류 조회 0건. 저장된 씬을 새로 실행하여 실제 설정 120/180/18.5/5.5/0을 확인했고, 새 PlayerBase 생성 시 기본값도 동일했다. 최종 MCP PlayMode 이동·점프 검사 16/16 통과. 가속·정지 0.04초, 반전 0.10초, 높은 점프 최고점 2.978·체공 0.66초, 조기 해제 점프 최고점 1.662·체공 0.46초였으며 코요테 0.06초 허용/0.18초 거부와 공중 재점프 거부를 재확인했다. 상세는 [verification.json](Artifacts/ResponsiveMovementApplied/verification.json).
+- 회귀: 이전 대역 테스트는 비교 기준 40/50/8을 명시하도록 변경하고 새 물리 재질 API 대역을 추가해 27/27 통과했다. 이 테스트는 최신 기본값의 조작감 측정이 아니라 고정 기준의 메커니즘 회귀이며 Unity PlayMode 결과와 구분한다.
+- 정리·수정: 최초 OnDestroy의 바디 재질 복원 코드가 Play 종료 후 dirty 표시를 남겨 해당 변경을 제거했다. 메모리 씬의 복사본을 [보존](Artifacts/ResponsiveMovementApplied/PlayTestScene_memory_backup_20261107.unity)하고 저장 씬과 바이트 일치를 확인한 뒤 다시 열어 최종 테스트를 수행했다. 최종 EditMode dirty=false/rootCount=10, isPlaying=false/isPaused=false, 임시 발판 없음, 런타임 재질 잔존 0개를 확인했다. 저장되지 않은 씬 다시 열기가 처음 자동 승인 검토에서 거부되었으나 복사 보존·동일성 확인 후 안전하게 재실행했다.
+- 범위·인계: 키보드·마우스 조작 없이 MCP만 사용했다. 실제 입력 지연·주관적 조작감·경사면·벽/천장·이동 발판 및 별도 Collider 재질 구성은 미검증이다. 공격·피해 처리는 이번 범위에서 변경하지 않았다.
+
+### 2026-11-07 — 적과 환경 장애물의 접촉 피해
+
+- 요청/목적: 적과 특정 환경 물체에 닿으면 플레이어 체력이 줄도록 연결하고 `Assets/Function/Environment/`에 `DamagedObstacle`을 추가한다.
+- 변경 파일: `Assets/Function/Player/PlayerBase.cs`, `Assets/Function/Environment/DamagedObstacle.cs`와 Unity 생성 폴더·스크립트 `.meta`, `Artifacts/ContactDamagePlayTest/`, `Artifacts/PlayerMovement/UnityTestDoubles.cs`, `Readme.md`, `AGENTS.md`.
+- 결정: 적의 기존 공격력과 장애물의 Inspector 피해량을 사용하고, 여러 접촉의 피해를 합산하지 않도록 공통 재피격 간격을 둔다. 첫 검증에서 정지한 물리 바디의 트리거 재피격이 누락되어 진입·이탈 콜백으로 접촉을 기록하고 물리 갱신에서 지속 피해를 확인하도록 수정했다. Unity 6000.6 공식 [Collision2D.collider](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/Collision2D-collider.html), [일반 충돌 지속 콜백](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/MonoBehaviour.OnCollisionStay2D.html), [트리거 지속 콜백](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/MonoBehaviour.OnTriggerStay2D.html)을 참고했다.
+- 검증: Unity 6000.6.6f1에서 C# 컴파일 오류 조회 0건. MCP로 PlayTestScene을 실행하여 임시 오브젝트의 실제 2D 물리 충돌을 검사했다. 일반·트리거 접촉, 사망 상태 적·비활성 장애물·일반 지형 무시, 동시 접촉 한 번만 적용, 재피격 간격, 접촉 종료, 체력 하한 및 조각 수집 등 [16/16 통과](Artifacts/ContactDamagePlayTest/verification.json). [재현 코드](Artifacts/ContactDamagePlayTest/verify_contact_damage.cs)와 별도로 Unity API 대역 기반 [이동 회귀 27/27](Artifacts/ContactDamagePlayTest/movement_regression.txt)을 기록했다.
+- 정리·인계: 키보드·마우스 조작 없이 검증했다. PlayMode를 종료하고 임시 오브젝트가 없으며 활성 씬이 dirty=false인 것을 확인했다. 저장된 씬의 해시는 작업 전후 동일하다. 장애물 배치, 피격 연출, 넉백 및 플레이어 사망 처리는 후속 작업이다.
+
+### 2026-11-07 — 근접 추적·돌진·공중 적 행동 구현
+
+- 요청/목적: 접촉만 하는 근접 추적 적, 인지 후 0.5초 준비하고 5초마다 1초간 300 이동하는 돌진 적, 발사 순간의 플레이어 위치로 속도 50의 투사체 한 발을 쏘는 공중 적을 구현한다.
+- 변경 파일: `Assets/Function/Enemy/`의 `MeleeEnemy`, `ChargeEnemy`, `FlyingEnemy`, 공통 `TargetingEnemy`, `EnemyProjectile` 및 Unity 생성 `.meta`, `EnemyBase.cs`, `PlayerBase.cs`, `Artifacts/EnemyBehaviors/`, 이동 검증 프로젝트, `Readme.md`, `AGENTS.md`.
+- 결정: 300을 Unity 월드 단위로 적용한다. 프로젝트의 2D 이동 속도 제한 100을 유지하고 돌진 이동량과 충돌을 별도로 계산해 이동 단계를 건너뛰는 플레이어도 맞도록 했다. 돌진 준비 상태 `Windup`을 기존 FSM 끝에 추가했다. 투사체는 발사 시 방향을 고정하고 공격 속도에 따라 한 발씩 발사한다. Unity 6000.6 공식 [Rigidbody2D.Cast](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/Rigidbody2D.Cast.html)와 [PhysicsScene2D.CircleCast](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/PhysicsScene2D.CircleCast.html)를 참고했다.
+- 검증: Unity 6000.6.6f1 컴파일 오류 조회 0건. MCP PlayMode [행동 검사 22/22](Artifacts/EnemyBehaviors/verification.json) 통과. 돌진 준비 0.5초·이동 1초·거리 300.0002·재돌진 간격 5초, 근접 추적·접촉 피해, 직선 투사체 속도 50.0045·회피·벽 차단을 확인했다. 기존 접촉 피해 16/16과 .NET Unity API 대역 이동 검사 27/27도 재실행했다. [재현 코드](Artifacts/EnemyBehaviors/verify_enemy_behaviors.cs)의 초기 실행은 에디터 첫 갱신 전에 가까운 대상이 투사체에 맞아 발사 방향 샘플을 놓쳤다. 관측용 대상을 멀리 배치해 다시 실행했으며 초기 실행은 통과 건수에 포함하지 않았다.
+- 정리·인계: 키보드·마우스 조작 없이 실행했다. 임시 적·플레이어·투사체 정리 후 PlayMode를 종료했고 저장 씬 해시는 작업 전후 동일했다. 별도 씬·프리팹·시각 에셋은 만들지 않았다. 실제 배치, 투사체 외형, 경사면·발판 끝에서의 돌진 연출은 후속 작업이다.
+
+### 2026-11-07 — 진행 저장·다시하기 조사와 게임 옵션 코드
+
+- 현재 체력·조각·특수 상태, 플레이어 사망 처리와 씬 등록 범위를 확인하고 체크포인트 자동 저장, 이어하기, 사망 후 다시하기의 초안을 작성했다. 진행 저장용 JSON과 씬 복원은 체크포인트 및 리스폰 규칙이 확정되면 구현한다. [Unity 사용자 데이터 경로](https://docs.unity3d.com/kr/current/ScriptReference/Application-persistentDataPath.html)
+- `Assets/Function/Options/GameOptions.cs`와 Unity 생성 `.meta`를 추가했다. 화면·품질·프레임·볼륨 설정을 적용하고 버전이 포함된 PlayerPrefs 키에 저장한다. 첫 씬에서 자동으로 불러오고, 오디오 채널은 향후 AudioMixer 그룹에 연결한다. [Unity PlayerPrefs](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/playerprefs), [해상도 설정](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/screen/setresolution), [AudioMixer 파라미터 적용](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/audio/audiomixer/setfloat)
+- Unity 6000.6.6f1에서 컴파일 오류 0건을 확인했다. 키보드·마우스 조작 없이 MCP PlayMode에서 옵션 적용·저장·복원·손상값 처리 23건과 PlayMode 재진입 시 자동 복원 1건을 검증했다. 검사에 사용한 설정 키를 제거하고 PlayMode를 종료했다. 씬과 프로젝트 설정 파일의 해시는 전후 일치했다. 독립 실행 빌드의 화면 전환과 실제 믹서를 통한 음원 재생은 후속 검증 대상이다. [검증 코드](Artifacts/GameOptions/verify_options.cs), [검증 결과](Artifacts/GameOptions/verification.json)
+
+### 2026-11-07 — 단일 체크포인트 자동 저장과 사망 후 복원
+
+- 사용자가 확정한 자동 저장 슬롯 하나를 구현했다. 이어하기와 사망 후 다시하기는 마지막 정상 저장에서 씬과 체크포인트를 찾아 최대 체력과 저장 당시 조각·활성 조합·특수 횟수를 복원한다. 씬을 다시 불러 일반 적을 리스폰한다.
+- `Assets/Function/Progress/`의 체크포인트·슬롯·복원 코드, `PlayerBase.cs`의 사망 전환, `PlayerCheckpointState.cs`, Unity 생성 `.meta`, 기존 이동 테스트 대역을 변경했다. `Assets/Scenes/TestScene/PlayTestScene.unity`에 체크포인트 두 개를 배치하고 `ProjectSettings/EditorBuildSettings.asset`에 등록했다. 안정적인 씬 경로를 저장하고 로드할 때 현재 빌드 인덱스로 변환한다. [Unity 씬 인덱스 조회](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/SceneManagement.SceneUtility.GetBuildIndexByScenePath.html), [Unity 비동기 씬 로드](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/scenemanagement/scenemanager/loadsceneasync)
+- 저장은 버전·조각 데이터 유효성 검사와 이전 정상본 보존을 사용한다. [Unity 영구 데이터 경로](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/application/persistentdatapath), [.NET 파일 교체 및 백업](https://learn.microsoft.com/en-us/dotnet/api/system.io.file.replace)
+- Unity MCP PlayMode에서 별도 임시 슬롯으로 실제 물리 자동 저장, 슬롯 갱신, 다른 씬에서 이어하기, 사망 후 다시하기, 일반 적 리스폰, 저장 손상 시 백업 복원 등 40/40을 통과했다. 콘솔 오류 0건, 기존 이동 대역 검사 27/27이다. 임시 저장 폴더를 정리하고 PlayMode를 종료했다. 별도 독립 실행 빌드와 UI는 검증하지 않았다. [검증 코드](Artifacts/CheckpointProgress/verify_checkpoint_progress.cs), [검증 결과](Artifacts/CheckpointProgress/verification.json)
+
+### 2026-11-07 — 새 게임·이어하기·옵션 타이틀
+
+- 빌드의 첫 씬인 `SampleScene`에 타이틀 UI를 연결했다. `TitleMenu.cs`, `Assets/UI/Title/`의 UXML·USS·테마·패널 설정과 Unity 생성 `.meta`를 추가했다. 이어하기는 유효한 슬롯이 있을 때 활성화하고 옵션 화면은 기존 `GameOptions`를 호출한다. [Unity 패널 설정](https://docs.unity3d.com/cn/current/ScriptReference/UIElements.PanelSettings.html), [UI Toolkit 입력](https://docs.unity3d.com/cn/6000.0/ScriptReference/UIElements.UIToolkitInputConfiguration.SetRuntimeInputBackend.html)
+- `CheckpointProgress.cs`에 새 게임 진입점을 추가했다. 시작 위치에서 새 진행을 열고, 기존 슬롯은 첫 체크포인트를 저장할 때 갱신한다. 그 전의 사망은 기존 저장을 불러오지 않는다.
+- 열린 편집기의 MCP가 가져오기 도중 응답하지 않아 별도 복사본에서 Unity 6000.6.6f1 명령줄 PlayMode 검증을 수행했다. 실제 UI Toolkit 버튼 이벤트로 빈 슬롯 비활성화, 체크포인트 복원, 새 게임의 슬롯 갱신, 옵션 적용·저장·취소 등 22/22를 확인했다. 키보드·마우스 입력과 기존 진행 슬롯은 사용하지 않았다. 독립 실행 빌드와 실제 BGM·효과음 믹서 재생은 별도 검증 대상이다. [검증 코드](Artifacts/TitleMenu/verify_title_menu.cs), [검증 결과](Artifacts/TitleMenu/verification.json)
+
+### 2026-11-08 — 일회성 아이템 획득 저장
+
+- `OneTimePickup.cs`, `CheckpointProgress.cs`, `CheckpointSaveStore.cs`를 연결했다. 기존 세이브와 호환되는 선택 필드 `CollectedItemIds`에 체크포인트 당시의 획득 목록을 기록한다. 이어하기와 사망 후 다시하기는 같은 경로에서 목록을 복원하고 씬의 획득 완료 아이템을 숨긴다. [Unity JSON 역직렬화](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/jsonutility/fromjson), [Unity 씬 로드 이벤트](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/scenemanagement/scenemanager/sceneloaded)
+- Unity 6000.6.6f1 MCP PlayMode에서 임시 슬롯과 실제 2D 트리거로 기존 세이브 호환, 체크포인트 저장, 저장 후 획득 롤백, 이어하기·사망 후 복원, 보상 중복 방지, 새 게임 등 24/24를 확인했다. 콘솔 오류는 0건이며 임시 슬롯을 정리했다. 실제 아이템은 콘텐츠 배치 시 컴포넌트와 ID를 연결한다. [검증 코드](Artifacts/OneTimePickup/verify_one_time_pickup.cs), [검증 결과](Artifacts/OneTimePickup/verification.json)
+
+### 2026-11-08 — 체크포인트 자동 저장 순서 보강
+
+- 체크포인트와 일회성 아이템에 동시에 닿았을 때 저장이 먼저 실행되어 실제로 획득한 ID가 파일에서 빠지는 문제를 재현했다. `Checkpoint.cs`에서 진입 시 저장을 예약하고 같은 프레임의 충돌·획득 처리가 끝난 뒤 `LateUpdate`에서 저장한다. [Unity 업데이트 순서](https://docs.unity.com/en-us/engine/6000.6/manual/scripting/managing-update-order)
+- Unity MCP PlayMode에서 임시 슬롯으로 동시 접촉 4/4와 기존 체크포인트·이어하기·사망 후 복원·백업 회귀 40/40을 통과했다. 콘솔 오류는 0건이며 검증 후 임시 슬롯을 정리했다. [동시 접촉 검증 코드](Artifacts/CheckpointAutosave/verify_overlap.cs), [검증 결과](Artifacts/CheckpointAutosave/verification.json)
+
+### 2026-11-08 — 중요 아이템·3분 간격·정상 종료·지역 이동 자동 저장
+
+- 체크포인트 외 자동 저장 시점을 사용자 지정대로 추가했다. `CheckpointProgress.cs`와 `CheckpointSaveStore.cs`는 기존 단일 슬롯을 사용한다. `ProgressAutosave.cs`에서 누적 플레이 시간과 종료 이벤트를 받고 `OneTimePickup.cs`에서 중요 아이템을 지정한다. `RegionTransition.cs`로 도착 지점을 연결하며 `PlayerBase.cs`는 지역 이동에서 현재 체력을 이어받는다. [Unity 종료 이벤트](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/monobehaviour/onapplicationquit), [Unity 비보정 프레임 시간](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/time/unscaleddeltatime)
+- Unity MCP PlayMode에서 179초/180초를 타이머에 전달해 경계를 확인했고, 실제 아이템·지역 트리거와 편집기 플레이 종료 이벤트를 임시 슬롯으로 검사했다. 새 동작 19/19와 체크포인트·사망 후 복원·백업 회귀 40/40을 통과했다. 독립 실행 빌드의 종료는 별도로 검증하지 않았다. [검증 코드](Artifacts/ProgressAutosave/verify_autosave_triggers.cs), [검증 결과](Artifacts/ProgressAutosave/verification.json)
+
+### 2026-11-08 — 플레이 테스트의 점프 경로 표시
+
+- `PlayerBase.cs`에서 유효한 점프의 시작을 알리고 실제 이동과 같은 수평 가속·감속 및 점프 높이 제한 계산을 예측에 제공한다. `PlayTestDisplay.cs`와 `JumpPathDisplay.cs`는 게임 화면에서 이륙 이후의 실선과 현재 입력에 따른 예상 점을 표시한다. 몸체 충돌체를 예상 경로에서 검사해 첫 장애물에서 예측을 끝낸다. [Unity Rigidbody2D.Cast](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody2d/cast)
+- Unity MCP PlayMode에서 실제 2D 물리를 사용해 경로 표시·공중 재입력·착지·조기 해제·반전·장애물 10/10을 확인했다. 유지 점프의 실제·예상 최고 높이는 모두 2.978 유닛이며 착지 X 오차는 약 0.101 유닛이었다. 기존 이동 대역 검사 27/27도 통과했다. 씬 파일 해시는 일치했고 검증은 키보드·마우스 입력 없이 수행했다. [검증 코드](Artifacts/JumpTrajectory/verify_jump_path.cs), [검증 결과](Artifacts/JumpTrajectory/verification.json)
+
+### 2026-11-08 — 적 접촉 피해 확인과 체력 표시
+
+- 플레이어의 기존 접촉 피해를 실제로 확인할 수 있도록 `PlayTestDisplay.cs`에 현재·최대 체력을 표시했다. 편집기에서 테스트 씬을 바로 실행할 때 점프 표시 참조가 비어 HUD가 중단되는 경우도 재현하여, 표시를 그리기 전에 안전하게 초기화한다.
+- Unity MCP PlayMode에서 배치된 A/B/C 적의 최초 피해, 0.75초 재피격, 접촉 해제를 검증해 6/6을 통과했다. 게임 화면에서 HP 60/100을 확인했다. 독립 실행 빌드는 검증하지 않았으며 편집기의 Unity AI 구독 진단 한 건이 별도로 남았다. [검증 코드](Artifacts/PlayTestEnemyContact/verify_scene_contacts.cs), [검증 결과](Artifacts/PlayTestEnemyContact/verification.json)
+
+### 2026-11-08 — 특수 효과 선택과 장비 보정
+
+- `Assets/Function/Special/`에 실행·보정 인터페이스와 레시피·장비 설정을 추가했다. `PlayerBase.cs`는 활성 조합의 레시피와 현재 장비로 교체 효과를 선택하고 보정을 적용한다. 공유 설정과 이번 시전 인스턴스를 분리하고 실행 성공 후에만 횟수를 차감한다. [Unity ScriptableObject](https://docs.unity.com/en-us/engine/6000.6/manual/scripting/get-started/fundamental-unity-types/class-scriptable-object)
+- Unity 6000.6.6f1 MCP PlayMode에서 임시 저장 슬롯과 검증용 효과로 조합 선택, 발사 수, 효과 교체 우선순위, 실패 보존, 성공 시 1회 차감 등을 23/23 확인했다. 컴파일 오류는 0건이며 기존 Unity API 사용 중단 경고 4건이 표시됐다. 이동 대역 검사에 새 소스 참조를 추가해 27/27을 확인했다. 씬 파일 해시는 같았으며 키보드·마우스 입력을 사용하지 않았다. [검증 코드](Artifacts/SpecialAbility/verify_special_ability.cs), [검증 결과](Artifacts/SpecialAbility/verification.json)
+- 인계: 실제 조합 효과와 장비 데이터를 만든 뒤 Inspector에서 연결한다. 현재 PlayTestScene에는 특수 효과 레시피가 없으므로 D 입력 시 횟수를 보존한다.
+
+### 2026-11-08 — 적 피격 WhiteFlash
+
+- `EnemyBase.cs`, `PlayerBase.cs`에서 플레이어 공격 피해를 구분하고 `EnemyWhiteFlash.cs`와 URP 2D [셰이더](Assets/Function/Enemy/Resources/EnemyWhiteFlash.shader)를 추가했다. 요청한 밝기를 흰색에서 채널마다 25를 뺀 sRGB `(230, 230, 230)`으로 해석했다. `PlayTestDisplay.cs`는 치명타에서 충돌을 끄고 플래시 종료 후 적을 숨긴다. [Unity SpriteRenderer 색상](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/spriterenderer/color), [Unity 셰이더 블렌딩](https://docs.unity3d.com/6000.6/Documentation/Manual/SL-Blend.html)
+- Unity MCP PlayMode에서 실제 근접 공격 판정과 URP 렌더 픽셀, 재피격, 비활성화, 치명타 및 원래 모습 복원을 13/13 확인했다. 불투명 픽셀은 RGB `(230, 230, 230)`으로 출력됐고 별도 피격의 복원 관측값은 0.0501초였다. 프레임 수는 실행 환경의 렌더 속도에 따라 달라진다. 컴파일·셰이더 오류 0건, 이동 대역 검사 27/27, 씬 파일 해시 일치를 확인했다. 독립 실행 빌드는 검증하지 않았다. [검증 코드](Artifacts/EnemyWhiteFlash/verify_enemy_white_flash.cs), [검증 결과](Artifacts/EnemyWhiteFlash/verification.json)
+
+### 2026-11-08 — 게임 분위기와 그래픽 방향
+
+- 요청/목적: 아트 기본 자료로 게임 분위기의 참고작과 공통 그래픽 방향을 기록한다.
+- 변경 파일: `Readme.md`.
+- 결정: 기존 할로우 나이트 중심의 아트 참고에 데드 셀과 Hellfurnace를 분위기 참고작으로 추가하고, 게임 전반에 윤곽선이 있는 그래픽을 적용한다. 스프라이트 기반 2D 방향은 유지한다.
+- 검증: 문서 도입부와 이력을 대조했다. 문서만 변경하여 Unity·Blender 조작과 코드 테스트는 수행하지 않았다.
+- 인계: 플레이어 대기 스프라이트의 구체적인 외형과 참고 자료가 필요하다.
+
+### 2026-11-08 — 플레이어 스탠딩 시안
+
+- 요청/목적: Notion Player character 참고 이미지를 보고 현대 어반 인간형 주인공의 스탠딩 스프라이트 시안을 제작한다. 오른팔과 왼다리는 기계이며 오른팔로 공격한다.
+- 변경 파일: [스탠딩 시안 PNG](Artifacts/PlayerStandingConcept/PlayerStandingConcept_v1.png), `Readme.md`.
+- 결정: Notion의 세 이미지에서 확인한 액션 게임 인간형 비율과 읽기 쉬운 실루엣을 참고해, 윤곽선이 있는 현대 스트리트웨어와 기계 팔다리를 제안했다. 이미지 생성 도구에는 참고 이미지를 직접 전달하지 못해 화면에서 확인한 특성을 텍스트로 설명했다. 외형·의상·색상은 시안이며 사용자 승인 전이다.
+- 생성 지시: 인간형 비율의 전신 대기 자세, 현대 스트리트웨어, 캐릭터 기준 오른팔과 왼다리의 기계 의수·의족, 윤곽선과 단순한 음영, 투명 배경, 한 인물.
+- 검증: 생성 결과를 시각적으로 확인해 기계 팔다리의 좌우와 전신 구도를 살폈다. `sips`에서 PNG 1199×1312 및 알파 채널 존재를 확인했다. Unity 임포트·실제 게임 크기 가독성·애니메이션은 검증하지 않았다.
+- 인계: 사용자 검토에 따라 디자인을 조정하고, 이후 애니메이션 프레임·Unity 적용을 별도 진행한다. 이 이미지는 단일 정지 프레임이다.
+
+### 2026-11-08 — 플레이어 스탠딩 시안 5등신화
+
+- 요청/목적: 인게임 스프라이트를 위해 기존 주인공 시안을 약 5등신으로 데포르메한다.
+- 변경 파일: [스탠딩 시안 v2](Artifacts/PlayerStandingConcept/PlayerStandingConcept_v2.png), `Readme.md`. 기존 v1은 보존한다.
+- 결정: 기본 이미지 생성 도구로 v1을 편집해 인체 비율을 압축하고 외곽선과 세부 형태를 단순화했다. 어반 의상, 오른팔과 왼다리의 기계 구성은 유지했다. 생성 지시: 기존 인물을 약 5등신 인간형 대기 자세로 바꾸고 복장·색상·기계 팔다리 위치를 보존하며 투명 배경과 선명한 윤곽선으로 표현.
+- 검증: 이미지에서 기계 팔다리 위치와 전신 구도, 압축된 비율을 시각 확인했다. `sips`에서 PNG 1206×1305와 알파 채널 존재를 확인했다. 정확한 등신 수의 계측, Unity 임포트·실제 게임 크기 가독성·애니메이션은 확인하지 않았다.
+- 인계: 시각 디자인은 사용자 검토 전이다. 단일 정지 프레임이며 대기 애니메이션과 Unity 적용은 후속 작업이다.
+
+### 2026-11-09 — 보스 패턴과 조각 적 소환
+
+- 보스의 시작·최대 체력을 2250으로 설정했다. `BossEnemy.cs`는 벽까지 돌진하고 전방 트리거로 내려찍기와 광역 공격을 판정한다. 공격 두 번을 완료하면 조각 적 세 마리를 소환하며 패턴 종료 뒤 일반 공격은 3초, 소환은 5초를 기다린다. `FragmentEnemy.cs`는 소환 적을 바닥에 고정하고 처치 시 충돌을 끈다. 모든 적의 접촉 피해는 각자의 `Attack Power`를 사용한다. [Unity Rigidbody2D.Cast](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody2d/cast), [Unity PhysicsScene2D.Raycast](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/physicsscene2d/raycast)
+- Unity 6000.6.6f1 CLI의 임시 프로젝트 PlayMode에서 고정 갱신과 실제 2D 물리를 수동 진행해 벽 정지, 두 전방 공격, 소환 순서·위치·고정·접촉 피해·드롭, 처치 후 중단을 19/19 확인했다. 3초·5초는 예약 시각과 기한 전 정지를 확인했고 패턴 사이의 대기는 검증 코드에서 앞당겼다. 이동 대역 검사도 27/27을 통과했다. [검증 코드](Artifacts/BossPatterns/verify_boss_patterns.cs), [검증 결과](Artifacts/BossPatterns/verification.json)
+- 인계는 실제 경기장에 보스를 배치하고 원하는 조각을 드롭하는 프리팹을 연결하는 것이다. 기본 돌진 속도와 전방 공격 범위는 보스 Inspector에서 조정한다.
+
+### 2026-11-09 — PlayTestScene 보스 구역과 프리팹
+
+- `Assets/Prefabs/PlayTest/`에 보스·고정 조각 적·B 조각 프리팹과 공통 테스트 스프라이트를 저장했다. 기존 PlayTestScene 오른쪽에 연결된 바닥과 두 벽을 배치했다. 플레이어 점프로 입구를 넘을 수 있으며, 벽은 보스 돌진을 멈춘다. 입구 체크포인트와 두 공격 범위 표식을 추가하고 카메라는 수평으로 플레이어를 따라가도록 설정했다. [Unity 프리팹 인스턴스](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityeditor/prefabutility/instantiateprefab), [Unity Position Constraint](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/animations/positionconstraint)
+- Unity CLI에서 저장된 씬을 다시 열어 프리팹 참조, 카메라 대상, 체크포인트 저장, 실제 물리 점프, 양방향 벽 정지, 네 패턴, 접촉 피해와 B 조각 수집을 12/12 확인했다. 물리를 수동 진행하고 패턴 사이의 대기를 앞당겼다. 실제 화면 렌더링은 별도로 확인하지 않았다. [생성 코드](Artifacts/BossArena/prepare_boss_arena.cs), [검증 코드](Artifacts/BossArena/verify_boss_arena.cs), [검증 결과](Artifacts/BossArena/verification.json)
+- 인계는 PlayTestScene의 오른쪽 보스 구역에서 플레이하며 패턴을 조정하는 것이다. 보스와 소환 적의 외형은 개발용 도형이다.
+
+### 2026-11-09 — 보스전 자연 진행과 사망 후 복귀 검증
+
+- PlayTestScene을 복사해 Unity 6000.6.6f1 macOS 검증 빌드로 실행했다. 관찰 코드는 플레이어 위치만 옮기고 실제 게임 루프가 물리와 패턴 타이머를 진행하게 했다. 키보드·마우스 입력을 사용하지 않았으며 체크포인트는 임시 슬롯에 저장했다.
+- 두 번의 소환에서 각각 세 마리가 추가됐다. 패턴 종료부터 다음 시작까지 게임 시간으로 돌진 → 내려찍기 3.000초, 내려찍기 → 소환 3.000초, 소환 → 광역 5.000초, 광역 → 돌진 3.000초, 돌진 → 소환 3.000초를 관측했다. 실시간으로는 3초 구간이 2.998~3.000초, 5초 구간이 4.997초였다.
+- 소환 적과 반복 접촉해 체력이 0이 되자 실제 씬 재로드가 실행됐다. 새 플레이어는 입구 체크포인트 `playtest-boss-entrance`의 좌표 `(6.500, 0.410, 0.000)`에서 체력 100으로 복원됐고, 보스는 체력 2250과 소환 적 0마리 상태로 초기화됐다. 총 23/23을 통과했다. [빌드 코드](Artifacts/BossArenaLive/build_boss_arena_live.cs), [관찰 코드](Artifacts/BossArenaLive/observe_boss_arena.cs), [검증 결과](Artifacts/BossArenaLive/verification.json)
+
+### 2026-11-09 — 비행 보스와 전용 테스트 아레나
+
+- `FlyingBossEnemy.cs`, `BossChargeMinion.cs`, `EnemyDash.cs`로 체력 3400의 부유 보스와 다섯 패턴을 구현했다. `FragmentEnemy.cs`는 비행 보스가 소환할 때 바닥 위에서 부유하고, `EnemyProjectile.cs`는 선택적 낙하 가속도로 포물선을 지원한다. 기본 패턴 간격은 3초로 정했다. [Unity Rigidbody2D.Cast](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody2d/cast), [Unity PhysicsScene2D.Raycast](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/physicsscene2d/raycast)
+- `FlyingBossTestScene`을 빌드 목록에 추가하고 `Assets/Prefabs/PlayTest/`의 비행 보스, 돌진 소환 적, 투사체 프리팹과 기존 B 조각 적을 연결했다. 기존 PlayTestScene의 파일 해시는 일치했다. [아레나 생성 코드](Artifacts/FlyingBossArena/prepare_flying_boss_arena.cs)
+- Unity 6000.6.6f1 macOS 임시 빌드를 키보드·마우스 조작 없이 두 번 실행했다. 벽 돌진 시나리오 21/21과 바닥 돌진 시나리오 22/22가 통과했다. 실제 게임 루프에서 조각 적 4·5마리 소환, 돌진 적의 2.000초 간격과 방향 고정, X자·십자 1.500초 간격, 포물선 3발과 방사형 4+4발, 투사체의 지형 충돌 제거를 확인했다. 관찰 코드는 플레이어를 검증 위치로 옮기고 발사 후 별도 지형 충돌용 투사체를 만들었다. [관찰 코드](Artifacts/FlyingBossArena/verify_flying_boss_live.cs), [검증 결과](Artifacts/FlyingBossArena/verification.json)
+- 인계는 전용 아레나에서 패턴 조작감과 난이도를 직접 조정하는 것이다. 외형은 테스트 도형이며 검증은 그래픽 없이 실행했다.
+
+### 2026-11-10 — 플레이어 점프 설정과 중력 배율 9.8 적용
+
+- 소스 초기값을 바꿔도 두 씬에 저장된 기존 Inspector 값이 실행에 사용되고 있었다. `PlayerBase.cs`와 두 테스트 씬의 중력 배율을 9.8로 맞추고 사용자가 수정한 점프 시작 속도 50과 높이 상한 30을 씬에 반영했다. 해제 배율 1.5는 기존 `Clamp01`에서 1이 되므로 씬에는 1을 저장했다. 최대 이동 속도는 5다. [Unity 직렬화 필드](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/serializefield), [Unity 중력 배율](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody2d/gravityscale)
+- Unity CLI에서 두 씬의 Inspector 값을 읽고 PlayTestScene의 실제 2D 물리를 진행해 16/16을 확인했다. 점프 시작 속도 50, 첫 물리 스텝 후 속도 48.07724, 조기 해제 순간 속도 유지와 실제 상승 12.502유닛을 기록했다. 기존 이동 대역 검사의 0.5 해제 배율은 검증용 입력으로 명시해 27/27을 통과했다. 다음 조정은 씬의 Player Inspector에서 비교한다. [검증 코드](Artifacts/PlayerGravityTuning/verify_player_gravity_tuning.cs), [검증 결과](Artifacts/PlayerGravityTuning/verification.json)
+
+### 2026-11-10 — 플레이어 점프 설정 재확인
+
+- 현재 소스 초기값은 점프 시작 속도 18.5, 높이 상한 3, 해제 배율 1, 중력 배율 9.8이다. 기존 두 씬은 속도 50과 높이 상한 30을 저장하며, 해제 배율과 중력 배율은 소스와 같다. 이번 요청은 재확인이므로 해당 차이를 문서에 기록했다.
+- 현재 소스와 씬으로 Unity CLI 검증을 다시 실행해 16/16을 통과했다. 두 씬의 저장값을 읽었고 PlayTestScene에서 점프 시작 속도 50, 첫 물리 스텝 뒤 48.07724, 실제 상승 12.502유닛을 다시 측정했다. [재검증 결과](Artifacts/PlayerGravityTuning/recheck_2026-11-10.json)
+
+### 2026-11-10 — 점프 버튼 해제 시 수직 속도 반전
+
+- `PlayerBase.cs`의 해제 배율 범위를 -1~1로 넓히고 소스 기본값 및 PlayTestScene·FlyingBossTestScene에 -1을 저장했다. 상승 중 S를 놓으면 수직 속도에 한 번 곱해 같은 크기로 하강한다. 점프 시작 속도는 소스 기본값 12.5와 두 씬의 저장값 50으로 구분한다.
+- 키보드·마우스 없이 Unity CLI에서 두 씬을 각각 실행하고 실제 2D 물리를 진행했다. 두 씬 모두 해제 직전 +44.23172에서 직후 -44.23172로 반전하고 다음 물리 스텝에 하강했다. 각 씬 5/5와 이동 대역 검사 29/29를 통과했다. [검증 코드](Artifacts/JumpReleaseDive/verify_jump_release_dive.cs), [검증 결과](Artifacts/JumpReleaseDive/verification.json)
+
+### 2026-11-10 — 두 테스트 씬의 점프력 절반 조정
+
+- PlayTestScene과 FlyingBossTestScene의 `Jump Force` 저장값을 50에서 25로 낮췄다. 두 씬의 중력 배율은 9.8이고 해제 배율은 -1이다. 새 컴포넌트의 소스 초기값은 12.5다.
+- 키보드·마우스 없이 두 씬을 Unity CLI PlayMode에서 검증해 총 8/8을 통과했다. S를 유지한 상태로 3.001유닛 상승했고, 비행 보스 씬에서 플레이어 충돌체와 천장 사이 최소 여유는 3.188유닛이었다. 지상 보스 구역의 입구 벽도 실제 점프로 통과했다. [검증 코드](Artifacts/PlayerJumpHalf/verify_player_jump_half.cs), [검증 결과](Artifacts/PlayerJumpHalf/verification.json)
+
+### 2026-11-10 — 유지 점프와 짧은 점프 높이 조정
+
+- 두 테스트 씬의 `Jump Force`는 25에서 27.82, `Jump Release Multiplier`는 -1에서 0.704로 조정했다. 상승 중 해제 직후에는 위쪽 속도가 남아 중력으로 점차 상승을 끝낸다. 짧은 입력의 비교 기준은 물리 3스텝인 0.06초다.
+- 두 씬을 Unity CLI PlayMode에서 키보드·마우스 없이 검증해 12/12를 통과했다. 유지 점프는 3.001→3.752유닛으로 1.250배, 0.06초 점프는 1.269→2.538유닛으로 2.000배였다. 즉시 탭은 1.802유닛 상승했다. 지상 보스 입구 벽을 통과했고 비행 보스 씬의 천장 여유는 2.436유닛이었다. 이후 조작감 비교는 같은 입력 길이와 씬을 기준으로 한다. [검증 코드](Artifacts/PlayerJumpRetune/verify_player_jump_retune.cs), [검증 결과](Artifacts/PlayerJumpRetune/verification.json)
+
+### 2026-11-10 — 이동·점프 공통 기준 확정
+
+- 두 테스트 씬의 현재 값을 `PlayerBase.cs` 초기값에 맞췄다. 차이가 있던 점프 시작 속도, 높이 상한, 중력 배율, 해제 배율에 27.82, 30, 9.8, 0.704를 적용했다. 이동·점프 공통 기준의 변경은 사용자가 명시적으로 요청할 때만 진행하도록 `AGENTS.md`에 기록했다.
+- Unity CLI의 편집 모드에서 새 PlayerBase와 두 씬의 저장된 컴포넌트를 확인해 29/29를 통과했다. 다음 조정 전에도 같은 기준 검사로 세 곳의 일치를 확인할 수 있다. [검증 코드](Artifacts/PlayerMovementBaseline/verify_player_movement_baseline.cs), [검증 결과](Artifacts/PlayerMovementBaseline/verification.json)
+
+### 2026-11-10 — 점프 해제·최고점의 하강 충격량
+
+- `PlayerBase.cs`와 두 씬에 `Jump Descent Speed Boost` 1.5유닛/초를 추가했다. 상승 중 S를 놓거나 최고점에서 상승이 끝나면 `AddForce`의 충격량 모드로 아래 방향 힘을 점프당 한 번 적용한다. 조기 해제 시 기존 배율 적용 뒤에 힘을 준다. `JumpPathDisplay.cs`는 최고점의 하강 충격량도 예측한다. [Unity Rigidbody2D.AddForce](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rigidbody2d/addforce)
+- Unity CLI PlayMode에서 키보드·마우스 없이 두 씬을 각각 검사해 16/16을 통과했다. 질량 2.5인 검증 바디에서도 해제와 최고점의 수직 속도가 추가로 1.5유닛/초 감소했고, 중복 적용 방지·중력 설정·최고점 예측 일치를 확인했다. 이동 대역 검사도 33/33을 통과했다. [검증 코드](Artifacts/JumpDescentImpulse/verify_jump_descent_impulse.cs), [검증 결과](Artifacts/JumpDescentImpulse/verification.json)
+
+### 2026-11-10 — PlayerBase 설정의 씬 직렬화 제거
+
+- 지정된 능력치·이동·점프·공격·특수 목록 20개에서 `SerializeField`와 관련 Inspector 속성을 제거했다. 두 씬을 불러오면 코드 초기값을 적용하므로 기존 저장값 27.82와 초당 공격 2회 대신 점프력 35와 초당 공격 1회를 사용한다. 특수 레시피와 장비 목록은 코드의 빈 배열로 시작한다. [Unity 직렬화 필드](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/serializefield)
+- Unity CLI에서 두 씬의 직렬화 속성 수 0, 코드 초기값, PlayTestScene의 실제 시작 체력과 점프 시작 속도를 확인해 9/9를 통과했다. [검증 코드](Artifacts/PlayerCodeSettings/verify_player_code_settings.cs), [검증 결과](Artifacts/PlayerCodeSettings/verification.json)
+
+### 2026-11-10 — PlayerBase 직렬화 제거 작업 복구
+
+- 마지막 작업의 검증 복사본을 기준으로 `PlayerBase.cs`에서 빠진 점프 해제 배율 0.704와 적용 로직, 하강 충격량 계산을 복구했다. 설정 필드는 비직렬화 상태이며 점프력 35와 초당 공격 1회를 사용한다.
+- 복구 파일을 검증 복사본과 대조했다. 이번 복구의 테스트는 사용자 요청으로 생략했다.
+
+### 2026-11-10 — 점프 하강 충격량을 중력 배율에 연동
+
+- `PlayerBase.cs`의 설정 필드가 비직렬화 상태임을 확인했다. 고정 하강 속도 보정을 `Gravity Scale × 0.75`의 하향 충격량으로 교체했다. 상승 중 입력 해제와 최고점 도달 중 먼저 일어난 시점에 점프당 한 번 적용하며 궤적 예측도 같은 충격량을 사용한다.
+- `Artifacts/PlayerMovement/MovementChecks.cs`의 기존 하강 검증 입력과 기대값을 새 공식에 맞췄다. 소스와 문서를 대조했고 플레이 테스트 및 검증 코드는 실행하지 않았다.
+
+### 2026-11-10 — 점프 해제와 최고점의 하강 강도 조정
+
+- `PlayerBase.cs`에서 S를 놓을 때 Y 속도에 곱하던 해제 배율을 제거했다. `jumpDescentStrength`를 비직렬화 필드로 분리해 기본값 0.5를 두고, S 해제와 최고점에서 `Gravity Scale × jumpDescentStrength`를 `AddForce`의 충격량 모드로 점프당 한 번 적용한다. 예상 점프 경로도 같은 공식을 사용한다.
+- [이동 검증 코드](Artifacts/PlayerMovement/MovementChecks.cs)를 갱신해 .NET 대역 검사 29/29를 통과했다. 중력 배율 9.8, 질량 2, 해제 전 Y 속도 6에서 적용 후 3.55를 확인했다. Unity 플레이 테스트는 생략했다.
+
+### 2026-11-11 — 현재 Y 속도를 기준으로 점프 해제 복구
+
+- `PlayerBase.cs`에서 상승 중 S를 놓을 때 현재 Y 속도에 비직렬화 배율 `jumpReleaseMultiplier = -0.75f`를 점프당 한 번 곱한다. 중력 배율 기반 충격량을 제거했고 S를 유지하면 최고점부터 중력으로 하강한다. `JumpPathDisplay.cs`는 실제 현재 속도에서 궤적을 계산한다.
+- [이동 검증 코드](Artifacts/PlayerMovement/MovementChecks.cs)의 .NET 대역 검사 28/28을 통과했다. 해제 시 6에서 -4.5로 바뀌는 경우와 중복 적용 방지, 최고점과 하강 중 속도 보존을 확인했다. Unity 플레이 테스트는 생략했다.
+
+### 2026-11-11 — 점프 하강 중력 1.75배 적용
+
+- `PlayerBase.cs`에서 최고점이나 S 해제로 하강이 시작되면 직전 중력 배율을 1.75배로 적용하고 착지 시 복원한다. 상승 중 S 해제의 Y 속도 배율은 -0.75다. `JumpPathDisplay.cs`는 궤적 계산 중 하강 전환 시 같은 중력 배율을 적용한다.
+- [이동 검증 코드](Artifacts/PlayerMovement/MovementChecks.cs)의 .NET 대역 검사 37/37을 통과했다. 상승 9.8, 최고점·조기 해제 후 하강 17.15, 착지와 비활성화 시 9.8 복원을 확인했다. Unity 플레이 테스트는 생략했다.
