@@ -1,0 +1,40 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "dateSeoul": "2026-11-10",
+  "method": "Separate Unity CLI PlayMode runs with actual 2D physics and direct input-state setup, without keyboard or mouse. Probe used Rigidbody2D mass 2.5 to validate the mass-normalized impulse.",
+  "runs": {
+    "PlayTestScene": {
+      "passed": 8,
+      "failed": 0,
+      "checks": [
+        "[JumpImpulse] 입력 씬에 저장된 하강 보정 | 기대 1.50000 | 실제 1.50000",
+        "[JumpImpulse] 입력 해제 직후 수직 속도 | 기대 14.02441 | 실제 14.02441",
+        "[JumpImpulse] 입력 해제로 이미 적용한 뒤 최고점 | 기대 -1.35766 | 실제 -1.35766",
+        "[JumpImpulse] 입력 버튼 유지 최고점의 충격량 | 기대 -2.52139 | 실제 -2.52139",
+        "[JumpImpulse] 입력 최고점 예측 수직 속도 | 기대 -2.52139 | 실제 -2.52139",
+        "[JumpImpulse] 입력 최고점 이후 해제 시 추가 충격량 없음 | 기대 -2.52139 | 실제 -2.52139",
+        "[JumpImpulse] 입력 플레이어 중력 배율 유지 | 기대 9.80000 | 실제 9.80000",
+        "[JumpImpulse] 입력 월드 중력 유지 | 기대 -9.81000 | 실제 -9.81000"
+      ]
+    },
+    "FlyingBossTestScene": {
+      "passed": 8,
+      "failed": 0,
+      "checks": [
+        "[JumpImpulse] 입력 씬에 저장된 하강 보정 | 기대 1.50000 | 실제 1.50000",
+        "[JumpImpulse] 입력 해제 직후 수직 속도 | 기대 14.02441 | 실제 14.02441",
+        "[JumpImpulse] 입력 해제로 이미 적용한 뒤 최고점 | 기대 -1.35766 | 실제 -1.35766",
+        "[JumpImpulse] 입력 버튼 유지 최고점의 충격량 | 기대 -2.52139 | 실제 -2.52139",
+        "[JumpImpulse] 입력 최고점 예측 수직 속도 | 기대 -2.52139 | 실제 -2.52139",
+        "[JumpImpulse] 입력 최고점 이후 해제 시 추가 충격량 없음 | 기대 -2.52139 | 실제 -2.52139",
+        "[JumpImpulse] 입력 플레이어 중력 배율 유지 | 기대 9.80000 | 실제 9.80000",
+        "[JumpImpulse] 입력 월드 중력 유지 | 기대 -9.81000 | 실제 -9.81000"
+      ]
+    }
+  },
+  "movementRegression": {
+    "method": "Unity API test doubles",
+    "passed": 33,
+    "failed": 0
+  }
+}

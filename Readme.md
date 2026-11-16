@@ -1,6 +1,6 @@
 # 프로젝트 현황과 과거 메카 작업 기록
 
-- 최종 문서 갱신: 2026-11-11 (Asia/Seoul)
+- 최종 문서 갱신: 2026-11-16 (Asia/Seoul)
 - 현재 프로젝트는 메카 프로젝트가 아니다. 아트는 스프라이트 기반 2D이며, 게임 분위기의 참고작은 데드 셀, 할로우 나이트, Hellfurnace다. 할로우 나이트와 Hellfurnace처럼 윤곽선이 있는 그래픽을 게임 전반에 적용한다. 플레이어는 현대 어반 콘셉트의 인간형이며 오른팔과 왼다리가 기계로 대체되어 있고 오른팔로 공격한다. 인게임 스프라이트는 약 5등신을 목표로 한다. [스탠딩 시안 v2](Artifacts/PlayerStandingConcept/PlayerStandingConcept_v2.png)는 검토용이며 외형은 아직 승인되지 않았다.
 - 플레이어 조작감의 참고도 할로우 나이트로 지정되었다. 실제 원작 수치는 측정하지 않았으며, 빠른 반응을 목표로 시험 설정을 비교한다.
 - 아래 메카 모델·리그·조립 관련 내용은 과거 작업 기록이며 현재 프로젝트의 아트 방향이나 구현 목표가 아니다.
@@ -13,15 +13,15 @@ Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더
 
 현재 작업 폴더의 `Assets/Function/`에는 플레이어·조각 수집, 적 및 환경 장애물 코드가 있다. [PlayerBase.cs](Assets/Function/Player/PlayerBase.cs)는 2D 횡스크롤 좌우 이동·점프, 공격, 접촉 피해, 조각 수집·특수 사용을 관리한다.
 
-- 방향키 좌우로 가속하고 입력을 놓으면 감속하며 S로 점프한다. `Rigidbody2D`와 `Collider2D`가 필요하고 중력·충돌체와 `Ground Layers`를 설정해야 한다. 지면은 아래 방향 0.05 단위 캐스트와 위쪽 법선으로 판정하며, 상승 중에는 점프 가능 상태를 갱신하지 않는다.
+- 방향키 좌우로 가속하고 입력을 놓으면 감속하며 A로 점프한다. `Rigidbody2D`와 `Collider2D`가 필요하고 중력·충돌체와 `Ground Layers`를 설정해야 한다. 지면은 아래 방향 0.05 단위 캐스트와 위쪽 법선으로 판정하며, 상승 중에는 점프 가능 상태를 갱신하지 않는다.
 - `maximumMovementSpeed` 5는 목표 최대 속도(단위/초), `Movement Acceleration` 기본 120과 `Movement Deceleration` 기본 180은 속도 변화량(단위/초²)이다. 입력 시 목표 속도로 가속하고 해제 시 0으로 감속한다. 방향 전환에는 가속도를 사용하며 공중에서도 같은 가속·감속을 적용한다. 가속도·감속도 0은 해당 속도 변화를 멈춘다.
 - `Jump Force`는 점프 시작 시 적용하는 위쪽 속도(단위/초)다. `Maximum Jump Height`는 이륙 당시 Rigidbody2D 위치에서의 상승 높이 상한이다. `PlayerBase` 소스 초기값은 각각 35와 30이다. 실제 높이는 초기 속도·하향 중력·충돌에도 좌우된다. 높이 또는 점프력 0이면 점프하지 않는다. Dynamic 바디와 하향 중력을 사용한다.
 - `Gravity Scale`과 `Movement Friction`을 Awake에서 Rigidbody2D에 적용한다. `PlayerBase`의 코드 중력 배율은 9.8이다. 배율 9.8은 월드 중력 Y=-9.81에 곱해져 플레이어에 약 -96.14 유닛/초²를 적용한다. 마찰 기본값은 0이며 플레이어별 런타임 PhysicsMaterial2D에 기존 바디 재질의 탄성 값을 복사한다. 런타임 재질은 OnDestroy에서 해제한다. 개별 Collider에 별도 재질을 지정한 다른 구성은 추가 확인이 필요하다.
 - `Coyote Time` 기본 0.12초 동안 발판을 벗어난 뒤에도 한 번 점프할 수 있다. 점프에 사용하면 소진하며 공중 재점프는 허용하지 않는다. 착지하면 다시 점프할 수 있고 버튼을 계속 누르는 것만으로 자동 재점프하지 않는다.
-- 상승 중 S를 놓으면 현재 Y 속도에 `jumpReleaseMultiplier` 기본값 -0.75를 점프당 한 번 곱한다. 물리 갱신 사이의 빠른 탭에도 적용하며 하강 중에 놓으면 현재 속도를 유지한다. 점프가 최고점 또는 입력 해제로 하강을 시작하면 `jumpFallGravityMultiplier` 기본값 1.75를 하강 전 Rigidbody2D 중력 배율에 곱한다. 기본값 9.8에서 하강 중 배율은 17.15이며 착지 시 기존 배율을 복원한다. 점프 경로 예측에도 같은 중력 전환을 적용한다.
+- 점프 최고점에 도달하거나 상승 중 A를 놓으면 `jumpFallGravityMultiplier` 기본값 1.75를 해당 시점의 Rigidbody2D 중력 배율에 곱한다. 기본 배율 9.8에서는 17.15를 적용하고 착지 시 기존 배율을 복원한다. 물리 갱신 사이의 빠른 탭에도 적용하며 점프 경로 예측에도 같은 중력 전환을 반영한다.
 - `PlayerBase`의 능력치·이동·점프·공격·특수 목록은 비직렬화 private 필드다. 두 테스트 씬을 불러오면 소스 초기값을 사용한다.
 - 위 이동·점프 수치는 `PlayerBase`와 두 테스트 씬의 공통 기준이다. 사용자가 해당 수치 변경을 명시적으로 요청할 때만 수정한다.
-- A를 누르고 있으면 `Attacks Per Second` 횟수/초로 마지막 좌우 이동 방향의 사각 범위를 검사하고 각 `EnemyBase`에 `AttackPower`만큼 피해를 한 번씩 적용한 뒤 `AttackRequested` 이벤트를 발생시킨다. 적의 여러 Collider가 겹쳐도 한 공격에서 중복 피해를 주지 않으며 트리거는 검사하지 않는다. 공격 범위와 레이어는 `PlayerBase` 코드에서 설정한다. D는 준비된 조합의 특수 시전을 시도한다.
+- S를 누르고 있으면 `Attacks Per Second` 횟수/초로 마지막 좌우 이동 방향의 사각 범위를 검사하고 각 `EnemyBase`에 `AttackPower`만큼 피해를 한 번씩 적용한 뒤 `AttackRequested` 이벤트를 발생시킨다. 적의 여러 Collider가 겹쳐도 한 공격에서 중복 피해를 주지 않으며 트리거는 검사하지 않는다. 공격 범위와 레이어는 `PlayerBase` 코드에서 설정한다. D는 준비된 조합의 특수 시전을 시도한다.
 - 시작 시 현재 체력을 코드의 최대 체력 100으로 초기화한다. `ApplyDamage`로 체력이 처음 0이 되면 사망 상태에서 입력·조각 수집·특수 사용을 멈추고 마지막 체크포인트를 불러온다. 유효한 저장이 없으면 사망 상태로 남는다. 넉백·사망 및 피격 연출은 후속 작업이다.
 - 활성화된 적에 닿으면 적의 `Attack Power`만큼 체력이 줄어든다. 사망 상태이거나 비활성화된 적은 접촉 피해를 주지 않는다. 적과 장애물은 일반 충돌과 트리거를 모두 지원하며, 피해 컴포넌트는 Collider가 달린 오브젝트 또는 그 부모에서 찾는다.
 - 환경에 접촉 피해를 주려면 [DamagedObstacle](Assets/Function/Environment/DamagedObstacle.cs)을 붙이고 Inspector에서 `Damage`(기본 10)를 설정한다. 같은 오브젝트 또는 자식에 `Collider2D`가 필요하며, 플레이어와 장애물의 물리 레이어 간 충돌을 허용해야 한다. `Is Trigger`를 켜면 통과하면서 피해를 받고, 끄면 일반 물리 충돌과 함께 피해를 받는다.
@@ -46,7 +46,8 @@ Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더
 
 적 FSM은 초기 `Idle`과 `Patrol`, `Chase`, `Attack`, `Groggy`, `Dead`, `Windup` 상태를 제공한다. `TryChangeState`로 수동 전환하며 정의되지 않은 값과 동일 상태는 거부하고, 성공 시 `StateChanged` 이벤트에 이전·새 상태를 전달한다. 치명적인 피해는 `Dead`로 전환하고 `IsDefeated`를 설정하며 `Defeated` 이벤트를 한 번 발생시킨다. 처치 후 재피해·다른 상태 전환은 거부한다. 단순한 수동 `Dead` 전환은 처치·드롭을 실행하지 않는다. 공통 적 오브젝트 자동 제거와 그로기 누적·회복·저항 계산은 미구현이다.
 
-- 플레이어의 근접 공격은 `ApplyPlayerDamage`를 호출한다. 유효한 피해를 받으면 [EnemyWhiteFlash](Assets/Function/Enemy/EnemyWhiteFlash.cs)가 적 소유 스프라이트의 투명도와 실루엣을 유지하며 밝은 회색 sRGB `(230, 230, 230)`을 0.05초간 표시한다. 재피격하면 종료 시각을 갱신하고, 종료 또는 비활성화 시 원래 머티리얼을 복원한다. 플레이어가 사용하는 신규 투사체·특수 효과에서도 같은 메서드로 피해를 전달할 수 있다. 일반 `ApplyDamage`는 체력과 처치만 처리한다.
+- 플레이어의 근접 공격은 `ApplyPlayerDamage(damage, attacker)`를 호출한다. 유효한 피해가 명중하면 적 스프라이트는 실제 시간 기준 0.03초 동안 밝은 회색 sRGB `(230, 230, 230)`을 표시한다. 투명도와 실루엣을 유지하고 시간이 지난 뒤 첫 갱신 또는 비활성화 시 원래 머티리얼을 복원한다. [EnemyWhiteFlash](Assets/Function/Enemy/EnemyWhiteFlash.cs)
+- 명중하면 공격자와 피격 대상의 `Animator` 재생 속도를 0으로 설정하고 실제 시간 기준 0.01초 뒤 기존 속도로 복원한다. 직교 메인 카메라에는 렌더링 중 화면 기준 상하좌우 방향으로 약 5픽셀의 흔들림을 0.005초 적용한다. 두 효과의 표시와 복원은 프레임 단위로 처리한다. 투사체나 특수 효과에서 공격자의 `Animator`도 정지하려면 `attacker`를 전달한다. 일반 `ApplyDamage`는 체력과 처치만 처리한다. [GameHitStop](Assets/Function/GameHitStop.cs), [AttackCameraShake](Assets/Function/AttackCameraShake.cs)
 - 기존 등급 클래스는 `FragmentEnemy`, `NormalEnemy`, `AdvancedEnemy : NormalEnemy`, `BossEnemy`다. 조각 적은 실제 플레이어 피해를 기준으로 Inspector 체력을 조절해야 한두 번에 처치할 수 있다. 아래 행동 클래스는 별도로 `EnemyBase`의 능력치·처치·조각 드롭을 상속한다.
 - [TestEnemy](Assets/Function/Enemy/TestEnemy.cs)는 `EnemyBase`를 직접 상속한다. Inspector에서 `Held Object Type`과 `Held Object`를 지정하면 Player 공격으로 체력이 0이 될 때 공통 처치 처리로 조각 하나가 드롭된다. 미지정 시 경고만 발생한다.
 - 조합에 필요한 조각 수와 특수 사용 횟수는 현재 각각 코드 상수 3이다. N개로의 확장과 조합별 실제 효과·UI는 후속 작업이다.
@@ -76,7 +77,7 @@ Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더
 | 포물선 사격 | 플레이어 위치를 조준한 중앙탄과 좌우 15도에 한 발씩, 총 3발을 발사한다. 탄은 낙하 가속도를 받고 지형이나 플레이어에 닿으면 제거된다. |
 | 방사형 사격 | X자로 직선탄 4발을 쏘고 1.5초 뒤 십자로 4발을 쏜다. |
 
-`FlyingBossTestScene`을 열고 Play를 누르면 바로 시험할 수 있다. 경기장에는 바닥·양쪽 벽·천장과 비행 중앙선, 시작 체크포인트가 있다. 좌우 방향키로 이동하고 S로 점프, A로 공격한다. 기존 테스트용 B 조각 적 프리팹을 재사용했으며 보스, 돌진 적, 투사체에는 단색 테스트 외형을 연결했다. [FlyingBossTestScene](Assets/Scenes/TestScene/FlyingBossTestScene.unity), [FlyingTestBoss.prefab](Assets/Prefabs/PlayTest/FlyingTestBoss.prefab)
+`FlyingBossTestScene`을 열고 Play를 누르면 바로 시험할 수 있다. 경기장에는 바닥·양쪽 벽·천장과 비행 중앙선, 시작 체크포인트가 있다. 좌우 방향키로 이동하고 A로 점프, S로 공격한다. 기존 테스트용 B 조각 적 프리팹을 재사용했으며 보스, 돌진 적, 투사체에는 단색 테스트 외형을 연결했다. [FlyingBossTestScene](Assets/Scenes/TestScene/FlyingBossTestScene.unity), [FlyingTestBoss.prefab](Assets/Prefabs/PlayTest/FlyingTestBoss.prefab)
 
 ### 적 행동 클래스
 
@@ -94,17 +95,17 @@ Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더
 
 ### 플레이 테스트 씬
 
-[PlayTestScene](Assets/Scenes/TestScene/PlayTestScene.unity)을 Unity에서 열고 Play를 누른 뒤 Game 화면을 클릭한다. 방향키로 이동, S로 점프, A를 누르고 있으면 정면 공격, 조각 3개 수집 후 D로 특수 시전을 시도할 수 있다. 현재 씬은 레시피가 연결되기 전이므로 D를 눌러도 준비된 횟수를 보존한다. 시작 구역의 적 세 마리는 각각 체력 30이며 씬 안의 원본에서 A/B/C 조각을 드롭한다. 플레이어의 코드 공격력은 10이며 초당 한 번 공격할 수 있다. 씬 전용 [PlayTestDisplay.cs](Assets/Scenes/TestScene/PlayTestDisplay.cs)는 시작 구역의 임시 도형·상태 표시와 적 외형 비활성화를 담당한다.
+[PlayTestScene](Assets/Scenes/TestScene/PlayTestScene.unity)을 Unity에서 열고 Play를 누른 뒤 Game 화면을 클릭한다. 방향키로 이동, A로 점프, S를 누르고 있으면 정면 공격, 조각 3개 수집 후 D로 특수 시전을 시도할 수 있다. 현재 씬은 레시피가 연결되기 전이므로 D를 눌러도 준비된 횟수를 보존한다. 시작 구역의 적 세 마리는 각각 체력 30이며 씬 안의 원본에서 A/B/C 조각을 드롭한다. 플레이어의 코드 공격력은 10이며 초당 한 번 공격할 수 있다. 씬 전용 [PlayTestDisplay.cs](Assets/Scenes/TestScene/PlayTestDisplay.cs)는 시작 구역의 임시 도형·상태 표시와 적 외형 비활성화를 담당한다.
 
-시작 구역에서 오른쪽으로 이동하면 `BOSS ARENA` 표지와 입구 체크포인트가 나온다. 오른쪽으로 이동하면서 S를 길게 눌러 낮은 입구 벽을 넘는다. 카메라는 플레이어를 수평으로 따라간다. 보스가 벽에서 방 안을 바라볼 때 바닥의 빨간 표식은 내려찍기, 주황 표식은 광역 공격 범위를 가리킨다. 테스트 보스는 씬 시작 뒤 기존 패턴을 자동으로 진행한다.
+시작 구역에서 오른쪽으로 이동하면 `BOSS ARENA` 표지와 입구 체크포인트가 나온다. 오른쪽으로 이동하면서 A를 길게 눌러 낮은 입구 벽을 넘는다. 카메라는 플레이어를 수평으로 따라간다. 보스가 벽에서 방 안을 바라볼 때 바닥의 빨간 표식은 내려찍기, 주황 표식은 광역 공격 범위를 가리킨다. 테스트 보스는 씬 시작 뒤 기존 패턴을 자동으로 진행한다.
 
 보스 프리팹은 시작 체력 2250이며, 소환 적은 체력 20·접촉 피해 10으로 설정했다. 소환 적은 기본 공격 두 번에 처치되고 B 조각을 떨어뜨린다. [TestBoss.prefab](Assets/Prefabs/PlayTest/TestBoss.prefab), [BossFragmentEnemy.prefab](Assets/Prefabs/PlayTest/BossFragmentEnemy.prefab)
 
-S로 점프가 시작되면 게임 화면에 민트색 실선으로 지나온 경로를, 노란 점으로 현재 입력 기준의 예상 경로를 표시한다. 방향을 바꾸거나 S를 일찍 놓으면 예측을 갱신하며, 예측은 첫 충돌 또는 최대 1.8초까지만 표시한다. 착지 후 실선은 1.25초 동안 남는다. [점프 경로 코드](Assets/Scenes/TestScene/JumpPathDisplay.cs), [게임 화면 예시](Artifacts/JumpTrajectory/jump_path_centered.png)
+A로 점프가 시작되면 게임 화면에 민트색 실선으로 지나온 경로를, 노란 점으로 현재 입력 기준의 예상 경로를 표시한다. 방향을 바꾸거나 A를 일찍 놓으면 예측을 갱신하며, 예측은 첫 충돌 또는 최대 1.8초까지만 표시한다. 착지 후 실선은 1.25초 동안 남는다. [점프 경로 코드](Assets/Scenes/TestScene/JumpPathDisplay.cs), [게임 화면 예시](Artifacts/JumpTrajectory/jump_path_centered.png)
 
 테스트 화면 상단의 HP는 현재 체력과 최대 체력을 표시한다. 배치된 A/B/C 적의 접촉 피해는 각 10이며, 적에게 계속 닿아 있으면 기본 0.75초 간격으로 체력이 줄어든다. [피격 화면 예시](Artifacts/PlayTestEnemyContact/contact_damage.png)
 
-플레이어가 적을 처치하면 테스트 표시 코드가 적의 충돌체를 끄고 0.05초 플래시가 끝나면 외형을 숨긴다.
+플레이어가 적을 처치하면 테스트 표시 코드가 적의 충돌체를 끄고 WhiteFlash가 끝나면 외형을 숨긴다.
 
 다음 작업은 사망 UI와 오디오 믹서를 연결하는 것이다. 세 적과 위험 장애물의 씬 배치, 투사체 외형, 플레이어 피격·사망 연출, 조합별 특수 효과와 실제 캐릭터·조각 에셋 연결도 남아 있다.
 
@@ -236,6 +237,8 @@ Mech/
 3. 소스코드·클래스를 추가할 때는 클래스·메서드·변수의 이름만 읽어도 역할, 동작, 값의 의미를 파악할 수 있도록 구성한다. 예: `ValidateSocketCompatibility`, `maximumMovementSpeed`. 기능 설명을 주석에만 의존하지 않으며, 필요한 설계 이유·제약에 대한 주석은 허용한다.
 4. 테스트 코드를 작성할 때는 각 테스트의 **입력값과 기대 결과를 주석으로 명시**한다. 실행 결과에도 입력값·기대값·실제값을 출력하고, assertion으로 성공·실패를 판정한다. 예: `입력: 이동 속도 -1 → 기대: 유효성 검사 false → 실제: false`. 테스트를 실행하지 않았다면 예상 결과와 실제 실행 결과를 구분하여 기록한다.
 5. 앞으로 새로 만드는 함수·메서드에는 선언 바로 위에 **어떤 기능을 하는지 설명하는 한국어 한 줄 주석**을 작성한다. 언어에 맞는 한 줄 주석 문법을 사용하며, 역할을 드러내는 이름도 유지한다.
+
+6. **불필요한 기능은 구현하지 않는다.** 사용자가 명시적으로 요청하지 않은 기능은 구현 범위에 넣지 않는다. 요청에 없는 기능이 필요하다고 판단되면, 필요한 이유를 설명하고 사용자에게 먼저 물어본다. 사용자가 승인한 뒤에만 구현한다.
 
 이 규칙은 이후 코드 작성·수정과 테스트 추가의 기준이다. 이번 규칙 추가만을 이유로 기존 코드·에셋을 일괄 재작성하지 않는다.
 
@@ -1084,3 +1087,19 @@ YYYY-MM-DD — 작업명
 
 - `PlayerBase.cs`에서 최고점이나 S 해제로 하강이 시작되면 직전 중력 배율을 1.75배로 적용하고 착지 시 복원한다. 상승 중 S 해제의 Y 속도 배율은 -0.75다. `JumpPathDisplay.cs`는 궤적 계산 중 하강 전환 시 같은 중력 배율을 적용한다.
 - [이동 검증 코드](Artifacts/PlayerMovement/MovementChecks.cs)의 .NET 대역 검사 37/37을 통과했다. 상승 9.8, 최고점·조기 해제 후 하강 17.15, 착지와 비활성화 시 9.8 복원을 확인했다. Unity 플레이 테스트는 생략했다.
+
+### 2026-11-16 — 기능 구현 범위 명시
+
+- 요청/목적: 요청에 없는 기능을 임의로 구현하지 않도록 개발 규칙을 명시한다.
+- 변경 파일: `Readme.md`. 2절에 추가 기능이 필요하다고 판단되면 이유를 설명하고 사용자 승인 후 구현한다는 원칙을 추가했다.
+- 검증·인계: 기존 산출물 범위 규칙과 일치함을 확인했다. 문서만 변경했으며 이후 기능 구현에 적용한다.
+
+### 2026-11-16 — 근접 공격 명중 연출
+
+- `PlayerBase.cs`에서 공격자를 `EnemyBase.ApplyPlayerDamage`에 전달하도록 연결했다. `EnemyWhiteFlash.cs`는 최소 3프레임·0.01초를 유지하도록 조정했다. `GameHitStop.cs`는 공격자와 피격 적의 `Animator` 속도를 0.01초 동안 정지하고, `AttackCameraShake.cs`는 직교 메인 카메라 렌더 중 상하좌우로 약 5픽셀의 오프셋을 0.005초 적용한다. [Unity Animator 재생 속도](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/animator/speed), [Unity 카메라 렌더링 콜백](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/rendering/renderpipelinemanager/begincamerarendering)
+- Unity 6000.6.6f1 명령줄 PlayMode에서 실제 근접 판정, URP 카메라 오프셋 5픽셀, `Animator` 속도 정지, 예약값 및 종료 조건을 직접 입력했을 때의 복원을 21/21 확인했다. 기존 두 테스트 씬의 임시 외형에는 `Animator`가 없어 정지 검증에는 임시 `Animator`를 사용했다. 실제 프레임 경과에 따른 체감과 캐릭터 애니메이션 클립 재생은 후속 확인 항목이다. [검증 결과](Artifacts/EnemyWhiteFlash/hit_effects_verification.txt)
+
+### 2026-11-16 — WhiteFlash 0.03초와 A 점프·S 공격
+
+- `EnemyWhiteFlash.cs`에서 최소 3프레임 조건을 제거하고 실제 시간 0.03초가 지나면 복원하도록 조정했다. `PlayerBase.cs`에서 A에 점프 시작·유지 입력을, S에 공격 입력을 연결했다. `PlayTestDisplay.cs` 조작 안내와 `MovementChecks.cs`의 점프 입력도 갱신했다.
+- Unity 6000.6.6f1 명령줄 PlayMode에서 가상 키 입력으로 A의 점프 요청과 유지·해제, S의 실제 피해 적용, WhiteFlash의 0.03초 예약 및 종료 조건에서 머티리얼 복원을 확인했다. 명중 연출 검사 25개를 통과했다. [검증 결과](Artifacts/EnemyWhiteFlash/key_mapping_and_duration_verification.txt)

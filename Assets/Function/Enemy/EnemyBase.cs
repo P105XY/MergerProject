@@ -64,14 +64,20 @@ namespace Mech.Function
             ApplyDamage(damage, false);
         }
 
-        // 플레이어가 준 피해에 피격 플래시를 적용한다.
+        // 공격 주체가 생략된 플레이어 피해에 적의 피격 연출을 적용한다.
         public void ApplyPlayerDamage(float damage)
         {
-            ApplyDamage(damage, true);
+            ApplyPlayerDamage(damage, null);
         }
 
-        // 유효한 피해로 체력을 줄이고 플레이어 공격이면 플래시를 시작한다.
-        private void ApplyDamage(float damage, bool fromPlayer)
+        // 플레이어 피해를 적용하고 공격자와 적에 명중 연출을 연결한다.
+        public void ApplyPlayerDamage(float damage, PlayerBase attacker)
+        {
+            ApplyDamage(damage, true, attacker);
+        }
+
+        // 유효한 피해로 체력을 줄이고 플레이어 공격이면 명중 연출을 시작한다.
+        private void ApplyDamage(float damage, bool fromPlayer, PlayerBase attacker = null)
         {
             if (IsDefeated || float.IsNaN(damage) || float.IsInfinity(damage) || damage <= 0f) {
                 return;
@@ -85,6 +91,9 @@ namespace Mech.Function
                 }
 
                 whiteFlash.Play(this);
+                GameHitStop.Play(this);
+                GameHitStop.Play(attacker);
+                AttackCameraShake.Play();
             }
 
             if (CurrentHealth <= 0f) {

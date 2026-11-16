@@ -1,0 +1,17 @@
+{
+  "date_kst": "2026-11-06",
+  "method_bodies_unchanged": {
+    "Attack": true,
+    "ApplyDamage": true,
+    "TryUseSpecial": true,
+    "TryCollectFragment": true
+  },
+  "preserved_files_unchanged": {
+    "Assets/Scenes/TestScene/PlayTestScene.unity": true,
+    "Assets/Function/Player/PlayerBase.cs.meta": true
+  },
+  "validation": "Unity DLL compile and Unity API test doubles; no Unity editor or PlayMode run",
+  "assertions_passed": 27,
+  "unity_version": "6000.6.6f1",
+  "source_sha256": "54faa6f82593101fd034b437c07abe2c40e68397e66f8125004d000685e4604a"
+}

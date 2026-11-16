@@ -1,0 +1,30 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "method": "Unity CLI opened both saved scenes in a temporary project copy. PlayTestScene ran with manually stepped real Unity 2D physics and no keyboard or mouse input.",
+  "passed": 16,
+  "failed": 0,
+  "checks": [
+    "[GravityTuning] 입력 FlyingBossTestScene 최대 이동 속도 | 기대 5 | 실제 5",
+    "[GravityTuning] 입력 FlyingBossTestScene 점프 속도 | 기대 50 | 실제 50",
+    "[GravityTuning] 입력 FlyingBossTestScene 높이 상한 | 기대 30 | 실제 30",
+    "[GravityTuning] 입력 FlyingBossTestScene 해제 배율 | 기대 1 | 실제 1",
+    "[GravityTuning] 입력 FlyingBossTestScene 중력 배율 | 기대 9.8 | 실제 9.8",
+    "[GravityTuning] 입력 FlyingBossTestScene 바디 중력 배율 | 기대 9.8 | 실제 9.8",
+    "[GravityTuning] 입력 PlayTestScene 최대 이동 속도 | 기대 5 | 실제 5",
+    "[GravityTuning] 입력 PlayTestScene 점프 속도 | 기대 50 | 실제 50",
+    "[GravityTuning] 입력 PlayTestScene 높이 상한 | 기대 30 | 실제 30",
+    "[GravityTuning] 입력 PlayTestScene 해제 배율 | 기대 1 | 실제 1",
+    "[GravityTuning] 입력 PlayTestScene 중력 배율 | 기대 9.8 | 실제 9.8",
+    "[GravityTuning] 입력 PlayTestScene 바디 중력 배율 | 기대 9.8 | 실제 9.8",
+    "[GravityTuning] 입력 PlayMode 점프 시작 수직 속도 | 기대 50 | 실제 50",
+    "[GravityTuning] 입력 PlayMode 첫 물리 스텝 후 수직 속도 | 기대 48.07724 | 실제 48.07724",
+    "[GravityTuning] 입력 PlayMode 상승 중 해제 직후 수직 속도 | 기대 48.07724 | 실제 48.07724",
+    "[GravityTuning] 입력 높이 상한 30 | 기대 실제 상승 12~13.5 | 실제 12.502"
+  ],
+  "measuredRise": 12.502,
+  "movementRegression": {
+    "method": "Unity API test doubles",
+    "passed": 27,
+    "failed": 0
+  }
+}

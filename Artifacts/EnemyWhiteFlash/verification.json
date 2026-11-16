@@ -1,0 +1,38 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "scene": "Assets/Scenes/TestScene/PlayTestScene.unity",
+  "method": "Unity MCP PlayMode, actual PlayerBase overlap attack and URP 2D render-texture readback, temporary checkpoint slot",
+  "passed": 13,
+  "failed": 0,
+  "checks": [
+    "[EnemyWhiteFlash] 입력 일반 피해 1과 유효하지 않은 플레이어 피해 0 | 기대 HP 99, 플래시 없음 | 실제 99, False",
+    "[EnemyWhiteFlash] 입력 플래시 전 어두운 스프라이트 | 기대 RGB 15, 35, 50 ±2 | 실제 RGBA(15, 35, 50, 255)",
+    "[EnemyWhiteFlash] 입력 근접 공격 10 | 기대 HP 89, 플래시 활성 | 실제 89, True",
+    "[EnemyWhiteFlash] 입력 플래시 종료 시각 | 기대 0.05초 뒤 | 실제 0.0499999999999998",
+    "[EnemyWhiteFlash] 입력 플래시 불투명 픽셀 | 기대 RGB 230, 230, 230 ±1 | 실제 RGBA(230, 230, 230, 255)",
+    "[EnemyWhiteFlash] 입력 반투명 픽셀 | 기대 RGB 169 ±2 | 실제 RGBA(169, 169, 169, 255)",
+    "[EnemyWhiteFlash] 입력 투명 픽셀 | 기대 RGB 0, 0, 0 | 실제 RGBA(0, 0, 0, 255)",
+    "[EnemyWhiteFlash] 입력 플래시 중 재피격 | 기대 0.05초로 갱신 | 실제 0.0499999999999998",
+    "[EnemyWhiteFlash] 입력 플래시 종료 뒤 머티리얼과 픽셀 | 기대 원래 값 복원 | 실제 True",
+    "[EnemyWhiteFlash] 입력 플래시 중 오브젝트 비활성화 | 기대 머티리얼 즉시 복원 | 실제 True",
+    "[EnemyWhiteFlash] 입력 별도 피격에서 실제 프레임 경과 | 기대 0.05초 이상 | 실제 0.0501초, 60프레임",
+    "[EnemyWhiteFlash] 입력 배치된 적 치명타 | 기대 처치·플래시 활성·충돌 해제 | 실제 True, True, False",
+    "[EnemyWhiteFlash] 입력 치명타 플래시 종료 | 기대 플래시 해제 및 적 숨김 | 실제 True"
+  ],
+  "configuredDurationSeconds": 0.05,
+  "observedRestorationSeconds": 0.0501,
+  "observedEditorFrames": 60,
+  "opaqueRGB": [
+    230,
+    230,
+    230
+  ],
+  "cSharpErrors": 0,
+  "shaderErrors": 0,
+  "movementRegression": {
+    "method": "Unity API test doubles",
+    "passed": 27,
+    "failed": 0
+  },
+  "sceneSha256BeforeAndAfter": "c4e516d7e920898927da1abd90d780734529792ed370a691dfe6f61fa361d40e"
+}

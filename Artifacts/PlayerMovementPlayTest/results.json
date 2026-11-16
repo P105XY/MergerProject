@@ -1,0 +1,267 @@
+{
+  "date_kst": "2026-11-06",
+  "unity_version": "6000.6.6f1",
+  "scene": "Assets/Scenes/TestScene/PlayTestScene.unity",
+  "interaction": "Unity MCP only; no OS keyboard/mouse events or device access",
+  "method": "Paused PlayMode, actual PlayerBase.FixedUpdate via reflection and real PhysicsScene2D.Simulate; Unity Update and physical key timing not exercised",
+  "baseline_settings": {
+    "maximumMovementSpeed": 5,
+    "movementAcceleration": 40,
+    "movementDeceleration": 50,
+    "jumpForce": 8,
+    "maximumJumpHeight": 3,
+    "coyoteTime": 0.12,
+    "jumpReleaseMultiplier": 0.5,
+    "gravityScale": 1,
+    "playerMaterial": "default"
+  },
+  "baseline": {
+    "mode": "Paused PlayMode, real PhysicsScene2D.Simulate; movement fields supplied by test, no keyboard device",
+    "fixedDeltaTime": 0.0199999921,
+    "accelerationTime": 0.139999941,
+    "stopTime": 0.0999999642,
+    "stopDistance": 0.178025723,
+    "reversalTime": 0.2599999,
+    "fullJumpHeight": 2.996076,
+    "shortJumpHeight": 1.228492,
+    "fullJumpApexTime": 0.619999766,
+    "shortJumpApexTime": 0.439999819,
+    "fullJumpFlightTime": 1.41999948,
+    "shortJumpFlightTime": 0.93999964,
+    "assertions": [
+      {
+        "input": "우측 0.5초",
+        "expected": "최대 속도 도달, 초과 없음",
+        "actual": 4.92152,
+        "passed": true
+      },
+      {
+        "input": "이동키 해제",
+        "expected": "0.6초 안에 정지",
+        "actual": 0.0999999642,
+        "passed": true
+      },
+      {
+        "input": "반대 방향 입력",
+        "expected": "0.8초 안에 반대 최대 속도",
+        "actual": 0.2599999,
+        "passed": true
+      },
+      {
+        "input": "점프 중 재요청 0",
+        "expected": "상승 속도 증가 없음",
+        "actual": 7.6076,
+        "passed": true
+      },
+      {
+        "input": "점프 착지 0",
+        "expected": "3.6초 안에 착지",
+        "actual": 1.41999948,
+        "passed": true
+      },
+      {
+        "input": "최대 높이 0",
+        "expected": "3.02 이하",
+        "actual": 2.996076,
+        "passed": true
+      },
+      {
+        "input": "착지 후 계속 누름 0",
+        "expected": "자동 재점프 없음",
+        "actual": 0,
+        "passed": true
+      },
+      {
+        "input": "점프 중 재요청 1",
+        "expected": "상승 속도 증가 없음",
+        "actual": 7.6076,
+        "passed": true
+      },
+      {
+        "input": "점프 착지 1",
+        "expected": "3.6초 안에 착지",
+        "actual": 0.93999964,
+        "passed": true
+      },
+      {
+        "input": "최대 높이 1",
+        "expected": "3.02 이하",
+        "actual": 1.228492,
+        "passed": true
+      },
+      {
+        "input": "착지 후 계속 누름 1",
+        "expected": "자동 재점프 없음",
+        "actual": 0,
+        "passed": true
+      },
+      {
+        "input": "점프 버튼 조기 해제",
+        "expected": "유지 점프보다 낮음",
+        "actual": 1.228492,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 0",
+        "expected": "실제 접지 상실",
+        "actual": 10,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 후 0.05999998초",
+        "expected": "점프 허용",
+        "actual": 7.8038,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 1",
+        "expected": "실제 접지 상실",
+        "actual": 10,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 후 0.1799999초",
+        "expected": "점프 거부",
+        "actual": -1.961999,
+        "passed": true
+      }
+    ]
+  },
+  "responsive_settings": {
+    "maximumMovementSpeed": 5,
+    "movementAcceleration": 120,
+    "movementDeceleration": 180,
+    "jumpForce": 18.5,
+    "maximumJumpHeight": 3,
+    "coyoteTime": 0.12,
+    "jumpReleaseMultiplier": 0.5,
+    "gravityScale": 5.5,
+    "playerMaterial": {
+      "friction": 0,
+      "bounciness": 0
+    }
+  },
+  "candidate": {
+    "mode": "Paused PlayMode, real PhysicsScene2D.Simulate; movement fields supplied by test, no keyboard device",
+    "fixedDeltaTime": 0.0199999921,
+    "accelerationTime": 0.0399999842,
+    "stopTime": 0.0399999842,
+    "stopDistance": 0.0280001163,
+    "reversalTime": 0.0999999642,
+    "fullJumpHeight": 2.978418,
+    "shortJumpHeight": 1.66197371,
+    "fullJumpApexTime": 0.319999874,
+    "shortJumpApexTime": 0.199999928,
+    "fullJumpFlightTime": 0.6599997,
+    "shortJumpFlightTime": 0.45999983,
+    "assertions": [
+      {
+        "input": "우측 0.5초",
+        "expected": "최대 속도 도달, 초과 없음",
+        "actual": 5,
+        "passed": true
+      },
+      {
+        "input": "이동키 해제",
+        "expected": "0.6초 안에 정지",
+        "actual": 0.0399999842,
+        "passed": true
+      },
+      {
+        "input": "반대 방향 입력",
+        "expected": "0.8초 안에 반대 최대 속도",
+        "actual": 0.0999999642,
+        "passed": true
+      },
+      {
+        "input": "점프 중 재요청 0",
+        "expected": "상승 속도 증가 없음",
+        "actual": 16.3418,
+        "passed": true
+      },
+      {
+        "input": "점프 착지 0",
+        "expected": "3.6초 안에 착지",
+        "actual": 0.6599997,
+        "passed": true
+      },
+      {
+        "input": "최대 높이 0",
+        "expected": "3.02 이하",
+        "actual": 2.978418,
+        "passed": true
+      },
+      {
+        "input": "착지 후 계속 누름 0",
+        "expected": "자동 재점프 없음",
+        "actual": 0,
+        "passed": true
+      },
+      {
+        "input": "점프 중 재요청 1",
+        "expected": "상승 속도 증가 없음",
+        "actual": 16.3418,
+        "passed": true
+      },
+      {
+        "input": "점프 착지 1",
+        "expected": "3.6초 안에 착지",
+        "actual": 0.45999983,
+        "passed": true
+      },
+      {
+        "input": "최대 높이 1",
+        "expected": "3.02 이하",
+        "actual": 1.66197371,
+        "passed": true
+      },
+      {
+        "input": "착지 후 계속 누름 1",
+        "expected": "자동 재점프 없음",
+        "actual": 0,
+        "passed": true
+      },
+      {
+        "input": "점프 버튼 조기 해제",
+        "expected": "유지 점프보다 낮음",
+        "actual": 1.66197371,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 0",
+        "expected": "실제 접지 상실",
+        "actual": 7,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 후 0.05999998초",
+        "expected": "점프 허용",
+        "actual": 17.4209,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 1",
+        "expected": "실제 접지 상실",
+        "actual": 7,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 후 0.1799999초",
+        "expected": "점프 거부",
+        "actual": -10.7909966,
+        "passed": true
+      }
+    ]
+  },
+  "preliminary_failures": [
+    "First measurement script compile failed because PhysicsSceneExtensions2D namespace was incorrect; reflected API then corrected before execution",
+    "Higher-gravity candidate using default friction reached only 4.56836 speed; failed 95% maximum-speed assertion. Temporary zero-friction player material resolved it"
+  ],
+  "persistence": "Comparison settings are runtime-only; source, scene and prefab settings are not changed",
+  "interpretation": "Candidate targets faster response inspired by user reference. Hollow Knight numerical values and original game were not measured.",
+  "remaining": [
+    "Physical keyboard latency and subjective user control feel",
+    "Moving platforms, slopes, wall/ceiling corner cases",
+    "Final tuning approval and persistent application"
+  ]
+}

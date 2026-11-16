@@ -1,0 +1,125 @@
+{
+  "dateAsiaSeoul": "2026-11-07",
+  "unity": "6000.6.6f1",
+  "method": "Unity CLI batch PlayMode in a project copy, using UI Toolkit NavigationSubmitEvent, isolated checkpoint slot and options",
+  "usedOSInput": false,
+  "passed": 22,
+  "exitCode": 0,
+  "cases": [
+    {
+      "input": "옵션 버튼으로 패널 열기",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "뒤로 버튼으로 패널 닫기",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "옵션 취소 뒤 전체 볼륨",
+      "expected": "1",
+      "actual": "1"
+    },
+    {
+      "input": "빈 슬롯의 이어하기 버튼",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "비활성 이어하기의 씬 로드 여부",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "옵션 적용 뒤 전체 볼륨",
+      "expected": "0.42",
+      "actual": "0.42"
+    },
+    {
+      "input": "옵션 파일에 변경값 기록",
+      "expected": "0.42",
+      "actual": "0.42"
+    },
+    {
+      "input": "옵션 적용 뒤 타이틀 복귀",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "유효한 슬롯의 이어하기 버튼",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "이어하기 버튼이 씬 전환 시작",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "이어하기 버튼으로 복원된 체크포인트 X",
+      "expected": "0.5",
+      "actual": "0.5"
+    },
+    {
+      "input": "이어하기 버튼으로 복원된 특수 횟수",
+      "expected": "2",
+      "actual": "2"
+    },
+    {
+      "input": "이어하기 버튼으로 복원된 체력",
+      "expected": "100",
+      "actual": "100"
+    },
+    {
+      "input": "타이틀 재진입 시 기존 슬롯 표시",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 버튼이 씬 전환 시작",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 시작 X",
+      "expected": "-5",
+      "actual": "-5"
+    },
+    {
+      "input": "새 게임 특수 횟수",
+      "expected": "0",
+      "actual": "0"
+    },
+    {
+      "input": "새 게임 이전 슬롯 보존",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 첫 체크포인트 전 사망은 이전 슬롯 로드 없음",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 첫 체크포인트가 단일 슬롯을 갱신",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 첫 저장 이후 사망 시 현재 슬롯 로드",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임에서 저장한 시작 체크포인트 복원",
+      "expected": "-3.5",
+      "actual": "-3.5"
+    }
+  ],
+  "scope": [
+    "Actual title scene and UI document linked to the same serialized assets as the workspace",
+    "Scene transitions and option persistence",
+    "No standalone build or AudioMixer playback verification"
+  ]
+}

@@ -36,7 +36,7 @@ namespace Mech.Function
         private float movementFriction = 0f;
         private float maximumJumpHeight = 30f;
         private float coyoteTime = 0.12f;
-        private float jumpFallGravityMultiplier = 1.75f;
+        private float jumpFallGravityMultiplier = 1.55f;
         private float attackReach = 1.1f;
         private Vector2 attackSize = new Vector2(1.2f, 1f);
         private LayerMask attackLayers = ~0;
@@ -132,19 +132,19 @@ namespace Mech.Function
 
             movementInput = (keyboard.rightArrowKey.isPressed ? 1f : 0f)
                 - (keyboard.leftArrowKey.isPressed ? 1f : 0f);
-            jumpHeld = keyboard.sKey.isPressed;
+            jumpHeld = keyboard.aKey.isPressed;
 
             if (movementInput != 0f) {
                 facingDirection = movementInput > 0f ? 1 : -1;
             }
 
-            if (keyboard.aKey.isPressed && attacksPerSecond > 0f && Time.time >= nextAttackTime) {
+            if (keyboard.sKey.isPressed && attacksPerSecond > 0f && Time.time >= nextAttackTime) {
                 nextAttackTime = Time.time + 1f / attacksPerSecond;
                 Attack();
                 AttackRequested?.Invoke(this);
             }
 
-            if (keyboard.sKey.wasPressedThisFrame) {
+            if (keyboard.aKey.wasPressedThisFrame) {
                 jumpRequested = true;
             }
 
@@ -169,7 +169,7 @@ namespace Mech.Function
                 EnemyBase enemy = hit.GetComponentInParent<EnemyBase>();
 
                 if (enemy != null && enemy.isActiveAndEnabled && hitEnemies.Add(enemy)) {
-                    enemy.ApplyPlayerDamage(attackPower);
+                    enemy.ApplyPlayerDamage(attackPower, this);
                 }
             }
         }

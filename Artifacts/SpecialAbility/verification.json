@@ -1,0 +1,40 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "scene": "Assets/Scenes/TestScene/PlayTestScene.unity",
+  "method": "Unity MCP PlayMode, isolated temporary save store, runtime probe effects, direct TryUseSpecial calls",
+  "passed": 23,
+  "failed": 0,
+  "checks": [
+    "입력 준비 전 시전 | 기대 False | 실제 False",
+    "입력 A→B→A 수집 | 기대 3 | 실제 3",
+    "입력 다른 개수만 등록 | 기대 False | 실제 False",
+    "입력 교체 효과 실행 거부 | 기대 False | 실제 False",
+    "입력 실패 뒤 남은 횟수 | 기대 3 | 실제 3",
+    "입력 실패 뒤 성공 알림 합계 | 기대 0 | 실제 0",
+    "입력 A2·B1 기본 효과 시전 | 기대 True | 실제 True",
+    "입력 +1발 장비 | 기대 Projectile:2 | 실제 Projectile:2",
+    "입력 2발 시전의 남은 횟수 | 기대 2 | 실제 2",
+    "입력 시전 당시 위치 | 기대 (1000.00, 20.00) | 실제 (1000.00, 20.00)",
+    "입력 시전 당시 방향 | 기대 1 | 실제 1",
+    "입력 성공 이벤트 중 중첩 시전 | 기대 False | 실제 False",
+    "입력 장비 해제 후 시전 | 기대 True | 실제 True",
+    "입력 새 시전의 기본 수량 | 기대 Projectile:1 | 실제 Projectile:1",
+    "입력 높은 우선순위와 동점 장비 동시 장착 | 기대 True | 실제 True",
+    "입력 다른 조합 전용 우선순위 100은 제외, 동점은 앞의 광선 | 기대 Beam | 실제 Beam",
+    "입력 광선 시전 시 직전 투사체 기록 유지 | 기대 Projectile:1 | 실제 Projectile:1",
+    "입력 세 번째 성공 뒤 남은 횟수 | 기대 0 | 실제 0",
+    "입력 세 번째 성공 뒤 활성 조합 A | 기대 0 | 실제 0",
+    "입력 성공 알림에 전달한 조합 A | 기대 2 | 실제 2",
+    "입력 SpecialUsed 발행 횟수 | 기대 3 | 실제 3",
+    "입력 SpecialRequested 발행 횟수 | 기대 3 | 실제 3",
+    "입력 소진 후 추가 시전 | 기대 False | 실제 False"
+  ],
+  "unityCompilerErrors": 0,
+  "preExistingUnityCompilerWarnings": 4,
+  "movementRegression": {
+    "method": "Unity API test doubles",
+    "passed": 27,
+    "failed": 0
+  },
+  "sceneSha256BeforeAndAfter": "c4e516d7e920898927da1abd90d780734529792ed370a691dfe6f61fa361d40e"
+}

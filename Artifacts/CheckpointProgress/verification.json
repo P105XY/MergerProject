@@ -1,0 +1,229 @@
+{
+  "dateAsiaSeoul": "2026-11-07",
+  "unity": "6000.6.6f1",
+  "method": "Unity MCP PlayMode with actual physics triggers, async scene loads and an isolated temporary save directory",
+  "usedOSInput": false,
+  "passed": 40,
+  "cases": [
+    {
+      "input": "빈 슬롯 확인",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "빈 슬롯 이어하기",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "저장 전 사망 상태",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "저장 전 사망 시 로드 여부",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "첫 트리거 진입으로 저장 가능",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "첫 저장 체크포인트 ID",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "첫 저장의 미조합 A/B",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "둘째 트리거의 특수 잔여 2회 저장",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "직전 정상 저장본 보존",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "이어하기 전 적 처치",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "이어하기 전 플레이어 피해",
+      "expected": "75",
+      "actual": "75"
+    },
+    {
+      "input": "다른 씬에서 이어하기 요청",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "로드 중 중복 이어하기",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "이어하기 로드 성공",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "이어하기 체크포인트 X",
+      "expected": "0.5",
+      "actual": "0.5"
+    },
+    {
+      "input": "이어하기 체크포인트 Y",
+      "expected": "0.4",
+      "actual": "0.4"
+    },
+    {
+      "input": "이어하기 체력 전부 회복",
+      "expected": "100",
+      "actual": "100"
+    },
+    {
+      "input": "이어하기 조합에 포함된 A/B/C",
+      "expected": "1/1/1",
+      "actual": "1/1/1"
+    },
+    {
+      "input": "이어하기 남은 특수 횟수",
+      "expected": "2",
+      "actual": "2"
+    },
+    {
+      "input": "이어하기 조합 밖 조각 합계",
+      "expected": "0",
+      "actual": "0"
+    },
+    {
+      "input": "이어하기 일반 적이 살아 있음",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "이어하기 일반 적 체력",
+      "expected": "30",
+      "actual": "30"
+    },
+    {
+      "input": "사망 전 변경한 특수 횟수",
+      "expected": "1",
+      "actual": "1"
+    },
+    {
+      "input": "사망에서 자동으로 복원 시작",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "사망 중 특수 사용 거부",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "사망 후 다시하기 로드 성공",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "사망 후 다시하기 체크포인트 X",
+      "expected": "0.5",
+      "actual": "0.5"
+    },
+    {
+      "input": "사망 후 다시하기 체크포인트 Y",
+      "expected": "0.4",
+      "actual": "0.4"
+    },
+    {
+      "input": "사망 후 다시하기 체력 전부 회복",
+      "expected": "100",
+      "actual": "100"
+    },
+    {
+      "input": "사망 후 다시하기 조합에 포함된 A/B/C",
+      "expected": "1/1/1",
+      "actual": "1/1/1"
+    },
+    {
+      "input": "사망 후 다시하기 남은 특수 횟수",
+      "expected": "2",
+      "actual": "2"
+    },
+    {
+      "input": "사망 후 다시하기 조합 밖 조각 합계",
+      "expected": "0",
+      "actual": "0"
+    },
+    {
+      "input": "사망 후 다시하기 일반 적이 살아 있음",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "사망 후 다시하기 일반 적 체력",
+      "expected": "30",
+      "actual": "30"
+    },
+    {
+      "input": "손상된 주 저장의 백업 이어하기",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "백업 복원 성공",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "백업 체크포인트 X",
+      "expected": "-3.5",
+      "actual": "-3.5"
+    },
+    {
+      "input": "백업 미조합 A/B/C 복원",
+      "expected": "1/1/0",
+      "actual": "1/1/0"
+    },
+    {
+      "input": "백업 특수 사용 횟수 복원",
+      "expected": "0",
+      "actual": "0"
+    },
+    {
+      "input": "백업 체력 전부 회복",
+      "expected": "100",
+      "actual": "100"
+    }
+  ],
+  "unityErrors": 0,
+  "movementRegression": {
+    "passed": 27,
+    "method": "dotnet Unity API doubles"
+  },
+  "editorAfter": {
+    "path": "Assets/Scenes/TestScene/PlayTestScene.unity",
+    "isDirty": false,
+    "rootCount": 12,
+    "isPlaying": false,
+    "isPaused": false,
+    "isCompiling": false,
+    "buildIndex": 1,
+    "checkpointCount": 2
+  },
+  "scope": [
+    "PlayTestScene and SampleScene in editor play mode",
+    "macOS local save file replace and fallback",
+    "No standalone build or UI testing"
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "dateAsiaSeoul": "2026-11-08",
+  "unity": "6000.6.6f1",
+  "method": "Unity MCP PlayMode using PlayerBase fixed updates and PhysicsScene2D.Simulate; game view captured through MCP",
+  "usedOSInput": false,
+  "playMode": {
+    "passed": 10,
+    "results": [
+      {
+        "input": "첫 점프의 실제 및 예측 표시",
+        "expected": "실제 2점 이상, 예측 3점 이상",
+        "actual": {
+          "traveled": 2,
+          "predicted": 12
+        },
+        "passed": true
+      },
+      {
+        "input": "계속 오른쪽으로 이동하는 점프의 끝점",
+        "expected": "이륙점보다 오른쪽",
+        "actual": -1.75694764,
+        "passed": true
+      },
+      {
+        "input": "공중 재입력",
+        "expected": "같은 이륙점과 누적 경로",
+        "actual": 3,
+        "passed": true
+      },
+      {
+        "input": "유지 점프의 최고점 오차",
+        "expected": "0.08 유닛 이내",
+        "actual": 0,
+        "passed": true
+      },
+      {
+        "input": "착지 X 오차",
+        "expected": "0.15 유닛 이내",
+        "actual": 0.100944161,
+        "passed": true
+      },
+      {
+        "input": "착지한 뒤 남는 경로",
+        "expected": "추적 종료, 예측 없음, 실제 이동 3점 이상",
+        "actual": {
+          "tracking": false,
+          "traveled": 35,
+          "predicted": 0
+        },
+        "passed": true
+      },
+      {
+        "input": "상승 중 버튼 해제",
+        "expected": "예상 최고점 0.3 유닛 이상 감소",
+        "actual": 1.32568216,
+        "passed": true
+      },
+      {
+        "input": "상승 중 왼쪽 방향으로 전환",
+        "expected": "예상 착지점이 오른쪽 유지보다 왼쪽",
+        "actual": -6.186946,
+        "passed": true
+      },
+      {
+        "input": "조기 해제 예상 높이",
+        "expected": "이륙점에서 0.5~2.2 유닛",
+        "actual": 1.652736,
+        "passed": true
+      },
+      {
+        "input": "앞쪽 장애물",
+        "expected": "벽 앞 -3.15 부근에서 예측 정지",
+        "actual": -3.156002,
+        "passed": true
+      }
+    ],
+    "fullPredictedHeight": 2.978418,
+    "actualHeight": 2.978418
+  },
+  "movementRegression": {
+    "passed": 27,
+    "method": "dotnet Unity API doubles"
+  },
+  "consoleErrors": 0,
+  "editorAfter": {
+    "path": "Assets/Scenes/SampleScene.unity",
+    "isDirty": false,
+    "isPlaying": false,
+    "isCompiling": false
+  },
+  "unchangedSceneHashes": [
+    "bea0e2c256c176222e1023adb8c6fb5339b73443  Assets/Scenes/SampleScene.unity",
+    "04cbfc50c844a02fcd04602c5d942bd48680878c  Assets/Scenes/TestScene/PlayTestScene.unity"
+  ],
+  "screenshot": "jump_path_centered.png"
+}

@@ -1,0 +1,34 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "dateSeoul": "2026-11-10",
+  "method": "Both saved scenes ran separately in Unity CLI PlayMode in a temporary project copy. The probe set player input-state fields without keyboard or mouse and stepped actual Unity 2D physics.",
+  "runs": {
+    "PlayTestScene": {
+      "passed": 5,
+      "failed": 0,
+      "checks": [
+        "[JumpReleaseDive] 입력 PlayTestScene 저장된 해제 배율 | 기대 -1 | 실제 -1",
+        "[JumpReleaseDive] 입력 유지 후 실제 상승 | 기대 공중, 양의 수직 속도 | 실제 44.23172",
+        "[JumpReleaseDive] 입력 해제 직후 속도 | 기대 -44.23172 | 실제 -44.23172",
+        "[JumpReleaseDive] 입력 해제 뒤 한 물리 스텝 | 기대 이전보다 낮은 위치 | 실제 2.255034",
+        "[JumpReleaseDive] 입력 해제 유지 중 수직 속도 | 기대 -46.15448 | 실제 -46.15448"
+      ]
+    },
+    "FlyingBossTestScene": {
+      "passed": 5,
+      "failed": 0,
+      "checks": [
+        "[JumpReleaseDive] 입력 FlyingBossTestScene 저장된 해제 배율 | 기대 -1 | 실제 -1",
+        "[JumpReleaseDive] 입력 유지 후 실제 상승 | 기대 공중, 양의 수직 속도 | 실제 44.23172",
+        "[JumpReleaseDive] 입력 해제 직후 속도 | 기대 -44.23172 | 실제 -44.23172",
+        "[JumpReleaseDive] 입력 해제 뒤 한 물리 스텝 | 기대 이전보다 낮은 위치 | 실제 2.257978",
+        "[JumpReleaseDive] 입력 해제 유지 중 수직 속도 | 기대 -46.15448 | 실제 -46.15448"
+      ]
+    }
+  },
+  "movementRegression": {
+    "passed": 29,
+    "failed": 0,
+    "method": "Unity API test doubles"
+  }
+}

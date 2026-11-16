@@ -1,0 +1,50 @@
+{
+  "dateAsiaSeoul": "2026-11-08",
+  "unity": "6000.6.6f1",
+  "method": "Unity MCP PlayMode using actual placed TestEnemy colliders and elapsed game time with an isolated save slot",
+  "usedOSInput": false,
+  "passed": 6,
+  "cases": [
+    {
+      "input": "시작 체력",
+      "expected": 100,
+      "actual": 100
+    },
+    {
+      "input": "A에 닿은 뒤 첫 피해 및 재피격 대기",
+      "expected": 90,
+      "actual": 90
+    },
+    {
+      "input": "A에 계속 닿아 있으면 0.75초 뒤 피해",
+      "expected": 80,
+      "actual": 80
+    },
+    {
+      "input": "접촉이 끝나면 추가 피해 없음",
+      "expected": 80,
+      "actual": 80
+    },
+    {
+      "input": "B에 닿으면 피해",
+      "expected": 70,
+      "actual": 70
+    },
+    {
+      "input": "C에 닿으면 피해",
+      "expected": 60,
+      "actual": 60
+    }
+  ],
+  "hudScreenshot": "contact_damage.png",
+  "compilationErrors": 0,
+  "unrelatedEditorDiagnostics": [
+    "Error reason is 'NoSubscription' and no additional error information was provided (https://generators.ai.unity.com)."
+  ],
+  "editorAfter": {
+    "path": "Assets/Scenes/TestScene/PlayTestScene.unity",
+    "isDirty": false,
+    "isPlaying": false,
+    "isCompiling": false
+  }
+}

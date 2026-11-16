@@ -1,0 +1,160 @@
+{
+  "date_kst": "2026-11-07",
+  "profile": {
+    "movementAcceleration": 120,
+    "movementDeceleration": 180,
+    "jumpForce": 18.5,
+    "gravityScale": 5.5,
+    "movementFriction": 0
+  },
+  "persistence": "PlayerBase serialized defaults and PlayTestScene saved; Awake applies gravity and creates per-player zero-friction runtime material",
+  "runtime_defaults_check": {
+    "acceleration": 120,
+    "deceleration": 180,
+    "jumpForce": 18.5,
+    "gravity": 5.5,
+    "friction": 0
+  },
+  "final_playtest": {
+    "mode": "Paused PlayMode, real PhysicsScene2D.Simulate; movement fields supplied by test, no keyboard device",
+    "fixedDeltaTime": 0.0199999921,
+    "accelerationTime": 0.0399999842,
+    "stopTime": 0.0399999842,
+    "stopDistance": 0.0280001163,
+    "reversalTime": 0.0999999642,
+    "fullJumpHeight": 2.978418,
+    "shortJumpHeight": 1.66197371,
+    "fullJumpApexTime": 0.319999874,
+    "shortJumpApexTime": 0.199999928,
+    "fullJumpFlightTime": 0.6599997,
+    "shortJumpFlightTime": 0.45999983,
+    "assertions": [
+      {
+        "input": "우측 0.5초",
+        "expected": "최대 속도 도달, 초과 없음",
+        "actual": 5,
+        "passed": true
+      },
+      {
+        "input": "이동키 해제",
+        "expected": "0.6초 안에 정지",
+        "actual": 0.0399999842,
+        "passed": true
+      },
+      {
+        "input": "반대 방향 입력",
+        "expected": "0.8초 안에 반대 최대 속도",
+        "actual": 0.0999999642,
+        "passed": true
+      },
+      {
+        "input": "점프 중 재요청 0",
+        "expected": "상승 속도 증가 없음",
+        "actual": 16.3418,
+        "passed": true
+      },
+      {
+        "input": "점프 착지 0",
+        "expected": "3.6초 안에 착지",
+        "actual": 0.6599997,
+        "passed": true
+      },
+      {
+        "input": "최대 높이 0",
+        "expected": "3.02 이하",
+        "actual": 2.978418,
+        "passed": true
+      },
+      {
+        "input": "착지 후 계속 누름 0",
+        "expected": "자동 재점프 없음",
+        "actual": 0,
+        "passed": true
+      },
+      {
+        "input": "점프 중 재요청 1",
+        "expected": "상승 속도 증가 없음",
+        "actual": 16.3418,
+        "passed": true
+      },
+      {
+        "input": "점프 착지 1",
+        "expected": "3.6초 안에 착지",
+        "actual": 0.45999983,
+        "passed": true
+      },
+      {
+        "input": "최대 높이 1",
+        "expected": "3.02 이하",
+        "actual": 1.66197371,
+        "passed": true
+      },
+      {
+        "input": "착지 후 계속 누름 1",
+        "expected": "자동 재점프 없음",
+        "actual": 0,
+        "passed": true
+      },
+      {
+        "input": "점프 버튼 조기 해제",
+        "expected": "유지 점프보다 낮음",
+        "actual": 1.66197371,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 0",
+        "expected": "실제 접지 상실",
+        "actual": 7,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 후 0.05999998초",
+        "expected": "점프 허용",
+        "actual": 17.4209,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 1",
+        "expected": "실제 접지 상실",
+        "actual": 7,
+        "passed": true
+      },
+      {
+        "input": "발판 이탈 후 0.1799999초",
+        "expected": "점프 거부",
+        "actual": -10.7909966,
+        "passed": true
+      }
+    ]
+  },
+  "cleanup": {
+    "playing": false,
+    "paused": false,
+    "dirty": false,
+    "roots": 10,
+    "leakedMaterials": 0,
+    "temporaryLedge": false
+  },
+  "scene_saved_and_reloaded": true,
+  "physical_input_used": false,
+  "notes": [
+    "Initial cleanup code restored body.sharedMaterial in OnDestroy and left the scene dirty. Removed that scene-object mutation and reran the same PlayMode test successfully.",
+    "Automatic approval initially rejected reloading the dirty scene. Saved memory scene as a copy, confirmed byte identity with the saved scene, then reloaded with preservation evidence.",
+    "Memory backup retained in Artifacts/ResponsiveMovementApplied/PlayTestScene_memory_backup_20261107.unity",
+    "Actual OS input timing and subjective user feel remain untested; tests directly supply movement fields and manually advance real Unity physics."
+  ],
+  "regression_reference_settings": {
+    "movementAcceleration": 40,
+    "movementDeceleration": 50,
+    "jumpForce": 8
+  },
+  "dotnet_doubles_regression": "27/27; mechanism regression with explicit reference settings, not a replacement for PlayMode",
+  "unchanged_method_bodies": {
+    "Attack": true,
+    "ApplyDamage": true,
+    "TryCollectFragment": true,
+    "TryUseSpecial": true
+  },
+  "player_source_sha256": "4997c57e8b85dba8b4c65b201502e36881be3bfc94c148fc81f7c888178322d1",
+  "saved_scene_sha256": "d63098a9a1b2826e5551c13a3dc320aa6303f21af6b0c0a03c701e8817c16a49"
+}

@@ -42,7 +42,7 @@ namespace Mech.Function
             enabled = IsFlashing;
         }
 
-        // 지정 시간이 지나면 적의 표시 처리보다 먼저 원래 머티리얼을 복원한다.
+        // 표시 시간이 지나면 원래 머티리얼을 복원한다.
         private void Update()
         {
             if (Time.unscaledTimeAsDouble >= endsAt) {

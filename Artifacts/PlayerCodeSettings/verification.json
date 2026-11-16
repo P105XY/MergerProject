@@ -1,0 +1,18 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "dateSeoul": "2026-11-10",
+  "method": "Unity CLI EditMode inspected the twenty former serialized properties in both saved scenes and PlayMode verified code defaults in PlayTestScene with direct input-state setup. No keyboard or mouse input.",
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    "[PlayerCodeSettings] 입력 FlyingBossTestScene 직렬화 속성 수 | 기대 0 | 실제 0",
+    "[PlayerCodeSettings] 입력 FlyingBossTestScene 점프력 | 기대 35 | 실제 35",
+    "[PlayerCodeSettings] 입력 FlyingBossTestScene 초당 공격 횟수 | 기대 1 | 실제 1",
+    "[PlayerCodeSettings] 입력 PlayTestScene 직렬화 속성 수 | 기대 0 | 실제 0",
+    "[PlayerCodeSettings] 입력 PlayTestScene 점프력 | 기대 35 | 실제 35",
+    "[PlayerCodeSettings] 입력 PlayTestScene 초당 공격 횟수 | 기대 1 | 실제 1",
+    "[PlayerCodeSettings] 입력 시작 체력 | 기대 100 | 실제 100",
+    "[PlayerCodeSettings] 입력 실제 점프 시작 수직 속도 | 기대 35 | 실제 35",
+    "[PlayerCodeSettings] 입력 실제 바디 중력 배율 | 기대 9.8 | 실제 9.8"
+  ]
+}

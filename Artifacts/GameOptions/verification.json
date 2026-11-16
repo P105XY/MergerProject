@@ -1,0 +1,162 @@
+{
+  "dateAsiaSeoul": "2026-11-07",
+  "unity": "6000.6.6f1",
+  "mode": "Unity MCP PlayMode",
+  "usedOSInput": false,
+  "applySaveLoad": {
+    "passed": 23,
+    "results": [
+      {
+        "input": "Apply 이전 편집본 볼륨 변경",
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "input": "품질 프리셋 적용",
+        "expected": 0,
+        "actual": 0
+      },
+      {
+        "input": "VSync 끄기",
+        "expected": 0,
+        "actual": 0
+      },
+      {
+        "input": "75 FPS 제한",
+        "expected": 75,
+        "actual": 75
+      },
+      {
+        "input": "전체 볼륨 0.4 적용",
+        "expected": 0.4,
+        "actual": 0.4
+      },
+      {
+        "input": "저장 뒤 기본값 복원",
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "input": "저장된 품질 이름 복원",
+        "expected": "Very Low",
+        "actual": "Very Low"
+      },
+      {
+        "input": "저장된 전체 볼륨 복원",
+        "expected": 0.4,
+        "actual": 0.4
+      },
+      {
+        "input": "저장된 BGM 볼륨 복원",
+        "expected": 0.25,
+        "actual": 0.25
+      },
+      {
+        "input": "저장된 효과음 볼륨 복원",
+        "expected": 0.7,
+        "actual": 0.7
+      },
+      {
+        "input": "일부 필드만 있는 저장 데이터의 볼륨",
+        "expected": 0.3,
+        "actual": 0.3
+      },
+      {
+        "input": "일부 필드만 있는 저장 데이터의 누락된 BGM 볼륨",
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "input": "깨진 JSON의 기본 볼륨 복원",
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "input": "잘못된 화면 너비",
+        "expected": 831,
+        "actual": 831
+      },
+      {
+        "input": "알 수 없는 화면 모드",
+        "expected": 3,
+        "actual": 3
+      },
+      {
+        "input": "알 수 없는 품질 이름",
+        "expected": "Ultra",
+        "actual": "Ultra"
+      },
+      {
+        "input": "범위보다 큰 전체 볼륨",
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "input": "음수 BGM 볼륨",
+        "expected": 0,
+        "actual": 0
+      },
+      {
+        "input": "숫자가 아닌 효과음 볼륨",
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "input": "0 FPS 제한",
+        "expected": -1,
+        "actual": -1
+      },
+      {
+        "input": "VSync 켜기",
+        "expected": 1,
+        "actual": 1
+      },
+      {
+        "input": "선형 볼륨 0.5의 믹서 감쇠",
+        "expected": -6.0206,
+        "actual": -6.02060032
+      },
+      {
+        "input": "선형 볼륨 0의 믹서 감쇠",
+        "expected": -80,
+        "actual": -80
+      }
+    ]
+  },
+  "startupReload": {
+    "expectedMaster": 0.37,
+    "actualMaster": 0.37,
+    "expectedMusic": 0.62,
+    "actualMusic": 0.62
+  },
+  "unityCompileErrors": 0,
+  "editorAfter": {
+    "path": "Assets/Scenes/TestScene/PlayTestScene.unity",
+    "isDirty": false,
+    "rootCount": 10,
+    "isPlaying": false,
+    "isPaused": false,
+    "isCompiling": false,
+    "hasTestOptions": false,
+    "quality": 5,
+    "volume": 1
+  },
+  "unchangedFiles": [
+    {
+      "path": "Assets/Scenes/TestScene/PlayTestScene.unity",
+      "sha1": "f47c16b78936b7f973898a48b6b889b5c0121d2b"
+    },
+    {
+      "path": "ProjectSettings/QualitySettings.asset",
+      "sha1": "2796b7730011db8b81e042cb1900fe2d3082926f"
+    },
+    {
+      "path": "ProjectSettings/ProjectSettings.asset",
+      "sha1": "9c245186ed4e5d2c5a8da0e8a1ed96fba351610d"
+    }
+  ],
+  "notTested": [
+    "Standalone resolution and display mode switching",
+    "Audio playback through a real AudioMixer asset"
+  ]
+}

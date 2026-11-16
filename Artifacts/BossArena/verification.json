@@ -1,0 +1,22 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "scene": "Assets/Scenes/TestScene/PlayTestScene.unity",
+  "method": "Unity CLI PlayMode in a copy of the saved scene. Actual 2D physics was stepped manually and the boss pattern deadline was advanced between attacks. Checkpoint writes used an isolated test slot.",
+  "passed": 12,
+  "failed": 0,
+  "checks": [
+    "[BossArenaCheck] 입력 저장된 보스 프리팹과 체력 | 기대 TestBoss.prefab / 2250 | 실제 Assets/Prefabs/PlayTest/TestBoss.prefab / 2250",
+    "[BossArenaCheck] 입력 카메라 제약 | 기대 플레이어 X축 | 실제 X",
+    "[BossArenaCheck] 입력 입구 트리거 통과 | 기대 playtest-boss-entrance / 저장 있음 | 실제 playtest-boss-entrance / True",
+    "[BossArenaCheck] 입력 실제 점프로 입구 벽 통과 | 기대 플레이어가 벽 오른쪽 | 실제 15.02401",
+    "[BossArenaCheck] 입력 왼쪽 돌진과 벽 | 기대 벽 간격 0~0.05, 피해 10 | 실제 0.01500034 / 10",
+    "[BossArenaCheck] 입력 내려찍기 | 기대 피해 10 | 실제 10",
+    "[BossArenaCheck] 입력 두 공격 뒤 조각 적 소환 | 기대 고정된 B 조각 적 3마리 | 실제 3",
+    "[BossArenaCheck] 입력 조각 적 접촉 | 기대 피해 10 | 실제 10",
+    "[BossArenaCheck] 입력 조각 적 첫 타격 | 기대 HP 10 | 실제 10",
+    "[BossArenaCheck] 입력 두 번째 타격과 B 조각 | 기대 처치, B 조각 1개 | 실제 1",
+    "[BossArenaCheck] 입력 광역 공격 | 기대 피해 10 | 실제 10",
+    "[BossArenaCheck] 입력 오른쪽 돌진과 벽 | 기대 벽 간격 0~0.05 | 실제 0.01499939"
+  ],
+  "sceneSha256": "1a4d5d2cd1a8e4c63c2a67b73b17ed694928dd06076f9850fedda3b8383e8b1b"
+}

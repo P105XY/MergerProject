@@ -1,0 +1,26 @@
+[HitEffects] 입력 A 점프 요청 | 기대 1 | 실제 1
+[HitEffects] 입력 A 점프 유지 | 기대 1 | 실제 1
+[HitEffects] 입력 A 점프 시 적 HP | 기대 100 | 실제 100
+[HitEffects] 입력 A 해제 시 점프 유지 종료 | 기대 0 | 실제 0
+[HitEffects] 입력 S 공격의 점프 요청 | 기대 0 | 실제 0
+[HitEffects] 입력 빗나간 공격의 적 HP | 기대 100 | 실제 100
+[HitEffects] 입력 빗나간 공격의 플레이어 재생 속도 | 기대 1.25 | 실제 1.25
+[HitEffects] 입력 S 명중 시 피해 | 기대 90 | 실제 90
+[HitEffects] 입력 플레이어 Animator 정지 | 기대 0 | 실제 0
+[HitEffects] 입력 적 Animator 정지 | 기대 0 | 실제 0
+[HitEffects] 입력 방관자 Animator 속도 | 기대 0.8 | 실제 0.8
+[HitEffects] 입력 명중 시 WhiteFlash 머티리얼 | 기대 1 | 실제 1
+[HitEffects] 입력 게임 전체 Time.timeScale | 기대 1 | 실제 1
+[HitEffects] 입력 URP 카메라 흔들림 픽셀 | 기대 5 | 실제 5
+[HitEffects] 입력 렌더 완료 후 카메라 오프셋 제거 | 기대 0 | 실제 0
+[HitEffects] 입력 WhiteFlash 시간 | 기대 0.03 | 실제 0.03
+[HitEffects] 입력 히트스톱 시간 | 기대 0.01 | 실제 0.01
+[HitEffects] 입력 카메라 흔들림 시간 | 기대 0.005 | 실제 0.005
+[HitEffects] 입력 표시 시간이 남은 WhiteFlash | 기대 1 | 실제 1
+[HitEffects] 입력 플레이어 재생 속도 복원 | 기대 1.25 | 실제 1.25
+[HitEffects] 입력 적 재생 속도 복원 | 기대 0.75 | 실제 0.75
+[HitEffects] 입력 원래 머티리얼 복원 | 기대 1 | 실제 1
+[HitEffects] 입력 카메라 흔들림 종료 | 기대 0 | 실제 0
+[HitEffects] 입력 비활성화 시 적 재생 속도 복원 | 기대 0.75 | 실제 0.75
+[HitEffects] 입력 비활성화 시 원래 머티리얼 복원 | 기대 1 | 실제 1
+[HitEffects] PASS 25/25

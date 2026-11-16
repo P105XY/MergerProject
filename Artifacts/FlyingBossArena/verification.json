@@ -1,0 +1,63 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "scene": "Assets/Scenes/TestScene/FlyingBossTestScene.unity",
+  "sceneSha256": "2f3e26f311154dee2ca1a0bb8d5d84fdb6c6de2cc01da4da9198277893d63787",
+  "execution": "Temporary macOS standalone build in batch mode. Natural game time and 2D physics. No keyboard or mouse input. The probe repositioned the player for aiming and fired two additional terrain-collision probes after observing the boss patterns.",
+  "runs": {
+    "wallDive": {
+      "passed": 21,
+      "failed": 0,
+      "checks": [
+        "[FlyingBossLive] 입력 시작 체력 | 기대 3400 | 실제 3400",
+        "[FlyingBossLive] 입력 패턴 1 | 기대 FragmentSummon | 실제 FragmentSummon",
+        "[FlyingBossLive] 입력 경기장 중앙선 좌우 이동·부유 | 기대 가로 이동 5 이상, 높이차 0.5 이상 | 실제 12.750 / 0.700",
+        "[FlyingBossLive] 입력 조각 적 소환 | 기대 3~5체 및 바닥 위 부유 | 실제 4",
+        "[FlyingBossLive] 입력 패턴 2 | 기대 ChargeSummon | 실제 ChargeSummon",
+        "[FlyingBossLive] 입력 플레이어가 반대편으로 이동한 뒤 첫 돌진 적 | 기대 발사 방향 고정 | 실제 (-0.18, -0.98)",
+        "[FlyingBossLive] 입력 돌진 적 2번째 소환 간격 | 기대 2.000초 | 실제 2.000",
+        "[FlyingBossLive] 입력 돌진 적 3번째 소환 간격 | 기대 2.000초 | 실제 2.000",
+        "[FlyingBossLive] 입력 패턴 3 | 기대 Dive | 실제 Dive",
+        "[FlyingBossLive] 입력 보스 직접 돌진 종료 | 기대 벽 또는 바닥 앞 정지 | 실제 (12.99, 0.55)",
+        "[FlyingBossLive] 입력 패턴 4 | 기대 ArcShot | 실제 ArcShot",
+        "[FlyingBossLive] 입력 패턴 5 | 기대 RadialShot | 실제 RadialShot",
+        "[FlyingBossLive] 입력 X자 → 십자 발사 간격 | 기대 1.500초 | 실제 1.500",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (0.00, -12.00)",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (-12.00, 0.00)",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (0.00, 12.00)",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (12.00, 0.00)",
+        "[FlyingBossLive] 입력 발사 수 | 기대 포물선 3, X자 4, 십자 4 | 실제 3 / 4 / 4",
+        "[FlyingBossLive] 입력 포물선의 수직 속도 | 기대 시간에 따라 감소 | 실제 True",
+        "[FlyingBossLive] 입력 돌진 적 총 소환 수 | 기대 3체 및 방향 고정 확인 | 실제 3",
+        "[FlyingBossLive] 입력 포물선의 바닥·벽 충돌 | 기대 수명 4초 이전에 두 발 제거 | 실제 True / True"
+      ]
+    },
+    "floorDive": {
+      "passed": 22,
+      "failed": 0,
+      "checks": [
+        "[FlyingBossLive] 입력 시작 체력 | 기대 3400 | 실제 3400",
+        "[FlyingBossLive] 입력 패턴 1 | 기대 FragmentSummon | 실제 FragmentSummon",
+        "[FlyingBossLive] 입력 경기장 중앙선 좌우 이동·부유 | 기대 가로 이동 5 이상, 높이차 0.5 이상 | 실제 12.750 / 0.700",
+        "[FlyingBossLive] 입력 조각 적 소환 | 기대 3~5체 및 바닥 위 부유 | 실제 5",
+        "[FlyingBossLive] 입력 패턴 2 | 기대 ChargeSummon | 실제 ChargeSummon",
+        "[FlyingBossLive] 입력 플레이어가 반대편으로 이동한 뒤 첫 돌진 적 | 기대 발사 방향 고정 | 실제 (-0.18, -0.98)",
+        "[FlyingBossLive] 입력 돌진 적 2번째 소환 간격 | 기대 2.000초 | 실제 2.000",
+        "[FlyingBossLive] 입력 돌진 적 3번째 소환 간격 | 기대 2.000초 | 실제 2.000",
+        "[FlyingBossLive] 입력 패턴 3 | 기대 Dive | 실제 Dive",
+        "[FlyingBossLive] 입력 보스 직접 돌진 종료 | 기대 바닥 앞 정지 | 실제 (-1.29, 0.24)",
+        "[FlyingBossLive] 입력 패턴 4 | 기대 ArcShot | 실제 ArcShot",
+        "[FlyingBossLive] 입력 패턴 5 | 기대 RadialShot | 실제 RadialShot",
+        "[FlyingBossLive] 입력 X자 → 십자 발사 간격 | 기대 1.500초 | 실제 1.500",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (0.00, 12.00)",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (0.00, -12.00)",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (-12.00, 0.00)",
+        "[FlyingBossLive] 입력 십자 발사 축 | 기대 가로 또는 세로 | 실제 (12.00, 0.00)",
+        "[FlyingBossLive] 입력 발사 수 | 기대 포물선 3, X자 4, 십자 4 | 실제 3 / 4 / 4",
+        "[FlyingBossLive] 입력 포물선의 수직 속도 | 기대 시간에 따라 감소 | 실제 True",
+        "[FlyingBossLive] 입력 돌진 적 총 소환 수 | 기대 3체 및 방향 고정 확인 | 실제 3",
+        "[FlyingBossLive] 입력 조각 적의 부유 운동 | 기대 초기 높이에서 0.08 이상 변화 | 실제 True",
+        "[FlyingBossLive] 입력 포물선의 바닥·벽 충돌 | 기대 수명 4초 이전에 두 발 제거 | 실제 True / True"
+      ]
+    }
+  }
+}

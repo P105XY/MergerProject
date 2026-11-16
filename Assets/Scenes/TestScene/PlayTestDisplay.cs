@@ -73,7 +73,7 @@ public class PlayTestDisplay : MonoBehaviour
         jumpPath?.Draw();
         GUI.Box(new Rect(16, 16, 390, 130), "PLAY TEST");
         GUI.Label(new Rect(280, 15, 115, 22), $"HP {player.CurrentHealth:0.#} / {player.MaxHealth:0.#}");
-        GUI.Label(new Rect(30, 42, 365, 22), "Arrows: Move    S: Jump + path    A: Attack");
+        GUI.Label(new Rect(30, 42, 365, 22), "Arrows: Move    A: Jump + path    S: Attack");
         GUI.Label(new Rect(30, 66, 365, 22), $"Fragments: A {player.TypeACount}   B {player.TypeBCount}   C {player.TypeCCount}");
         GUI.Label(new Rect(30, 90, 365, 22), $"D: Special request   Uses: {player.SpecialUsesRemaining}");
         GUI.Label(new Rect(30, 114, 365, 22), "Collect 3 fragments, then press D 3 times.");

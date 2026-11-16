@@ -1,0 +1,35 @@
+{
+  "date_kst": "2026-11-06",
+  "package": "com.coplaydev.unity-mcp",
+  "version": "10.3.0",
+  "git_revision": "aa5fc638d623f56178d50329d9ad8c541a57fe66",
+  "server_version": "10.3.0",
+  "transport": "HTTP Local",
+  "endpoint": "http://127.0.0.1:8080",
+  "unity_version": "6000.6.6f1",
+  "bridge_assembly_loaded": true,
+  "is_compiling": false,
+  "is_playing": false,
+  "active_scene_query": "success",
+  "active_scene": "Assets/Scenes/TestScene/PlayTestScene.unity",
+  "scene_dirty": false,
+  "scene_root_count": 10,
+  "auto_start_on_editor_load": true,
+  "console_observation": {
+    "bridge_or_CSharp_compile_errors": 0,
+    "other_exception": "Unity AI Assistant NoSubscription"
+  },
+  "limitations": [
+    "Editor restart auto-reconnect not exercised",
+    "No gameplay PlayMode test performed during installation"
+  ],
+  "interaction_policy": "Future Unity work and testing use MCP/console/CLI without keyboard or mouse control",
+  "player_settings_readback": {
+    "maximumMovementSpeed": 5.0,
+    "jumpForce": 8.0,
+    "coyoteTime": 0.12,
+    "maximumJumpHeight": 3.0,
+    "movementAcceleration": 40.0,
+    "movementDeceleration": 50.0
+  }
+}

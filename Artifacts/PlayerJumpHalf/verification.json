@@ -1,0 +1,33 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "dateSeoul": "2026-11-10",
+  "method": "Unity CLI PlayMode with both saved scenes. Direct input-state configuration and actual Unity 2D physics stepping without keyboard or mouse input.",
+  "sceneJumpForce": {
+    "before": 50,
+    "after": 25
+  },
+  "measuredRise": 3.001,
+  "ceilingClearance": 3.188,
+  "runs": {
+    "FlyingBossTestScene": {
+      "passed": 4,
+      "failed": 0,
+      "checks": [
+        "[JumpHalf] 입력 FlyingBossTestScene 저장된 점프력 | 기대 25 | 실제 25",
+        "[JumpHalf] 입력 점프 시작 수직 속도 | 기대 25 | 실제 25",
+        "[JumpHalf] 입력 S 유지 점프 상승 높이 | 기대 2.5~3.3유닛 | 실제 3.001",
+        "[JumpHalf] 입력 비행 보스 씬 천장 여유 | 기대 플레이어 충돌체가 천장 아래 | 실제 3.188"
+      ]
+    },
+    "PlayTestScene": {
+      "passed": 4,
+      "failed": 0,
+      "checks": [
+        "[JumpHalf] 입력 PlayTestScene 저장된 점프력 | 기대 25 | 실제 25",
+        "[JumpHalf] 입력 점프 시작 수직 속도 | 기대 25 | 실제 25",
+        "[JumpHalf] 입력 S 유지 점프 상승 높이 | 기대 2.5~3.3유닛 | 실제 3.001",
+        "[JumpHalf] 입력 보스 구역 입구 진입 | 기대 플레이어 충돌체가 벽 오른쪽 | 실제 16.62402"
+      ]
+    }
+  }
+}

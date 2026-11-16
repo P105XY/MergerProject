@@ -1,0 +1,143 @@
+{
+  "dateAsiaSeoul": "2026-11-08",
+  "unity": "6000.6.6f1",
+  "method": "Unity MCP PlayMode with real 2D triggers, scene reloads and an isolated checkpoint slot",
+  "usedOSInput": false,
+  "passed": 24,
+  "cases": [
+    {
+      "input": "기존 JSON의 이어하기 시작",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "기존 세이브 복원",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "기존 플레이어 조각 복원",
+      "expected": "1",
+      "actual": "1"
+    },
+    {
+      "input": "기존 세이브의 아이템 초기 표시",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "첫 아이템 획득 후 비활성",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "첫 아이템 보상 호출",
+      "expected": "1",
+      "actual": "1"
+    },
+    {
+      "input": "이미 획득한 아이템 다시 활성화",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "다시 활성화해도 보상 중복 없음",
+      "expected": "1",
+      "actual": "1"
+    },
+    {
+      "input": "체크포인트가 첫 아이템 ID 저장",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "둘째 아이템 획득 후 비활성",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "체크포인트 이후의 ID는 파일에 없음",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "사망으로 체크포인트 복원 요청",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "사망 후 로드 성공",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "사망 후 저장된 아이템 비활성",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "사망 후 미저장 아이템 복귀",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "사망 후 획득 목록이 체크포인트 상태로 복귀",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "복원 시 보상 재호출 없음",
+      "expected": "2",
+      "actual": "2"
+    },
+    {
+      "input": "타이틀에서 이어하기 시작",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "이어하기 후 저장된 아이템 비활성",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "이어하기 후 미저장 아이템 활성",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 시작 요청",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 아이템 표시",
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "input": "새 게임 기존 획득 상태 제거",
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "input": "새 게임 첫 체크포인트 전 슬롯 유지",
+      "expected": "True",
+      "actual": "True"
+    }
+  ],
+  "unityErrors": 0,
+  "editorAfter": {
+    "path": "Assets/Scenes/SampleScene.unity",
+    "isDirty": false,
+    "rootCount": 3,
+    "isPlaying": false,
+    "isPaused": false,
+    "isCompiling": false,
+    "temporaryItemCount": 0
+  },
+  "unchangedSceneHashes": [
+    "bea0e2c256c176222e1023adb8c6fb5339b73443  Assets/Scenes/SampleScene.unity",
+    "04cbfc50c844a02fcd04602c5d942bd48680878c  Assets/Scenes/TestScene/PlayTestScene.unity"
+  ]
+}

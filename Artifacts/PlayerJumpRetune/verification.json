@@ -1,0 +1,41 @@
+{
+  "unityVersion": "6000.6.6f1",
+  "dateSeoul": "2026-11-10",
+  "method": "Two Unity CLI PlayMode runs. Actual Unity 2D physics was stepped under the previous and saved scene settings without keyboard or mouse input. Short jump was defined as release after three 0.02-second physics steps.",
+  "sceneSettings": {
+    "previous": {
+      "jumpForce": 25,
+      "jumpReleaseMultiplier": -1
+    },
+    "current": {
+      "jumpForce": 27.82,
+      "jumpReleaseMultiplier": 0.704
+    }
+  },
+  "runs": {
+    "PlayTestScene": {
+      "passed": 6,
+      "failed": 0,
+      "checks": [
+        "[JumpRetune] 입력 씬의 점프 시작 속도와 해제 배율 | 기대 27.82 / 0.704 | 실제 27.82 / 0.704",
+        "[JumpRetune] 입력 유지 점프 높이 | 기대 1.25배 | 실제 3.001 → 3.752 (1.250배)",
+        "[JumpRetune] 입력 0.06초 입력 점프 높이 | 기대 2배 | 실제 1.269 → 2.538 (2.000배)",
+        "[JumpRetune] 입력 0.06초 해제 직후 수직 속도 | 기대 하강 대신 상승 유지 | 실제 -19.232 → 15.524",
+        "[JumpRetune] 입력 즉시 탭 점프 | 기대 1유닛 이상 상승, 유지 점프보다 낮음 | 실제 1.802",
+        "[JumpRetune] 입력 지상 보스 구역 진입 | 기대 입구 벽 오른쪽 | 실제 16.62402"
+      ]
+    },
+    "FlyingBossTestScene": {
+      "passed": 6,
+      "failed": 0,
+      "checks": [
+        "[JumpRetune] 입력 씬의 점프 시작 속도와 해제 배율 | 기대 27.82 / 0.704 | 실제 27.82 / 0.704",
+        "[JumpRetune] 입력 유지 점프 높이 | 기대 1.25배 | 실제 3.001 → 3.752 (1.250배)",
+        "[JumpRetune] 입력 0.06초 입력 점프 높이 | 기대 2배 | 실제 1.269 → 2.538 (2.000배)",
+        "[JumpRetune] 입력 0.06초 해제 직후 수직 속도 | 기대 하강 대신 상승 유지 | 실제 -19.232 → 15.524",
+        "[JumpRetune] 입력 즉시 탭 점프 | 기대 1유닛 이상 상승, 유지 점프보다 낮음 | 실제 1.802",
+        "[JumpRetune] 입력 유지 점프 최고점의 천장 여유 | 기대 양의 간격 | 실제 2.436"
+      ]
+    }
+  }
+}
