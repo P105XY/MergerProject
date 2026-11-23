@@ -134,6 +134,7 @@ namespace Mech.Function
                 MoveCharge();
             } else {
                 Strike(attack == AttackPattern.Slam ? slamSize : sweepSize);
+                DropPatternFragments(attack == AttackPattern.Slam ? 1 : 2, FacingDirection);
                 attacksSinceSummon++;
                 FinishPattern(AttackDelay);
             }
@@ -177,6 +178,7 @@ namespace Mech.Function
             body.position += direction * moveDistance;
 
             if (wallDistance <= distance + WallClearance) {
+                DropPatternFragments(1, -FacingDirection);
                 attacksSinceSummon++;
                 FinishPattern(AttackDelay);
             }
@@ -199,6 +201,36 @@ namespace Mech.Function
                 if (hit.GetComponentInParent<PlayerBase>() is PlayerBase player) {
                     player.TryReceiveContactDamage(AttackPower);
                 }
+            }
+        }
+
+        // 패턴 종료 후 보스 또는 소환 적의 드롭 설정으로 접근 가능한 쪽에 조각을 배치한다.
+        private void DropPatternFragments(int count, int direction)
+        {
+            if (!CanAct || !isActiveAndEnabled) {
+                return;
+            }
+
+            EnemyBase dropSource = HeldObject == null && fragmentEnemyPrefab != null ? fragmentEnemyPrefab : this;
+
+            Physics2D.SyncTransforms();
+            Bounds bounds = bodyCollider.bounds;
+            float spacing = Mathf.Max(0.1f, fragmentSpawnSpacing);
+            float furthestDistance = bounds.extents.x + count * spacing;
+            gameObject.scene.GetPhysicsScene2D().Raycast(bounds.center, Vector2.right * direction,
+                furthestDistance, new ContactFilter2D { useTriggers = false }, groundHits);
+
+            foreach (RaycastHit2D hit in groundHits) {
+                if (IsEnvironment(hit.collider) && Vector2.Dot(hit.normal, Vector2.right * direction) < -0.1f) {
+                    direction = -direction;
+                    break;
+                }
+            }
+
+            for (int index = 0; index < count; index++) {
+                float x = bounds.center.x + direction * (bounds.extents.x + (index + 0.5f) * spacing);
+                var position = new Vector3(x, bounds.min.y + GroundProbeHeight, transform.position.z);
+                CreateDroppedFragment(dropSource.HeldObject, dropSource.HeldObjectType, position);
             }
         }
 

@@ -46,7 +46,7 @@ namespace Mech.Function
         public GameObject HeldObject => heldObject;
         public EnemyState CurrentState { get; private set; } = EnemyState.Idle;
         public bool IsDefeated { get; private set; }
-        internal bool IsWhiteFlashing => whiteFlash != null && whiteFlash.IsFlashing;
+        public bool IsWhiteFlashing => whiteFlash != null && whiteFlash.IsFlashing;
 
         public event Action<EnemyState, EnemyState> StateChanged;
         public event Action<EnemyBase, CollectibleType, GameObject> FragmentDropped;
@@ -83,9 +83,14 @@ namespace Mech.Function
                 return;
             }
 
+            float previousHealth = CurrentHealth;
             CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
 
             if (fromPlayer && isActiveAndEnabled) {
+                if (CurrentHealth < previousHealth && attacker != null) {
+                    attacker.RegisterWeaponHit();
+                }
+
                 if (whiteFlash == null) {
                     whiteFlash = gameObject.AddComponent<EnemyWhiteFlash>();
                 }
@@ -105,30 +110,29 @@ namespace Mech.Function
         private void Defeat()
         {
             IsDefeated = true;
-            GameObject droppedFragment = null;
-
-            if (heldObject != null) {
-                droppedFragment = Instantiate(heldObject, transform.position, Quaternion.identity);
-                FragmentPickup pickup = droppedFragment.GetComponent<FragmentPickup>();
-
-                if (pickup == null) {
-                    pickup = droppedFragment.AddComponent<FragmentPickup>();
-                }
-
-                pickup.Initialize(heldObjectType);
-            }
-
-            if (heldObject == null) {
-                Debug.LogWarning("적에게 드롭할 조각이 지정되지 않았습니다.", this);
-            }
-
+            GameObject droppedFragment = CreateDroppedFragment(heldObject, heldObjectType,
+                FragmentDrop.FindFloor(transform.position, gameObject.scene));
             TryChangeState(EnemyState.Dead);
+            FragmentDropped?.Invoke(this, heldObjectType, droppedFragment);
+            Defeated?.Invoke(this);
+        }
 
-            if (droppedFragment != null) {
-                FragmentDropped?.Invoke(this, heldObjectType, droppedFragment);
+        // 실제 공격이 실행될 때 수집 가능한 보상 파편을 떨어뜨린다.
+        public void DropAttackFragment()
+        {
+            if (!isActiveAndEnabled || IsDefeated || CurrentState == EnemyState.Dead) {
+                return;
             }
 
-            Defeated?.Invoke(this);
+            Vector3 position = FragmentDrop.FindFloor(transform.position, gameObject.scene);
+            GameObject fragment = CreateDroppedFragment(heldObject, heldObjectType, position);
+            FragmentDropped?.Invoke(this, heldObjectType, fragment);
+        }
+
+        // 지정한 위치에 조각을 만들고 종류와 수집 및 소멸 처리를 초기화한다.
+        protected GameObject CreateDroppedFragment(GameObject prefab, CollectibleType type, Vector3 position)
+        {
+            return FragmentDrop.Spawn(prefab, type, position, gameObject.scene);
         }
 
         // 유효한 새 상태로 전환하고 이전 상태와 새 상태를 알린다.

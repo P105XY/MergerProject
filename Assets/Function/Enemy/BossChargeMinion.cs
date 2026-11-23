@@ -23,12 +23,13 @@ namespace Mech.Function
         }
 
         // 생성 순간의 돌진 방향과 지형 레이어를 지정한다.
-        internal void Launch(Vector2 launchDirection, LayerMask collisionLayers)
+        public void Launch(Vector2 launchDirection, LayerMask collisionLayers)
         {
             direction = launchDirection;
             terrainLayers = collisionLayers;
             remainingLife = lifetime;
             TryChangeState(EnemyState.Attack);
+            DropAttackFragment();
         }
 
         // 정해진 방향으로 진행하고 지형에 닿거나 수명이 끝나면 제거한다.

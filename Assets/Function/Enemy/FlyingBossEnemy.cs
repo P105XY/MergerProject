@@ -145,6 +145,7 @@ namespace Mech.Function
                     break;
                 case Pattern.Dive:
                     diveDirection = AimAt(player);
+                    DropAttackFragment();
                     break;
                 case Pattern.ArcShot:
                     FireArc(player);
@@ -259,6 +260,7 @@ namespace Mech.Function
         // 중앙 포물선이 조준 위치를 지나도록 계산하고 좌우 15도에 한 발씩 더 쏜다.
         private void FireArc(PlayerBase player)
         {
+            DropAttackFragment();
             Vector2 offset = (Vector2)player.transform.position - body.position;
             float speed = Mathf.Max(0.01f, projectileSpeed);
             float gravity = Mathf.Max(0.01f, projectileGravity);
@@ -274,6 +276,7 @@ namespace Mech.Function
         // X자 대각선 또는 십자 직선 방향으로 네 발을 발사한다.
         private void FireRadial(bool diagonal)
         {
+            DropAttackFragment();
             float startAngle = diagonal ? 45f : 0f;
 
             for (int index = 0; index < 4; index++) {

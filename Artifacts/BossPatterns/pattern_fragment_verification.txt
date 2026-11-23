@@ -1,0 +1,34 @@
+[BossPatterns] 입력 보스 초기 체력 | 기대 2250 / 2250 | 실제 2250 / 2250
+[BossPatterns] 입력 첫 패턴 대기 | 기대 3초, 정지 | 실제 3.000초 / Idle
+[BossPatterns] 입력 벽 충돌 전 돌진 조각 수 | 기대 0개 | 실제 0
+[BossPatterns] 입력 오른쪽 돌진 정지 X | 기대 12.49 | 실제 12.485
+[BossPatterns] 입력 오른쪽 돌진 경로의 플레이어 HP | 기대 90 | 실제 90
+[BossPatterns] 입력 돌진 벽 충돌 조각 수 | 기대 1개 | 실제 1
+[BossPatterns] 입력 돌진 조각의 벽 안쪽 위치 | 기대 보스 왼쪽, 경기장 안쪽 | 실제 (10.74, 0.50, 0.00)
+[BossPatterns] 입력 돌진 후 대기 | 기대 3초, 정지 | 실제 3.000초 / Idle
+[BossPatterns] 입력 돌진 후 대기 중 조각 수 | 기대 1개 | 실제 1
+[BossPatterns] 입력 내려찍기 플레이어 HP | 기대 80 | 실제 80
+[BossPatterns] 입력 내려찍기 후 누적 조각 수 | 기대 2개 | 실제 2
+[BossPatterns] 입력 공격 2회 직후 소환 수 | 기대 0 | 실제 0
+[BossPatterns] 입력 내려찍기 후 대기 | 기대 3초, 정지 | 실제 3.000초 / Idle
+[BossPatterns] 입력 두 공격 뒤 강제 소환 | 기대 3마리 | 실제 3
+[BossPatterns] 입력 소환 패턴의 직접 조각 수 | 기대 누적 2개 | 실제 2
+[BossPatterns] 입력 첫 소환 위치·고정·조각 종류 | 기대 바닥 안쪽, Static, B | 실제 True
+[BossPatterns] 입력 소환 후 대기 | 기대 5초, 정지 | 실제 5.000초 / Idle
+[BossPatterns] 입력 소환 적 접촉 후 HP | 기대 70 | 실제 70
+[BossPatterns] 입력 소환 적 처치 | 기대 B 조각 1개, 충돌 해제 | 실제 1 / False
+[BossPatterns] 입력 광역 공격의 먼 전방 표적 HP | 기대 60 | 실제 60
+[BossPatterns] 입력 광역 공격 보상 조각 수 | 기대 2개 | 실제 2
+[BossPatterns] 입력 보스에 지정한 조각 종류 우선 | 기대 C 두 개 | 실제 2
+[BossPatterns] 입력 광역 조각 간격 | 기대 별도 위치 | 실제 (9.24, 0.50, 0.00)
+[BossPatterns] 입력 광역 후 대기 | 기대 3초, 정지 | 실제 3.000초 / Idle
+[BossPatterns] 입력 왼쪽 돌진 정지 X | 기대 -12.49 | 실제 -12.485
+[BossPatterns] 입력 두 번째 돌진 후 대기 | 기대 3초, 정지 | 실제 3.000초 / Idle
+[BossPatterns] 입력 두 번째 돌진 후 누적 조각 수 | 기대 6개 | 실제 6
+[BossPatterns] 입력 두 번째 강제 소환 | 기대 생존 5마리 | 실제 5
+[BossPatterns] 입력 보스 처치 후 패턴 정지 | 기대 Dead, 생존 5마리 | 실제 Dead / 5
+[BossPatterns] 입력 보스 처치 후 패턴 보상 중단 | 기대 6개 | 실제 6
+[BossPatterns] 입력 저장된 테스트 보스의 패턴 보상 | 기대 B 조각 1개 | 실제 1
+[BossPatterns] 입력 패턴 보상 조각의 수집 초기화 | 기대 수집 가능 | 실제 True
+[BossPatterns] PASS 32/32
+PASS 42/42; Unity API 대역 검증이며 Unity 물리 실행 결과가 아님.

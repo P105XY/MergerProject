@@ -110,7 +110,7 @@ public static class VerifyJumpDescentImpulse
             Physics2D.Simulate(Time.fixedDeltaTime);
             ReachApex();
             Vector2 apexVelocity = body.linearVelocity;
-            var prediction = typeof(PlayerBase).GetMethod("PredictJumpVelocity", Private);
+            var prediction = typeof(PlayerBase).GetMethod("PredictJumpVelocity");
             object[] predictionArguments = { body.position, apexVelocity, Time.fixedDeltaTime, true };
             var expected = (Vector2)prediction.Invoke(player, predictionArguments);
             tick.Invoke(player, null);

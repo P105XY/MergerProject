@@ -1,0 +1,33 @@
+[FragmentSlots] 입력 초기 조각 칸 | 기대  | 실제 
+[FragmentSlots] 입력 초기 활성 여부 | 기대 False | 실제 False
+[FragmentSlots] 입력 C, A 획득 순서 | 기대 CA | 실제 CA
+[FragmentSlots] 입력 체크포인트 저장 상태 유효 | 기대 True | 실제 True
+[FragmentSlots] 입력 미조합 저장 복원 순서 | 기대 CA | 실제 CA
+[FragmentSlots] 입력 가득 찬 큐의 획득 순서 | 기대 CAC | 실제 CAC
+[FragmentSlots] 입력 네 번째 조각 거부 | 기대 False | 실제 False
+[FragmentSlots] 입력 활성 조합의 기존 미조합 A 수 | 기대 0 | 실제 0
+[FragmentSlots] 입력 활성 특수명 | 기대 Spinning Slash | 실제 Spinning Slash
+[FragmentSlots] 입력 활성 사용 횟수 | 기대 3 | 실제 3
+[FragmentSlots] 입력 실제 특수 1회 실행 | 기대 True | 실제 True
+[FragmentSlots] 입력 한 번 시전 후 조각 순서 | 기대 CAC | 실제 CAC
+[FragmentSlots] 입력 한 번 시전 후 횟수 | 기대 2 | 실제 2
+[FragmentSlots] 입력 체크포인트 저장 상태 유효 | 기대 True | 실제 True
+[FragmentSlots] 입력 활성 저장 복원 순서 | 기대 CAC | 실제 CAC
+[FragmentSlots] 입력 활성 저장 복원 횟수 | 기대 2 | 실제 2
+[FragmentSlots] 입력 두 번째 시전 | 기대 True | 실제 True
+[FragmentSlots] 입력 세 번째 시전 | 기대 True | 실제 True
+[FragmentSlots] 입력 소진 후 큐 비움 | 기대  | 실제 
+[FragmentSlots] 입력 소진 후 활성 해제 | 기대 False | 실제 False
+[FragmentSlots] 입력 소진 후 새 조각 획득 | 기대 True | 실제 True
+[FragmentSlots] 입력 체크포인트 저장 상태 유효 | 기대 True | 실제 True
+[FragmentSlots] 입력 이전 미조합 저장 수량 복원 | 기대 BC | 실제 BC
+[FragmentSlots] 입력 체크포인트 저장 상태 유효 | 기대 True | 실제 True
+[FragmentSlots] 입력 이전 활성 저장 수량 복원 | 기대 ACC | 실제 ACC
+[FragmentSlots] 입력 이전 활성 공격 이름 | 기대 Spinning Slash | 실제 Spinning Slash
+[FragmentSlots] 입력 수량과 맞지 않는 새 순서 거부 | 기대 False | 실제 False
+[FragmentSlots] 입력 교체된 활성 공격명 | 기대 Focused Shot | 실제 Focused Shot
+[FragmentSlots] 입력 1280×720 왼쪽 아래의 네 정사각형 | 기대 True | 실제 True
+[FragmentSlots] 입력 280×160 왼쪽 아래의 네 정사각형 | 기대 True | 실제 True
+[FragmentSlots] PASS 30/30
+[FragmentSpecials] PASS 114/114
+PASS 42/42; Unity API 대역 검증이며 Unity 물리 실행 결과가 아님.

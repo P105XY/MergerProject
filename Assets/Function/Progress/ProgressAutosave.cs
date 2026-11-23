@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Mech.Function
 {
-    internal sealed class ProgressAutosave : MonoBehaviour
+    sealed class ProgressAutosave : MonoBehaviour
     {
         // 씬을 이동해도 주기와 종료를 감시할 자동 저장 오브젝트를 만든다.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

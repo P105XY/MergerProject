@@ -10,7 +10,7 @@ namespace Mech.Function
         private float hoverTime;
 
         // 바닥에 떠 있는 위치를 맞추고 키네마틱 바디로 가볍게 부유하도록 설정한다.
-        internal void HoverAboveFloor(float floorY, float clearance)
+        public void HoverAboveFloor(float floorY, float clearance)
         {
             PlaceAsObstacle(floorY + clearance);
             Vector2 center = transform.position;
@@ -35,7 +35,7 @@ namespace Mech.Function
         }
 
         // 소환된 조각 적의 발을 바닥에 맞추고 밀리지 않는 장애물로 만든다.
-        internal void PlaceAsObstacle(float floorY)
+        public void PlaceAsObstacle(float floorY)
         {
             if (TryGetComponent(out Rigidbody2D body)) {
                 body.bodyType = RigidbodyType2D.Static;

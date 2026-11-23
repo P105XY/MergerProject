@@ -7,9 +7,9 @@ var flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static
 var progress = typeof(Mech.Function.CheckpointProgress);
 var storeType = progress.Assembly.GetType("Mech.Function.CheckpointSaveStore", true);
 var directory = System.IO.Path.Combine("/private/tmp", "merger-whiteflash-" + Guid.NewGuid().ToString("N"));
-var store = Activator.CreateInstance(storeType, flags, null, new object[] { directory }, null);
+var store = Activator.CreateInstance(storeType, new object[] { directory });
 progress.GetField("saveStore", flags).SetValue(null, store);
-var flashProperty = typeof(Mech.Function.EnemyBase).GetProperty("IsWhiteFlashing", flags);
+var flashProperty = typeof(Mech.Function.EnemyBase).GetProperty("IsWhiteFlashing");
 var objects = new List<UnityEngine.Object>();
 int checks = 0;
 

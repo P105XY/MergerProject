@@ -5,17 +5,17 @@ namespace Mech.Function
 {
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-1)]
-    internal sealed class EnemyWhiteFlash : MonoBehaviour
+    sealed class EnemyWhiteFlash : MonoBehaviour
     {
         private const double Duration = 0.05;
         private readonly List<(SpriteRenderer Renderer, Material Original)> originalMaterials = new();
         private Material flashMaterial;
         private double endsAt;
 
-        internal bool IsFlashing => originalMaterials.Count != 0;
+        public bool IsFlashing => originalMaterials.Count != 0;
 
         // 적에 속한 스프라이트를 밝게 표시하고 연속 피격 시 종료 시각을 갱신한다.
-        internal void Play(EnemyBase owner)
+        public void Play(EnemyBase owner)
         {
             if (!IsFlashing) {
                 foreach (SpriteRenderer sprite in GetComponentsInChildren<SpriteRenderer>()) {

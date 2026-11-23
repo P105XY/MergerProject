@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace Mech.Function
 {
-    internal static class EnemyDash
+    static class EnemyDash
     {
         // 돌진 경로의 플레이어를 타격하고 가장 가까운 지형 앞에서 이동을 멈춘다.
-        internal static bool Step(Rigidbody2D body, Vector2 direction, float distance, LayerMask terrainLayers,
+        public static bool Step(Rigidbody2D body, Vector2 direction, float distance, LayerMask terrainLayers,
             float damage, List<RaycastHit2D> hits)
         {
             const float clearance = 0.01f;
@@ -32,7 +32,7 @@ namespace Mech.Function
         }
 
         // 지정 레이어의 고체 지형만 돌진 장애물과 소환 바닥으로 취급한다.
-        internal static bool IsTerrain(Collider2D collider, LayerMask layers)
+        public static bool IsTerrain(Collider2D collider, LayerMask layers)
         {
             return !collider.isTrigger && (layers.value & (1 << collider.gameObject.layer)) != 0
                 && collider.GetComponentInParent<EnemyBase>() == null && collider.GetComponentInParent<PlayerBase>() == null;

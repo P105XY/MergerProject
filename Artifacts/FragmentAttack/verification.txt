@@ -1,0 +1,16 @@
+[FragmentAttack] 입력 프로젝트의 트리거 쿼리 설정 | 기대 1 | 실제 1
+[FragmentAttack] 입력 적 처치 | 기대 0 | 실제 0
+[FragmentAttack] 입력 트리거 전용 적 체력 | 기대 100 | 실제 100
+[FragmentAttack] 입력 B 프리팹 드롭 | 기대 1 | 실제 1
+[FragmentAttack] 입력 처치 공격 직후 B 수 | 기대 0 | 실제 0
+[FragmentAttack] 입력 접촉한 조각의 트리거 설정 | 기대 1 | 실제 1
+[FragmentAttack] 입력 조각과 플레이어의 실제 물리 접촉 | 기대 1 | 실제 1
+[FragmentAttack] 입력 접촉 뒤 B 수 | 기대 0 | 실제 0
+[FragmentAttack] 입력 반대 방향 공격 뒤 B 수 | 기대 0 | 실제 0
+[FragmentAttack] 입력 조각 명중 뒤 B 수 | 기대 1 | 실제 1
+[FragmentAttack] 입력 조각 제거 처리 | 기대 1 | 실제 1
+[FragmentAttack] 입력 같은 조각 재명중 뒤 B 수 | 기대 1 | 실제 1
+[FragmentAttack] 입력 준비된 특수 사용 횟수 | 기대 3 | 실제 3
+[FragmentAttack] 입력 특수 준비 중 추가 조각 수집 처리 | 기대 0 | 실제 0
+[FragmentAttack] 입력 특수 소진 뒤 다시 맞힌 B 수 | 기대 1 | 실제 1
+[FragmentAttack] PASS 15/15

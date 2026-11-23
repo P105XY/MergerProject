@@ -12,7 +12,7 @@ var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingF
 var directory = System.IO.Path.Combine("/private/tmp", "merger-autosave-triggers-" + System.Guid.NewGuid().ToString("N"));
 var savePath = System.IO.Path.Combine(directory, "checkpoint.json");
 var storeType = progress.Assembly.GetType("Mech.Function.CheckpointSaveStore", true);
-var store = System.Activator.CreateInstance(storeType, flags, null, new object[] { directory }, null);
+var store = System.Activator.CreateInstance(storeType, new object[] { directory });
 progress.GetField("saveStore", flags).SetValue(null, store);
 int passed = 0;
 int phase = 0;
@@ -78,7 +78,7 @@ observe = () => {
         switch (phase) {
             case 0:
                 // 타이틀에서 시간을 흘려도 저장을 만들지 않아야 한다.
-                progress.GetMethod("TickAutosave", flags).Invoke(null, new object[] { 180f });
+                progress.GetMethod("TickAutosave").Invoke(null, new object[] { 180f });
                 check("타이틀에서는 180초가 지나도 저장 없음", "", read());
                 check("새 게임 시작", true, Mech.Function.CheckpointProgress.TryStartNewGame(stagePath));
                 phase++;
@@ -89,7 +89,7 @@ observe = () => {
                 }
 
                 // 179초에는 저장하지 않고 180초에 시작 위치와 현재 상태를 기록한다.
-                var tick = progress.GetMethod("TickAutosave", flags);
+                var tick = progress.GetMethod("TickAutosave");
                 progress.GetField("autosaveElapsed", flags).SetValue(null, 0f);
                 player().TryCollectFragment(Mech.Function.CollectibleType.A);
                 tick.Invoke(null, new object[] { 179f });

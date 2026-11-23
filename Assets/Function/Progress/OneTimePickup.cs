@@ -54,7 +54,7 @@ namespace Mech.Function
         }
 
         // 현재 진행에 획득 기록이 있는 아이템을 보상 호출 없이 숨긴다.
-        internal void HideIfCollected()
+        public void HideIfCollected()
         {
             if (CheckpointProgress.HasCollectedItem(itemId)) {
                 gameObject.SetActive(false);

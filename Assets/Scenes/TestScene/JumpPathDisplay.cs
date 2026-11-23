@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Mech.Function;
 using UnityEngine;
 
-internal sealed class JumpPathDisplay
+sealed class JumpPathDisplay
 {
     private const float TrailDuration = 1.25f;
     private readonly PlayerBase player;
@@ -14,14 +14,14 @@ internal sealed class JumpPathDisplay
     private float hideAt;
 
     // 플레이 테스트의 플레이어와 물리 바디를 연결한다.
-    internal JumpPathDisplay(PlayerBase player)
+    public JumpPathDisplay(PlayerBase player)
     {
         this.player = player;
         body = player.GetComponent<Rigidbody2D>();
     }
 
     // 점프가 실제로 시작되면 이륙 위치부터 새 경로를 기록한다.
-    internal void Begin()
+    public void Begin()
     {
         traveled.Clear();
         predicted.Clear();
@@ -30,7 +30,7 @@ internal sealed class JumpPathDisplay
     }
 
     // 물리 갱신 뒤에 현재 위치를 추가하고 아직 공중이면 예상 경로를 계산한다.
-    internal void UpdatePath()
+    public void UpdatePath()
     {
         if (!tracking || player.IsDead || !player.isActiveAndEnabled) {
             return;
@@ -103,7 +103,7 @@ internal sealed class JumpPathDisplay
     }
 
     // 게임 화면에 실제 이동은 민트색 실선으로, 예측은 노란 점으로 그린다.
-    internal void Draw()
+    public void Draw()
     {
         if (Event.current.type != EventType.Repaint || player.IsDead || !player.isActiveAndEnabled
             || traveled.Count == 0 || (!tracking && Time.unscaledTime >= hideAt)) {

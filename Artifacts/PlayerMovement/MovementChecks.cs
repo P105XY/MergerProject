@@ -37,6 +37,8 @@ public static class MovementChecks
     private static PlayerBase Create(float deltaTime = 0.02f, float gravityScale = 0f)
     {
         Time.fixedDeltaTime = deltaTime;
+        Time.fixedTimeAsDouble = 0d;
+        Time.timeAsDouble = 0d;
         Keyboard.current = new Keyboard();
         PlayerBase player = new PlayerBase();
         Set(player, "movementAcceleration", 40f);
@@ -50,12 +52,20 @@ public static class MovementChecks
     // 실제 입력 처리와 물리 갱신을 한 번 진행한다.
     private static void Step(PlayerBase player, int direction = 0, bool pressed = false, bool held = false)
     {
+        Time.timeAsDouble = Time.fixedTimeAsDouble;
         Keyboard keyboard = Keyboard.current;
         keyboard.leftArrowKey.isPressed = direction < 0;
         keyboard.rightArrowKey.isPressed = direction > 0;
         keyboard.aKey.wasPressedThisFrame = pressed;
         keyboard.aKey.isPressed = held;
         Invoke(player, "Update");
+        AdvancePhysics(player);
+    }
+
+    // 고정 시각을 한 단계 진행하고 플레이어의 물리 갱신을 호출한다.
+    private static void AdvancePhysics(PlayerBase player)
+    {
+        Time.fixedTimeAsDouble += Time.fixedDeltaTime;
         Invoke(player, "FixedUpdate");
     }
 
@@ -141,25 +151,25 @@ public static class MovementChecks
         player.TestBody.linearVelocity = new Vector2(0, 6f);
         Step(player, pressed: true, held: true);
         Check("공중 재점프 거부", 6, player.TestBody.linearVelocity.y);
-        // 입력: 중력 배율 0, 상승 속도 6에서 해제 → 기대: 6 × -0.75 = -4.5.
+        // 입력: 중력 배율 0, 상승 속도 6에서 A 해제 → 기대: Y 속도 6 유지.
         Step(player);
-        Check("중력 배율 0에서 해제 시 하강 전환", -4.5, player.TestBody.linearVelocity.y);
-        // 입력: 상승 속도 6, 중력 배율 9.8, 질량 2에서 해제 → 기대: 동일한 -4.5, 점프당 한 번 적용.
+        Check("중력 배율 0에서 해제 시 Y 속도 유지", 6, player.TestBody.linearVelocity.y);
+        // 입력: 상승 속도 6, 중력 배율 9.8, 질량 2에서 A 해제 → 기대: 속도 6 유지, 중력 15.19 적용.
         player = Create(gravityScale: 9.8f);
         player.TestBody.mass = 2f;
         Step(player, pressed: true, held: true);
         player.TestBody.TestGrounded = false;
         player.TestBody.linearVelocity = new Vector2(0f, 6f);
         Check("상승 중 기본 중력 배율", 9.8, player.TestBody.gravityScale);
-        Check("예측에 사용할 하강 중력 배율", 17.15, player.JumpFallGravityScale);
+        Check("예측에 사용할 하강 중력 배율", 15.19, player.JumpFallGravityScale);
         Step(player);
-        Check("해제 시 현재 수직 속도에 -0.75 적용", -4.5, player.TestBody.linearVelocity.y);
-        Check("해제로 하강 전환 시 중력 배율", 17.15, player.TestBody.gravityScale);
+        Check("해제 시 현재 수직 속도 유지", 6, player.TestBody.linearVelocity.y);
+        Check("해제 시 하강 중력 배율", 15.19, player.TestBody.gravityScale);
         player.TestBody.linearVelocity = new Vector2(0f, 2f);
         Step(player);
-        Check("같은 점프에서 해제 배율 중복 적용 없음", 2, player.TestBody.linearVelocity.y);
-        Check("착지 전까지 하강 중력 배율 유지", 17.15, player.TestBody.gravityScale);
-        // 입력: 착지와 같은 갱신에 다시 점프한 뒤 S를 유지해 최고점 도달 → 기대: 상승 9.8, 최고점 17.15.
+        Check("같은 점프에서 해제 뒤 Y 속도 유지", 2, player.TestBody.linearVelocity.y);
+        Check("착지 전까지 하강 중력 배율 유지", 15.19, player.TestBody.gravityScale);
+        // 입력: 착지와 같은 갱신에 다시 점프한 뒤 A를 유지해 최고점 도달 → 기대: 상승 9.8, 최고점 15.19.
         player.TestBody.linearVelocity = new Vector2(0f, -1f);
         player.TestBody.TestGrounded = true;
         Step(player, pressed: true, held: true);
@@ -168,7 +178,7 @@ public static class MovementChecks
         player.TestBody.linearVelocity = Vector2.zero;
         Step(player, held: true);
         Check("유지 점프 최고점의 Y 속도", 0, player.TestBody.linearVelocity.y);
-        Check("유지 점프 최고점의 중력 배율", 17.15, player.TestBody.gravityScale);
+        Check("유지 점프 최고점의 중력 배율", 15.19, player.TestBody.gravityScale);
         // 입력: 하강 중 착지 → 기대: 기본 중력 배율 복원 및 다시 점프 허용.
         player.TestBody.linearVelocity = new Vector2(0f, -1f);
         player.TestBody.TestGrounded = true;
@@ -211,7 +221,7 @@ public static class MovementChecks
         player.TestBody.TestGroundNormalY = 0f;
         Step(player, pressed: true, held: true);
         Check("벽 접촉 점프 거부", 0, player.TestBody.linearVelocity.y);
-        // 입력: 물리 갱신 전에 S를 눌렀다 놓음 → 기대: 8 × -0.75 = -6.
+        // 입력: 물리 갱신 전에 A를 눌렀다 놓음 → 기대: 점프 속도 8, 중력 배율 15.19.
         player = Create(gravityScale: 9.8f);
         Keyboard.current.aKey.wasPressedThisFrame = true;
         Keyboard.current.aKey.isPressed = true;
@@ -219,8 +229,9 @@ public static class MovementChecks
         Keyboard.current.aKey.wasPressedThisFrame = false;
         Keyboard.current.aKey.isPressed = false;
         Invoke(player, "Update");
-        Invoke(player, "FixedUpdate");
-        Check("빠른 탭 점프", -6, player.TestBody.linearVelocity.y);
+        AdvancePhysics(player);
+        Check("빠른 탭 점프", 8, player.TestBody.linearVelocity.y);
+        Check("빠른 탭의 하강 중력 배율", 15.19, player.TestBody.gravityScale);
         // 입력: 최대 높이 1과 기본 높이 3에서 중력 적분 → 기대: 상한 준수와 짧은 탭이 더 낮음.
         float cappedPeak = Peak(true, 1f);
         Check("최대 높이 1 상한", 1, cappedPeak <= 1.0001f ? 1 : 0);
@@ -229,7 +240,7 @@ public static class MovementChecks
         float tappedPeak = Peak(false, 3f);
         Check("기본 최대 높이 3 상한", 1, heldPeak <= 3.0001f ? 1 : 0);
         Check($"유지 최고점 {heldPeak:F3} / 탭 최고점 {tappedPeak:F3}", 1, heldPeak > tappedPeak ? 1 : 0);
-        // 입력: 하강 속도 -3에서 S 해제 → 기대: 현재 하강 속도 유지.
+        // 입력: 하강 속도 -3에서 A 해제 → 기대: 현재 하강 속도 유지.
         player = Create(gravityScale: 9.8f);
         Step(player, pressed: true, held: true);
         player.TestBody.TestGrounded = false;
@@ -237,20 +248,51 @@ public static class MovementChecks
         Step(player, held: true);
         Step(player);
         Check("하강 속도 보존", -3, player.TestBody.linearVelocity.y);
-        Check("하강 중 해제해도 중력 배율을 한 번만 적용", 17.15, player.TestBody.gravityScale);
+        Check("하강 중 해제해도 중력 배율을 한 번만 적용", 15.19, player.TestBody.gravityScale);
         // 입력: 하강 중 비활성화 → 기대: 기본 중력 배율 복원.
         Invoke(player, "OnDisable");
         Check("비활성화 시 기본 중력 배율 복원", 9.8, player.TestBody.gravityScale);
         // 입력: 비활성화 뒤 입력 장치 없음 → 기대: 대기 점프와 코요테 권한 초기화.
         player = Create();
         Step(player);
-        Set(player, "jumpRequested", true);
+        Set(player, "jumpInputExpiresAt", Time.timeAsDouble + 0.01d);
         Invoke(player, "OnDisable");
         player.TestBody.TestGrounded = false;
         Keyboard.current = null;
         Invoke(player, "Update");
-        Invoke(player, "FixedUpdate");
+        AdvancePhysics(player);
         Check("비활성화 대기 점프 제거", 0, player.TestBody.linearVelocity.y);
+
+        // 입력: 1.016초 A 입력, 1.026초 착지, 물리 간격 0.02초 → 기대: 공중에서는 대기하고 접지 확인 즉시 점프.
+        player = Create();
+        player.TestBody.TestGrounded = false;
+        player.TestBody.linearVelocity = new Vector2(0f, -3f);
+        Time.fixedTimeAsDouble = 1d;
+        Time.timeAsDouble = 1.016d;
+        Keyboard.current.aKey.wasPressedThisFrame = true;
+        Keyboard.current.aKey.isPressed = true;
+        Invoke(player, "Update");
+        AdvancePhysics(player);
+        AdvancePhysics(player);
+        Check("착지 전에는 버퍼만 유지", -3, player.TestBody.linearVelocity.y);
+        player.TestBody.TestGrounded = true;
+        player.TestBody.linearVelocity = Vector2.zero;
+        AdvancePhysics(player);
+        Check("착지 0.01초 전 입력을 첫 접지 판정에서 실행", 8, player.TestBody.linearVelocity.y);
+        player.TestBody.linearVelocity = Vector2.zero;
+        AdvancePhysics(player);
+        Check("이미 사용한 입력은 다음 접지에서 재실행되지 않음", 0, player.TestBody.linearVelocity.y);
+
+        // 입력: A를 누른 뒤 공중에서 0.02초씩 네 번 갱신하고 착지 → 기대: 오래된 입력은 만료.
+        player = Create();
+        player.TestBody.TestGrounded = false;
+        Step(player, pressed: true, held: true);
+        Step(player, held: true);
+        Step(player, held: true);
+        Step(player, held: true);
+        player.TestBody.TestGrounded = true;
+        Step(player, held: true);
+        Check("만료된 입력으로 착지할 때 점프하지 않음", 0, player.TestBody.linearVelocity.y);
         Console.WriteLine($"PASS {passed}/{passed}; Unity API 대역 검증이며 Unity 물리 실행 결과가 아님.");
     }
 }

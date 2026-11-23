@@ -9,7 +9,7 @@ var progress = typeof(Mech.Function.CheckpointProgress);
 var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic;
 var directory = System.IO.Path.Combine("/private/tmp", "merger-checkpoint-verification-" + System.Guid.NewGuid().ToString("N"));
 var storeType = progress.Assembly.GetType("Mech.Function.CheckpointSaveStore", true);
-var isolatedStore = System.Activator.CreateInstance(storeType, flags, null, new object[] { directory }, null);
+var isolatedStore = System.Activator.CreateInstance(storeType, new object[] { directory });
 progress.GetField("saveStore", flags).SetValue(null, isolatedStore);
 var primary = System.IO.Path.Combine(directory, "checkpoint.json");
 var backup = primary + ".bak";

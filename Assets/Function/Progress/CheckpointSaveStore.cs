@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Mech.Function
 {
     [Serializable]
-    internal sealed class CheckpointSaveData
+    sealed class CheckpointSaveData
     {
         public const int CurrentVersion = 1;
         public const string SceneEntryId = "$scene-entry";
@@ -17,18 +17,18 @@ namespace Mech.Function
         public PlayerCheckpointState Player;
         public string[] CollectedItemIds = Array.Empty<string>();
 
-        internal bool IsValid => Version == CurrentVersion && !string.IsNullOrWhiteSpace(ScenePath)
+        public bool IsValid => Version == CurrentVersion && !string.IsNullOrWhiteSpace(ScenePath)
             && !string.IsNullOrWhiteSpace(CheckpointId) && PlayerBase.IsValidCheckpointState(Player);
     }
 
-    internal sealed class CheckpointSaveStore
+    sealed class CheckpointSaveStore
     {
         private readonly string directory;
         private readonly string primaryPath;
         private readonly string backupPath;
 
         // 사용자 데이터 폴더에서 단일 진행 슬롯의 경로를 준비한다.
-        internal CheckpointSaveStore(string directory)
+        public CheckpointSaveStore(string directory)
         {
             this.directory = directory;
             primaryPath = Path.Combine(directory, "checkpoint.json");
@@ -36,13 +36,13 @@ namespace Mech.Function
         }
 
         // 주 저장 파일이 없거나 유효하지 않으면 직전 정상 저장본을 읽는다.
-        internal CheckpointSaveData Read()
+        public CheckpointSaveData Read()
         {
             return ReadFile(primaryPath) ?? ReadFile(backupPath);
         }
 
         // 새 내용을 임시 파일에 기록한 뒤 정상 저장본을 보존하며 슬롯을 교체한다.
-        internal void Write(CheckpointSaveData data)
+        public void Write(CheckpointSaveData data)
         {
             string json = JsonUtility.ToJson(data);
             CheckpointSaveData previous = ReadFile(primaryPath);

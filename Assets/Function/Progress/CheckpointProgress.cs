@@ -38,7 +38,7 @@ namespace Mech.Function
         }
 
         // 로드 중이 아닐 때 유효한 아이템 ID의 최초 획득을 기록한다.
-        internal static bool TryRecordItemPickup(string itemId)
+        public static bool TryRecordItemPickup(string itemId)
         {
             return Application.isPlaying && !IsLoading && !string.IsNullOrWhiteSpace(itemId)
                 && collectedItemIds.Add(itemId);
@@ -119,7 +119,7 @@ namespace Mech.Function
         }
 
         // 저장 중복과 씬 구성을 확인하고 현재 진행을 단일 슬롯에 쓴다.
-        internal static void SaveAt(Checkpoint checkpoint, PlayerBase player)
+        public static void SaveAt(Checkpoint checkpoint, PlayerBase player)
         {
             Scene scene = checkpoint.gameObject.scene;
 
@@ -140,7 +140,7 @@ namespace Mech.Function
         }
 
         // 현재 지역의 마지막 체크포인트 또는 시작 위치를 기준으로 자동 저장한다.
-        internal static void SaveCurrentProgress(PlayerBase player)
+        public static void SaveCurrentProgress(PlayerBase player)
         {
             if (CanSavePlayer(player) && SceneUtility.GetBuildIndexByScenePath(player.gameObject.scene.path) >= 0) {
                 WriteProgress(CaptureProgress(player, player.gameObject.scene.path, currentCheckpointId));
@@ -148,7 +148,7 @@ namespace Mech.Function
         }
 
         // 실제 플레이가 누적 3분에 도달할 때마다 현재 진행을 저장한다.
-        internal static void TickAutosave(float elapsedSeconds)
+        public static void TickAutosave(float elapsedSeconds)
         {
             if (Time.timeScale <= 0f || !CanSavePlayer(gameplayPlayer)) {
                 return;
@@ -163,7 +163,7 @@ namespace Mech.Function
         }
 
         // 정상 종료 시 플레이 중인 지역의 진행을 디스크에 기록한다.
-        internal static void SaveBeforeQuit()
+        public static void SaveBeforeQuit()
         {
             SaveCurrentProgress(gameplayPlayer);
         }

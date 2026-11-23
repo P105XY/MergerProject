@@ -9,7 +9,7 @@ var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingF
 var directory = System.IO.Path.Combine("/private/tmp", "merger-autosave-overlap-" + System.Guid.NewGuid().ToString("N"));
 var savePath = System.IO.Path.Combine(directory, "checkpoint.json");
 var storeType = progress.Assembly.GetType("Mech.Function.CheckpointSaveStore", true);
-var store = System.Activator.CreateInstance(storeType, flags, null, new object[] { directory }, null);
+var store = System.Activator.CreateInstance(storeType, new object[] { directory });
 progress.GetField("saveStore", flags).SetValue(null, store);
 int passed = 0;
 

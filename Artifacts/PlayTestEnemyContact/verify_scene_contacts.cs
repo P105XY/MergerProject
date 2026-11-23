@@ -11,7 +11,7 @@ var flags = System.Reflection.BindingFlags.Static | System.Reflection.BindingFla
 var progress = typeof(Mech.Function.CheckpointProgress);
 var storeType = progress.Assembly.GetType("Mech.Function.CheckpointSaveStore", true);
 var directory = System.IO.Path.Combine("/private/tmp", "merger-scene-contact-" + System.Guid.NewGuid().ToString("N"));
-var store = System.Activator.CreateInstance(storeType, flags, null, new object[] { directory }, null);
+var store = System.Activator.CreateInstance(storeType, new object[] { directory });
 progress.GetField("saveStore", flags).SetValue(null, store);
 int phase = 0;
 int passed = 0;

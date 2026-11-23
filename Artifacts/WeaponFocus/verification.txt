@@ -1,0 +1,195 @@
+[WeaponFocus] 입력 플레이 테스트 씬에서 HUD 연결 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 빈 게이지에서 집중 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 S 실제 근접 피해 | 기대 [90] | 실제 [90]
+[WeaponFocus] 입력 S 첫 명중 누적 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 피해 없는 공격 제외 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 두 번째 명중 뒤 게이지 | 기대 [0] | 실제 [0]
+[WeaponFocus] 입력 세 번째 명중 뒤 게이지 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 세 번째 명중 뒤 누적 초기화 | 기대 [0] | 실제 [0]
+[WeaponFocus] 입력 비행 적 공격 파편 한 개 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 공격 파편 한 개분 수집 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 공격 파편 재수집 방지 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 사망 파편도 한 개 | 기대 [2] | 실제 [2]
+[WeaponFocus] 입력 사망 파편 수집 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 충전 상한 | 기대 [3] | 실제 [3]
+[WeaponFocus] 입력 가득 찬 게이지에서 수집 불가 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 충전만으로 무기를 획득하지 않음 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 D 집중 시작 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 집중 게임 속도 기대 0.15000 실제 0.15000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 집중 고정 갱신 간격 기대 0.00300 실제 0.00300 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 집중 왼쪽 입력은 이동에 쓰이지 않음 기대 0.00000 실제 0.00000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 왼쪽 방향 첫 입력 | 기대 [A] | 실제 [A]
+[WeaponFocus] 입력 누른 채 유지하면 방향 한 번 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 미완성 해제 후 입력 폐기 | 기대 [0] | 실제 [0]
+[WeaponFocus] 입력 미완성 해제 후 게이지 보존 | 기대 [3] | 실제 [3]
+[WeaponFocus] 입력 미완성 해제 후 속도 복원 기대 1.00000 실제 1.00000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 미완성 해제 후 즉시 재진입 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 네 번째 입력은 맨 앞을 교체 | 기대 [C] | 실제 [C]
+[WeaponFocus] 입력 교체 후 가운데 방향 | 기대 [B] | 실제 [B]
+[WeaponFocus] 입력 교체 후 마지막 방향 | 기대 [C] | 실제 [C]
+[WeaponFocus] 입력 버튼을 누르는 동안 게이지 보존 | 기대 [3] | 실제 [3]
+[WeaponFocus] 입력 BCC 확정 무기 이름 | 기대 [Buckshot] | 실제 [Buckshot]
+[WeaponFocus] 입력 완성 해제 후 2회 부여 | 기대 [2] | 실제 [2]
+[WeaponFocus] 입력 완성 해제 시 3칸 차감 | 기대 [0] | 실제 [0]
+[WeaponFocus] 입력 확정 후 고정 갱신 간격 복원 기대 0.02000 실제 0.02000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 무기 보유 중 파편 충전 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 다음 D 입력으로 첫 시전 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 두 번째 시전 후 무기 소진 | 기대 [0] | 실제 [0]
+[WeaponFocus] 입력 확정 쿨타임 3초 중 재진입 금지 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 집중 제한은 실제 5초 기대 5.00000 실제 5.00000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 만료 시 무기 미지급 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 만료 시 게이지 유지 | 기대 [3] | 실제 [3]
+[WeaponFocus] 입력 만료 시 방향 폐기 | 기대 [0] | 실제 [0]
+[WeaponFocus] 입력 만료 후 속도 복원 기대 1.00000 실제 1.00000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 만료 후 실제 3초 쿨타임 기대 3.00000 실제 3.00000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 만료 직후 재진입 거부 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 새 저장 유효 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 새 저장 게이지 복원 | 기대 [2] | 실제 [2]
+[WeaponFocus] 입력 새 저장 누적 명중 복원 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 새 저장 무기 복원 | 기대 [Piercing Spear] | 실제 [Piercing Spear]
+[WeaponFocus] 입력 새 저장 사용 횟수 복원 | 기대 [1] | 실제 [1]
+[WeaponFocus] 입력 초과 게이지 저장 거부 | 기대 [False] | 실제 [False]
+[WeaponFocus] 입력 기존 미완성 조각 저장 유효 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 기존 미완성 조각을 게이지로 전환 | 기대 [2] | 실제 [2]
+[WeaponFocus] 입력 기존 활성 조합 저장 유효 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 기존 조합을 현행 관통 투창으로 복원 | 기대 [Piercing Spear] | 실제 [Piercing Spear]
+[WeaponFocus] 입력 기존 횟수는 최대 2회 복원 | 기대 [2] | 실제 [2]
+[WeaponFocus] 입력 정리 검증용 집중 진입 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 비활성화 후 게임 속도 복구 기대 1.00000 실제 1.00000 | 기대 [True] | 실제 [True]
+[WeaponFocus] 입력 비활성화 후 물리 간격 복구 기대 0.02000 실제 0.02000 | 기대 [True] | 실제 [True]
+[WeaponFocus] PASS 59/59
+[FragmentSpecials] 입력 AAA 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAA 강타 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAA 강타 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAA 가까운 단일 적 | 기대 40.000 ± 0.001 | 실제 40.000
+[FragmentSpecials] 입력 AAA 두 번째 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAB 늘어나는 칼날 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 늘어나는 칼날 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 충돌 표면 기준 첫 적의 기본 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAB 첫 적 뒤에는 관통하지 않음 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 칼날 폭 밖의 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 시전 후 플레이어 위치 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 AAB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAB 왼쪽 칼끝 명중 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 왼쪽 칼끝 명중 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 칼끝 추가 피해 | 기대 55.000 ± 0.001 | 실제 55.000
+[FragmentSpecials] 입력 AAB 반대 방향의 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 최대 길이 밖의 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB HUD 이름 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 칼끝 강조 메시 수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAB 효과의 실제 명중 길이 | 기대 3.500 ± 0.010 | 실제 3.505
+[FragmentSpecials] 입력 AAC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAC 넓은 베기 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAC 넓은 베기 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAC 전방 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAC 대각선 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAC 후방 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAC 부채꼴 바깥 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ABB 관통 검기 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABB 관통 검기 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABB 첫 적 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ABB 관통한 두 번째 적 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ABB 벽 뒤 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ABC 관통 투창 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 관통 투창 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC HUD 이름 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 투사체 수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 여러 콜라이더의 첫 적 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 ABC 후속 적 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 ABC 벽 뒤 적 보호 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABC 적 한 명마다 파편 한 개 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ABC 실제 명중 두 번 누적 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ACC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ACC 회전 베기 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ACC 회전 베기 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ACC 앞의 적 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ACC 뒤의 적 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ACC 범위 바깥 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BBB 5발 사격 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BBB 5발 사격 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BBB 동시 투사체 수 | 기대 5.000 ± 0.001 | 실제 5.000
+[FragmentSpecials] 입력 BBB 중앙 탄의 첫 적 | 기대 90.000 ± 0.001 | 실제 90.000
+[FragmentSpecials] 입력 BBB 중앙 탄의 두 번째 적 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BBC 폭발탄 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BBC 폭발탄 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BBC 직접 표적 폭발 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 BBC 인접한 적 폭발 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 BBC 작은 폭발 바깥 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BCC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BCC 산탄 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BCC 산탄 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BCC 동시 산탄 수 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 BCC 좌측 탄 각도 | 기대 -5.000 ± 0.001 | 실제 -5.000
+[FragmentSpecials] 입력 BCC 중앙 탄 각도 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 BCC 우측 탄 각도 | 기대 5.000 ± 0.001 | 실제 5.000
+[FragmentSpecials] 입력 BCC 중앙 산탄 피해 | 기대 90.000 ± 0.001 | 실제 90.000
+[FragmentSpecials] 입력 BCC 위쪽 산탄 피해 | 기대 90.000 ± 0.001 | 실제 90.000
+[FragmentSpecials] 입력 BCC 아래쪽 산탄 피해 | 기대 90.000 ± 0.001 | 실제 90.000
+[FragmentSpecials] 입력 CCC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 CCC 광역 파동 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 CCC 광역 파동 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 CCC 전방 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 CCC 후방 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 CCC 위쪽 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 CCC 범위 밖 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 벽 앞 늘어나는 칼날 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 벽 앞 늘어나는 칼날 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 칼날이 벽 앞에서 멈춘 길이 | 기대 1.100 ± 0.010 | 실제 1.095
+[FragmentSpecials] 입력 AAB 벽 뒤 적 보호 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAA 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 벽에 가린 강타 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 벽에 가린 강타 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 근접 사선 차단 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 폭발의 벽 차단 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 폭발의 벽 차단 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 벽 앞 폭발 표적 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 벽 뒤 폭발 표적 보호 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 왼쪽 5발 사격 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 왼쪽 5발 사격 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 왼쪽 투사체 피해 | 기대 90.000 ± 0.001 | 실제 90.000
+[FragmentSpecials] 입력 반대쪽 투사체 표적 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 6발 장비 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 6발 장비 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 장비 적용 투사체 수 | 기대 6.000 ± 0.001 | 실제 6.000
+[FragmentSpecials] 입력 장비 해제 후 재시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 장비 해제 후 추가된 투사체 수 | 기대 11.000 ± 0.001 | 실제 11.000
+[FragmentSpecials] 입력 BBB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 잘못된 보정의 시전 실패 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 실패 시 사용 횟수 보존 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BBB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 기본 조합의 전용 장비 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 기본 조합의 전용 장비 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 기본 BBB 조합 전용 장비 | 기대 6.000 ± 0.001 | 실제 6.000
+[FragmentSpecials] 입력 BBB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 제외 | 기대 5.000 ± 0.001 | 실제 5.000
+[FragmentSpecials] 입력 BBB 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 장비의 기능 교체 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 장비의 기능 교체 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 교체된 강타 피해 | 기대 40.000 ± 0.001 | 실제 40.000
+[FragmentSpecials] 입력 기능 교체 후 투사체 수 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 AAA 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 등록 레시피의 기본 효과 우선 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 등록 레시피의 기본 효과 우선 사용 횟수 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 등록 효과의 전방 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 등록 효과의 후방 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAA 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 특수 첫 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 특수 두 번째 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 두 번 사용 뒤 남은 횟수 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 두 번 사용 뒤 재시전 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 다음 조각 수집 허용 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 CCC 무기 복원 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 D 특수 공격 입력 연결 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] PASS 133/133
+PASS 42/42; Unity API 대역 검증이며 Unity 물리 실행 결과가 아님.

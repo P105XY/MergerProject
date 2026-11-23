@@ -12,7 +12,7 @@ namespace Mech.Function
         private PlayerBase pendingPlayer;
 
         public string CheckpointId => checkpointId;
-        internal Vector3 SpawnPosition => spawnPoint != null ? spawnPoint.position : transform.position;
+        public Vector3 SpawnPosition => spawnPoint != null ? spawnPoint.position : transform.position;
 
         // 새 체크포인트의 충돌체를 통과 가능한 트리거로 설정한다.
         private void Reset()

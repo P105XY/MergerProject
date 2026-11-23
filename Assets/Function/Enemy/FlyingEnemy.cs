@@ -39,6 +39,7 @@ namespace Mech.Function
             }
 
             LaunchProjectile(origin, offset.normalized);
+            DropAttackFragment();
             nextFireTime = now + 1.0 / AttackSpeed;
             TryChangeState(EnemyState.Attack);
         }

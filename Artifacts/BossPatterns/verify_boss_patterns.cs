@@ -5,6 +5,7 @@ using Mech.Function;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using static UnityEngine.Object;
 
 [InitializeOnLoad]
 public static class BossPatternChecks
@@ -88,8 +89,10 @@ public static class BossPatternChecks
             boss.CurrentHealth == 2250f && boss.MaxHealth == 2250f);
         CheckDelay(boss, 3, "첫 패턴");
 
-        // 돌진은 지정 방향 벽에서 끝나며 경로에 있는 플레이어를 한 번 타격한다.
+        // 입력: 오른쪽 돌진 → 기대: 벽 충돌 뒤 조각 1개, 플레이어 피해 한 번.
         BeginPattern(boss);
+        Check("벽 충돌 전 돌진 조각 수", "0개", FindObjectsByType<FragmentPickup>().Length,
+            FindObjectsByType<FragmentPickup>().Length == 0);
 
         for (int step = 0; step < 100 && boss.CurrentState == EnemyState.Attack; step++) {
             Tick(boss);
@@ -98,12 +101,20 @@ public static class BossPatternChecks
         Check("오른쪽 돌진 정지 X", "12.49", boss.transform.position.x,
             boss.CurrentState == EnemyState.Idle && Mathf.Abs(boss.transform.position.x - 12.49f) < 0.025f);
         Check("오른쪽 돌진 경로의 플레이어 HP", "90", player.CurrentHealth, player.CurrentHealth == 90f);
+        var chargeDrops = FindObjectsByType<FragmentPickup>();
+        Check("돌진 벽 충돌 조각 수", "1개", chargeDrops.Length, chargeDrops.Length == 1);
+        Check("돌진 조각의 벽 안쪽 위치", "보스 왼쪽, 경기장 안쪽", chargeDrops[0].transform.position,
+            chargeDrops[0].transform.position.x < bossHitbox.bounds.min.x && chargeDrops[0].transform.position.x > -13.5f);
         CheckDelay(boss, 3, "돌진 후");
+        Check("돌진 후 대기 중 조각 수", "1개", FindObjectsByType<FragmentPickup>().Length,
+            FindObjectsByType<FragmentPickup>().Length == 1);
 
-        // 가까운 전방 플레이어는 내려찍기에 맞고 소환은 다음 패턴까지 발생하지 않는다.
+        // 입력: 가까운 전방에서 내려찍기 → 기대: 피해와 조각 1개, 조각 적 소환은 다음 패턴에 실행.
         MovePlayer(player, 10.1f, 1f);
         BeginPattern(boss);
         Check("내려찍기 플레이어 HP", "80", player.CurrentHealth, player.CurrentHealth == 80f);
+        Check("내려찍기 후 누적 조각 수", "2개", FindObjectsByType<FragmentPickup>().Length,
+            FindObjectsByType<FragmentPickup>().Length == 2);
         int beforeSummon = Fragments(template).Length;
         Check("공격 2회 직후 소환 수", "0", beforeSummon, beforeSummon == 0);
         CheckDelay(boss, 3, "내려찍기 후");
@@ -113,6 +124,8 @@ public static class BossPatternChecks
         BeginPattern(boss);
         var firstWave = Fragments(template);
         Check("두 공격 뒤 강제 소환", "3마리", firstWave.Length, firstWave.Length == 3);
+        Check("소환 패턴의 직접 조각 수", "누적 2개", FindObjectsByType<FragmentPickup>().Length,
+            FindObjectsByType<FragmentPickup>().Length == 2);
         bool onGround = firstWave.All(fragment => Mathf.Abs(fragment.GetComponent<Collider2D>().bounds.min.y) < 0.025f
             && fragment.GetComponent<Rigidbody2D>().bodyType == RigidbodyType2D.Static
             && fragment.transform.position.x < 13.5f && fragment.HeldObjectType == CollectibleType.B);
@@ -134,10 +147,20 @@ public static class BossPatternChecks
         bool colliderEnabled = contactFragment.GetComponent<Collider2D>().enabled;
         Check("소환 적 처치", "B 조각 1개, 충돌 해제", drops + " / " + colliderEnabled, drops == 1 && !colliderEnabled);
 
-        // 내려찍기보다 먼 위치를 광역 공격이 타격하며, 다음 돌진은 반대편 벽에서 끝난다.
+        // 입력: 광역 공격과 왼쪽 돌진 → 기대: 전방 피해, 광역 조각 2개, 돌진 벽 충돌 조각 1개.
         MovePlayer(player, 6.5f, 2f);
+        var beforeSweep = FindObjectsByType<FragmentPickup>();
+        typeof(EnemyBase).GetField("heldObject", PrivateInstance).SetValue(boss, dropTemplate);
+        typeof(EnemyBase).GetField("heldObjectType", PrivateInstance).SetValue(boss, CollectibleType.C);
         BeginPattern(boss);
         Check("광역 공격의 먼 전방 표적 HP", "60", player.CurrentHealth, player.CurrentHealth == 60f);
+        var sweepDrops = FindObjectsByType<FragmentPickup>().Except(beforeSweep).ToArray();
+        Check("광역 공격 보상 조각 수", "2개", sweepDrops.Length, sweepDrops.Length == 2);
+        Check("보스에 지정한 조각 종류 우선", "C 두 개", sweepDrops.Length,
+            sweepDrops.All(drop => (CollectibleType)typeof(FragmentPickup).GetField("fragmentType", PrivateInstance).GetValue(drop) == CollectibleType.C));
+        Check("광역 조각 간격", "별도 위치", sweepDrops[0].transform.position,
+            sweepDrops[0].transform.position != sweepDrops[1].transform.position);
+        typeof(EnemyBase).GetField("heldObject", PrivateInstance).SetValue(boss, null);
         CheckDelay(boss, 3, "광역 후");
         BeginPattern(boss);
 
@@ -148,6 +171,8 @@ public static class BossPatternChecks
         Check("왼쪽 돌진 정지 X", "-12.49", boss.transform.position.x,
             boss.CurrentState == EnemyState.Idle && Mathf.Abs(boss.transform.position.x + 12.49f) < 0.025f);
         CheckDelay(boss, 3, "두 번째 돌진 후");
+        Check("두 번째 돌진 후 누적 조각 수", "6개", FindObjectsByType<FragmentPickup>().Length,
+            FindObjectsByType<FragmentPickup>().Length == 6);
 
         // 다음 두 공격 뒤 소환이 반복되고 보스를 처치하면 기한이 지나도 패턴이 멈춘다.
         MovePlayer(player, 0f, 2f);
@@ -158,6 +183,21 @@ public static class BossPatternChecks
         BeginPattern(boss);
         Check("보스 처치 후 패턴 정지", "Dead, 생존 5마리", boss.CurrentState + " / " + Fragments(template).Length,
             boss.IsDefeated && boss.CurrentState == EnemyState.Dead && Fragments(template).Length == 5);
+        Check("보스 처치 후 패턴 보상 중단", "6개", FindObjectsByType<FragmentPickup>().Length,
+            FindObjectsByType<FragmentPickup>().Length == 6);
+
+        // 입력: 저장된 테스트 보스의 내려찍기 → 기대: 소환 적 설정을 사용해 B 조각 한 개 드롭.
+        var savedBoss = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(
+            "Assets/Prefabs/PlayTest/TestBoss.prefab"), new Vector3(0f, 1.2f, 0f), Quaternion.identity).GetComponent<BossEnemy>();
+        typeof(TargetingEnemy).GetField("targetPlayer", PrivateInstance).SetValue(savedBoss, player);
+        var patternField = typeof(BossEnemy).GetField("nextAttack", PrivateInstance);
+        patternField.SetValue(savedBoss, Enum.ToObject(patternField.FieldType, 1));
+        var beforeSaved = FindObjectsByType<FragmentPickup>();
+        BeginPattern(savedBoss);
+        var savedDrops = FindObjectsByType<FragmentPickup>().Except(beforeSaved).ToArray();
+        Check("저장된 테스트 보스의 패턴 보상", "B 조각 1개", savedDrops.Length,
+            savedDrops.Length == 1 && (CollectibleType)typeof(FragmentPickup).GetField("fragmentType", PrivateInstance).GetValue(savedDrops[0]) == CollectibleType.B);
+        Check("패턴 보상 조각의 수집 초기화", "수집 가능", savedDrops[0].TryCollect(player), player.TypeBCount == 1);
     }
 
     // 다음 패턴의 대기값을 확인하고 기한이 오기 전 움직임과 상태가 유지되는지 검사한다.

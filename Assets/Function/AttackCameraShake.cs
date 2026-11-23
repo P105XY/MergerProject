@@ -5,7 +5,7 @@ namespace Mech.Function
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Camera))]
-    internal sealed class AttackCameraShake : MonoBehaviour
+    sealed class AttackCameraShake : MonoBehaviour
     {
         private const double Duration = 0.03;
         private const float AmplitudeInPixels = 5f;
@@ -17,7 +17,7 @@ namespace Mech.Function
         private Vector3 renderOffset;
 
         // 명중한 프레임에 메인 직교 카메라의 흔들림을 예약한다.
-        internal static void Play()
+        public static void Play()
         {
             Camera camera = Camera.main;
 
@@ -69,9 +69,18 @@ namespace Mech.Function
             }
 
             Vector2 direction = Directions[(directionIndex + Time.frameCount - startFrame) % Directions.Length];
-            float unitsPerPixel = 2f * camera.orthographicSize / Mathf.Max(1, camera.pixelHeight);
-            renderOffset = (transform.right * direction.x + transform.up * direction.y) * (AmplitudeInPixels * unitsPerPixel);
-            transform.position += renderOffset;
+            bool followsPlayer = camera.TryGetComponent(out PlayerCameraFollow follow) && follow.isActiveAndEnabled;
+            float visibleHeight = followsPlayer ? follow.VisibleHeight : 2f * camera.orthographicSize;
+            float unitsPerPixel = visibleHeight / Mathf.Max(1, camera.pixelHeight);
+            Vector3 position = transform.position;
+            Vector3 shaken = position + (transform.right * direction.x + transform.up * direction.y) * (AmplitudeInPixels * unitsPerPixel);
+
+            if (followsPlayer) {
+                shaken = follow.ConstrainPosition(shaken);
+            }
+
+            renderOffset = shaken - position;
+            transform.position = shaken;
         }
 
         private bool HasExpired => Time.frameCount != startFrame && Time.unscaledTimeAsDouble >= endsAt;

@@ -27,8 +27,12 @@ namespace UnityEngine
         public float x;
         public float y;
         public static Vector2 zero => default;
+        public static Vector2 up => new Vector2(0f, 1f);
         public static Vector2 down => new Vector2(0f, -1f);
+        public static Vector2 left => new Vector2(-1f, 0f);
         public static Vector2 right => new Vector2(1f, 0f);
+        public float sqrMagnitude => x * x + y * y;
+        public Vector2 normalized => sqrMagnitude > 0f ? this * (1f / MathF.Sqrt(sqrMagnitude)) : zero;
         // 테스트 벡터를 초기화한다.
         public Vector2(float x, float y) { this.x = x; this.y = y; }
         // 두 테스트 벡터를 더한다.
@@ -39,6 +43,7 @@ namespace UnityEngine
         public static explicit operator Vector2(Vector3 value) => new Vector2(value.x, value.y);
     }
     public struct Vector3 { public float x; public float y; }
+    public struct Color { public float r; public float g; public float b; public float a; }
     public struct Quaternion { public static Quaternion identity => default; }
     public struct LayerMask
     {
@@ -55,6 +60,7 @@ namespace UnityEngine
     public enum HideFlags { DontSave }
     public class Object
     {
+        public string name;
         public HideFlags hideFlags;
         // 테스트용 객체를 복제한다.
         public static T Instantiate<T>(T original, Vector3 position, Quaternion rotation) where T : Object => (T)Activator.CreateInstance(original.GetType());
@@ -63,6 +69,7 @@ namespace UnityEngine
     }
     public class GameObject : Object
     {
+        public int layer;
         public UnityEngine.SceneManagement.Scene scene;
         // 테스트에서는 추가 컴포넌트를 검색하지 않는다.
         public T GetComponent<T>() where T : class => null;
@@ -79,10 +86,19 @@ namespace UnityEngine
         public readonly Rigidbody2D TestBody = new Rigidbody2D();
         // 플레이어가 테스트용 물리 바디를 조회하도록 한다.
         public T GetComponent<T>() where T : class => TestBody as T;
+        // 이동 검사에서는 자식 렌더러가 없는 상태를 제공한다.
+        public T[] GetComponentsInChildren<T>(bool includeInactive = false) => Array.Empty<T>();
+    }
+    public class SpriteRenderer : Object
+    {
+        public Color color;
+        // 이동 검사에서는 조각 렌더러의 부모를 조회하지 않는다.
+        public T GetComponentInParent<T>() where T : class => null;
     }
     public class Collider2D : Object
     {
         public bool isActiveAndEnabled = true;
+        public bool isTrigger;
         // 이동 테스트에서는 부모 컴포넌트를 조회하지 않는다.
         public T GetComponentInParent<T>() where T : class => null;
     }
@@ -128,8 +144,24 @@ namespace UnityEngine
         // 이동 테스트에서는 공격 쿼리에 빈 결과를 제공한다.
         public int OverlapBox(Vector2 center, Vector2 size, float angle, ContactFilter2D filter, List<Collider2D> hits) => 0;
     }
+    public static class Physics2D
+    {
+        // 이동 검사에서 기본 물리 충돌 레이어를 반환한다.
+        public static int GetLayerCollisionMask(int layer) => ~0;
+    }
     public static class Mathf
     {
+        public const float Rad2Deg = 180f / MathF.PI;
+        // 테스트 조준 벡터가 가리키는 각도를 라디안으로 돌려준다.
+        public static float Atan2(float y, float x) => MathF.Atan2(y, x);
+
+        // 양수 시간에서 지정 길이만큼 왕복하는 값을 계산한다.
+        public static float PingPong(float value, float length)
+        {
+            float phase = value % (2f * length);
+            return length - Math.Abs(phase - length);
+        }
+
         // 두 값 중 큰 값을 반환한다.
         public static float Max(float a, float b) => Math.Max(a, b);
         // 두 값 중 작은 값을 반환한다.
@@ -146,7 +178,16 @@ namespace UnityEngine
             return current + Math.Sign(target - current) * delta;
         }
     }
-    public static class Time { public static float fixedDeltaTime = 0.02f; public static float deltaTime; public static float time; }
+    public static class Time
+    {
+        public static float timeScale = 1f;
+        public static double unscaledTimeAsDouble;
+        public static float fixedDeltaTime = 0.02f;
+        public static float deltaTime;
+        public static float time;
+        public static double timeAsDouble;
+        public static double fixedTimeAsDouble;
+    }
     public static class Debug
     {
         // 이동 테스트에서 사용하지 않는 경고를 받아들인다.
@@ -163,24 +204,57 @@ namespace UnityEngine.Serialization
 }
 namespace Mech.Function
 {
-    internal static class GameHitStop
+    static class FragmentDrop
+    {
+        // 이동 검사에서는 파편의 위치를 그대로 사용한다.
+        public static UnityEngine.Vector3 FindFloor(UnityEngine.Vector3 origin, UnityEngine.SceneManagement.Scene scene) => origin;
+
+        // 이동 검사에서 씬의 파편 생성 호출을 대체한다.
+        public static UnityEngine.GameObject Spawn(UnityEngine.GameObject prefab, CollectibleType type,
+            UnityEngine.Vector3 position, UnityEngine.SceneManagement.Scene scene) => new UnityEngine.GameObject();
+    }
+
+    public sealed class FragmentSpecialEffect
+    {
+        // 이동 검사에서는 특수 공격 효과를 생성하지 않는다.
+        public static ISpecialEffect Create(FragmentCombination combination) => null;
+
+        // 이동 검사에서는 조합 공격 이름을 표시하지 않는다.
+        public static string GetDefaultName(FragmentCombination combination) => "";
+    }
+
+    sealed class SpecialDash : UnityEngine.MonoBehaviour
+    {
+        public bool IsRunning => false;
+
+        // 이동 검사에서는 특수 돌진을 실행하지 않는다.
+        public bool TryBegin(in SpecialContext context, FragmentSpecialEffect effect) => false;
+
+        // 이동 검사에서 특수 돌진 갱신 호출을 받아들인다.
+        public void Step(float deltaTime) { }
+
+        // 이동 검사에서 특수 돌진 종료 호출을 받아들인다.
+        public void Cancel() { }
+    }
+
+    static class GameHitStop
     {
         // 이동 검사에서 애니메이션 정지 호출을 받아들인다.
-        internal static void Play(UnityEngine.MonoBehaviour owner) { }
+        public static void Play(UnityEngine.MonoBehaviour owner) { }
     }
 
-    internal static class AttackCameraShake
+    static class AttackCameraShake
     {
         // 이동 검사에서 카메라 흔들림 호출을 받아들인다.
-        internal static void Play() { }
+        public static void Play() { }
     }
 
-    internal sealed class EnemyWhiteFlash : UnityEngine.MonoBehaviour
+    sealed class EnemyWhiteFlash : UnityEngine.MonoBehaviour
     {
-        internal bool IsFlashing => false;
+        public bool IsFlashing => false;
 
         // 이동 테스트에서는 렌더링 없이 피격 플래시 호출만 받는다.
-        internal void Play(EnemyBase owner) { }
+        public void Play(EnemyBase owner) { }
     }
 }
 namespace UnityEngine.SceneManagement
@@ -200,6 +274,8 @@ namespace UnityEngine.InputSystem
         public static Keyboard current;
         public readonly TestButton leftArrowKey = new TestButton();
         public readonly TestButton rightArrowKey = new TestButton();
+        public readonly TestButton upArrowKey = new TestButton();
+        public readonly TestButton downArrowKey = new TestButton();
         public readonly TestButton aKey = new TestButton();
         public readonly TestButton sKey = new TestButton();
         public readonly TestButton dKey = new TestButton();

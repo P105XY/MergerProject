@@ -19,6 +19,24 @@ namespace Mech.Function
             BCount = bCount;
             CCount = cCount;
         }
+
+        // 최근 방향 입력을 순서와 무관한 방향별 개수로 바꾼다.
+        public static FragmentCombination FromDirections(IEnumerable<CollectibleType> directions)
+        {
+            int left = 0;
+            int down = 0;
+            int right = 0;
+
+            foreach (CollectibleType direction in directions) {
+                switch (direction) {
+                    case CollectibleType.A: left++; break;
+                    case CollectibleType.B: down++; break;
+                    case CollectibleType.C: right++; break;
+                }
+            }
+
+            return new FragmentCombination(left, down, right);
+        }
     }
 
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
@@ -36,6 +54,7 @@ namespace Mech.Function
         private float movementFriction = 0f;
         private float maximumJumpHeight = 30f;
         private float coyoteTime = 0.12f;
+        private float jumpInputBufferTime = 0.01f;
         private float jumpFallGravityMultiplier = 1.55f;
         private float attackReach = 1.1f;
         private Vector2 attackSize = new Vector2(1.2f, 1f);
@@ -43,8 +62,9 @@ namespace Mech.Function
         private LayerMask groundLayers = ~0;
         private SpecialRecipe[] specialRecipes = Array.Empty<SpecialRecipe>();
         private SpecialEquipment[] equippedSpecialEquipment = Array.Empty<SpecialEquipment>();
-        private const int RequiredFragmentCount = 3;
-        private const int SpecialUseCount = 3;
+        public const int FragmentSlotCount = WeaponFocus.DirectionCount;
+        public const int WeaponGaugeCapacity = WeaponFocus.Capacity;
+        private const int SpecialUseCount = 2;
 
         private readonly RaycastHit2D[] groundHits = new RaycastHit2D[16];
         private readonly List<Collider2D> contactColliders = new List<Collider2D>();
@@ -53,7 +73,7 @@ namespace Mech.Function
         private float movementInput;
         private float nextAttackTime;
         private float nextContactDamageTime;
-        private bool jumpRequested;
+        private double jumpInputExpiresAt = double.NegativeInfinity;
         private bool jumpHeld;
         private bool jumpInProgress;
         private bool jumpReleaseApplied;
@@ -64,33 +84,40 @@ namespace Mech.Function
         private int facingDirection = 1;
         private readonly List<Collider2D> attackHits = new List<Collider2D>();
         private readonly HashSet<EnemyBase> hitEnemies = new HashSet<EnemyBase>();
-        private int typeACount;
-        private int typeBCount;
-        private int typeCCount;
+        private readonly WeaponFocus weaponFocus = new();
+        private FragmentCombination activeCombination;
         private bool specialUseInProgress;
+        private SpecialDash specialDash;
 
         public float MaxHealth => maxHealth;
         public float CurrentHealth { get; private set; }
         public bool IsDead => CurrentHealth <= 0f;
-        internal bool IsJumping => jumpInProgress && isActiveAndEnabled && !IsDead;
-        internal bool IsJumpDescending => jumpDescending;
-        internal float JumpFallGravityScale => jumpDescending ? playerBody.gravityScale : playerBody.gravityScale * jumpFallGravityMultiplier;
-        internal LayerMask JumpGroundLayers => groundLayers;
+        public bool IsJumping => jumpInProgress && isActiveAndEnabled && !IsDead;
+        public bool IsJumpDescending => jumpDescending;
+        public float JumpFallGravityScale => jumpDescending ? playerBody.gravityScale : playerBody.gravityScale * jumpFallGravityMultiplier;
+        public LayerMask JumpGroundLayers => groundLayers;
+        public LayerMask SpecialAttackLayers => attackLayers;
+        public LayerMask SpecialEnvironmentLayers => Physics2D.GetLayerCollisionMask(gameObject.layer);
         public float AttackPower => attackPower;
         public float AttacksPerSecond => attacksPerSecond;
         public int FacingDirection => facingDirection;
-        public int TypeACount => typeACount;
-        public int TypeBCount => typeBCount;
-        public int TypeCCount => typeCCount;
+        public Vector2 LastAttackCenter { get; private set; }
+        public float LastAttackAngle { get; private set; }
+        public Vector2 AttackSize => new Vector2(Mathf.Max(0f, attackSize.x), Mathf.Max(0f, attackSize.y));
+        public int WeaponGauge => weaponFocus.Gauge;
+        public int HitsTowardFragment => weaponFocus.HitProgress;
+        public bool IsFocusingWeapon => weaponFocus.IsActive;
+        public bool CanFocusWeapon => !IsSpecialAvailable && weaponFocus.CanBegin(Time.unscaledTimeAsDouble);
+        public IReadOnlyList<CollectibleType> CombinationInputs => weaponFocus.Directions;
         public int SpecialUsesRemaining { get; private set; }
         public bool IsSpecialAvailable => SpecialUsesRemaining > 0;
-        public FragmentCombination ActiveCombination { get; private set; }
+        public FragmentCombination ActiveCombination => activeCombination;
 
         public event Action<PlayerBase> AttackRequested;
-        internal event Action JumpStarted;
+        public event Action JumpStarted;
         public event Action<PlayerBase> SpecialRequested;
         public event Action<PlayerBase, FragmentCombination> SpecialUsed;
-        internal static event Action<PlayerBase> Died;
+        public static event Action<PlayerBase> Died;
 
         // 플레이어의 물리 컴포넌트와 초기 체력을 준비한다.
         protected virtual void Awake()
@@ -110,6 +137,8 @@ namespace Mech.Function
         // 플레이어 전용으로 생성한 물리 재질을 해제한다.
         protected virtual void OnDestroy()
         {
+            weaponFocus.Cancel();
+
             if (runtimeMovementMaterial != null) {
                 Destroy(runtimeMovementMaterial);
             }
@@ -125,13 +154,21 @@ namespace Mech.Function
             Keyboard keyboard = Keyboard.current;
             movementInput = 0f;
             jumpHeld = false;
+            double now = Time.unscaledTimeAsDouble;
+            weaponFocus.Tick(now);
 
             if (keyboard == null) {
+                weaponFocus.Cancel();
                 return;
             }
 
-            movementInput = (keyboard.rightArrowKey.isPressed ? 1f : 0f)
-                - (keyboard.leftArrowKey.isPressed ? 1f : 0f);
+            bool composing = ReadWeaponInput(keyboard, now);
+
+            if (!composing) {
+                movementInput = (keyboard.rightArrowKey.isPressed ? 1f : 0f)
+                    - (keyboard.leftArrowKey.isPressed ? 1f : 0f);
+            }
+
             jumpHeld = keyboard.aKey.isPressed;
 
             if (movementInput != 0f) {
@@ -145,27 +182,88 @@ namespace Mech.Function
             }
 
             if (keyboard.aKey.wasPressedThisFrame) {
-                jumpRequested = true;
+                jumpInputExpiresAt = Time.timeAsDouble + jumpInputBufferTime;
             }
 
-            if (keyboard.dKey.wasPressedThisFrame) {
+            if (!composing && keyboard.dKey.wasPressedThisFrame && IsSpecialAvailable) {
                 TryUseSpecial();
             }
         }
 
-        // 바라보는 방향의 공격 범위에 있는 적에게 피해를 한 번씩 적용한다.
+        // D로 집중을 시작하고 집중 중의 방향 입력을 확정한다.
+        private bool ReadWeaponInput(Keyboard keyboard, double now)
+        {
+            if (keyboard.dKey.wasPressedThisFrame && !IsSpecialAvailable) {
+                weaponFocus.TryBegin(now);
+            }
+
+            if (!weaponFocus.IsActive) {
+                return false;
+            }
+
+            if (keyboard.leftArrowKey.wasPressedThisFrame) {
+                weaponFocus.AddDirection(CollectibleType.A);
+            }
+
+            if (keyboard.downArrowKey.wasPressedThisFrame) {
+                weaponFocus.AddDirection(CollectibleType.B);
+            }
+
+            if (keyboard.rightArrowKey.wasPressedThisFrame) {
+                weaponFocus.AddDirection(CollectibleType.C);
+            }
+
+            if (!keyboard.dKey.isPressed && weaponFocus.TryComplete(now, out FragmentCombination result)) {
+                activeCombination = result;
+                SpecialUsesRemaining = SpecialUseCount;
+            }
+
+            return true;
+        }
+
+        // 누른 방향키로 공격 방향을 정하고 입력이 없으면 마지막 좌우 방향을 사용한다.
+        private Vector2 GetAttackDirection()
+        {
+            Keyboard keyboard = Keyboard.current;
+
+            if (keyboard != null && !weaponFocus.IsActive) {
+                if (keyboard.upArrowKey.isPressed != keyboard.downArrowKey.isPressed) {
+                    return keyboard.upArrowKey.isPressed ? Vector2.up : Vector2.down;
+                }
+
+                if (keyboard.leftArrowKey.isPressed != keyboard.rightArrowKey.isPressed) {
+                    return keyboard.leftArrowKey.isPressed ? Vector2.left : Vector2.right;
+                }
+            }
+
+            return Vector2.right * facingDirection;
+        }
+
+        // 조준 방향으로 회전한 근접 판정에 닿은 조각을 수집하고 적에게 피해를 준다.
         private void Attack()
         {
-            Vector2 center = (Vector2)transform.position + Vector2.right * (facingDirection * Mathf.Max(0f, attackReach));
-            Vector2 size = new Vector2(Mathf.Max(0f, attackSize.x), Mathf.Max(0f, attackSize.y));
+            Vector2 direction = GetAttackDirection();
+            LastAttackCenter = (Vector2)transform.position + direction * Mathf.Max(0f, attackReach);
+            LastAttackAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             ContactFilter2D filter = new ContactFilter2D();
             filter.SetLayerMask(attackLayers);
-            filter.useTriggers = false;
+            filter.useTriggers = true;
             attackHits.Clear();
             hitEnemies.Clear();
-            gameObject.scene.GetPhysicsScene2D().OverlapBox(center, size, 0f, filter, attackHits);
+            gameObject.scene.GetPhysicsScene2D().OverlapBox(LastAttackCenter, AttackSize, LastAttackAngle, filter, attackHits);
 
             foreach (Collider2D hit in attackHits) {
+                FragmentPickup fragment = hit.GetComponentInParent<FragmentPickup>();
+
+                if (fragment != null && fragment.isActiveAndEnabled) {
+                    fragment.TryCollect(this);
+                    continue;
+                }
+
+                if (hit.isTrigger) {
+                    continue;
+                }
+
                 EnemyBase enemy = hit.GetComponentInParent<EnemyBase>();
 
                 if (enemy != null && enemy.isActiveAndEnabled && hitEnemies.Add(enemy)) {
@@ -198,15 +296,10 @@ namespace Mech.Function
             RegisterContact(other);
         }
 
-        // 트리거 접촉 목록을 복구하고 수집 가능한 조각을 줍는다.
+        // 트리거 접촉 목록을 복구하고 접촉 피해를 확인한다.
         protected virtual void OnTriggerStay2D(Collider2D other)
         {
             RegisterContact(other);
-            FragmentPickup fragment = other.GetComponentInParent<FragmentPickup>();
-
-            if (fragment != null) {
-                fragment.TryCollect(this);
-            }
         }
 
         // 벗어난 트리거를 접촉 목록에서 제거한다.
@@ -275,11 +368,16 @@ namespace Mech.Function
                 damage = obstacle.Damage;
             }
 
+            float previousHealth = CurrentHealth;
             TryReceiveContactDamage(damage);
+
+            if (enemy != null && enemy.CurrentState != EnemyState.Attack && CurrentHealth < previousHealth) {
+                enemy.DropAttackFragment();
+            }
         }
 
         // 충돌이나 돌진으로 인한 피해에 동일한 재피격 간격을 적용한다.
-        internal void TryReceiveContactDamage(float damage)
+        public void TryReceiveContactDamage(float damage)
         {
             float now = Time.time;
 
@@ -295,36 +393,20 @@ namespace Mech.Function
             }
         }
 
-        // 조각을 종류별로 모으고 세 개가 되면 조합을 준비한다.
+        // 월드에서 수집한 파편 한 개로 무기 게이지를 한 칸 충전한다.
         public bool TryCollectFragment(CollectibleType fragmentType)
         {
-            if (IsDead || IsSpecialAvailable) {
-                return false;
-            }
+            return !IsDead && isActiveAndEnabled
+                && fragmentType is (CollectibleType.A or CollectibleType.B or CollectibleType.C)
+                && weaponFocus.TryCharge();
+        }
 
-            switch (fragmentType) {
-                case CollectibleType.A:
-                    typeACount++;
-                    break;
-                case CollectibleType.B:
-                    typeBCount++;
-                    break;
-                case CollectibleType.C:
-                    typeCCount++;
-                    break;
-                default:
-                    return false;
+        // 적에게 실제로 피해를 준 명중을 파편 게이지 진행도에 기록한다.
+        public void RegisterWeaponHit()
+        {
+            if (!IsDead && isActiveAndEnabled) {
+                weaponFocus.RegisterHit();
             }
-
-            if (typeACount + typeBCount + typeCCount == RequiredFragmentCount) {
-                ActiveCombination = new FragmentCombination(typeACount, typeBCount, typeCCount);
-                typeACount = 0;
-                typeBCount = 0;
-                typeCCount = 0;
-                SpecialUsesRemaining = SpecialUseCount;
-            }
-
-            return true;
         }
 
         // 시전할 때 참조하는 장착 장비 목록을 교체한다.
@@ -346,7 +428,7 @@ namespace Mech.Function
 
             try {
                 FragmentCombination combination = ActiveCombination;
-                SpecialContext context = new SpecialContext(this, combination);
+                SpecialContext context = new SpecialContext(this, combination, GetAttackDirection());
 
                 if (!TryExecuteSpecial(context)) {
                     return false;
@@ -355,7 +437,7 @@ namespace Mech.Function
                 SpecialUsesRemaining--;
 
                 if (SpecialUsesRemaining == 0) {
-                    ActiveCombination = default;
+                    activeCombination = default;
                 }
 
                 SpecialUsed?.Invoke(this, combination);
@@ -369,13 +451,38 @@ namespace Mech.Function
         // 활성 조합과 일치하는 첫 레시피를 찾아 현재 장비로 시전한다.
         private bool TryExecuteSpecial(in SpecialContext context)
         {
+            SpecialRecipe recipe = FindSpecialRecipe(context.Combination);
+            return recipe != null ? recipe.TryExecute(context, equippedSpecialEquipment)
+                : SpecialRecipe.TryExecuteDefault(context, equippedSpecialEquipment);
+        }
+
+        // 활성 조합에 장비 효과 교체까지 반영한 공격 이름을 표시용으로 돌려준다.
+        public string GetActiveSpecialName()
+        {
+            FragmentCombination combination = ActiveCombination;
+            return SpecialRecipe.GetEffectName(FindSpecialRecipe(combination), combination, equippedSpecialEquipment);
+        }
+
+        // 등록 순서에서 지정한 조합의 첫 번째 레시피를 찾는다.
+        private SpecialRecipe FindSpecialRecipe(FragmentCombination combination)
+        {
             foreach (SpecialRecipe recipe in specialRecipes) {
-                if (recipe != null && recipe.Matches(context.Combination)) {
-                    return recipe.TryExecute(context, equippedSpecialEquipment);
+                if (recipe != null && recipe.Matches(combination)) {
+                    return recipe;
                 }
             }
 
-            return false;
+            return null;
+        }
+
+        // 장비 보정된 특수 돌진을 중복 실행 없이 시작한다.
+        public bool TryBeginSpecialDash(in SpecialContext context, FragmentSpecialEffect effect)
+        {
+            if (specialDash == null) {
+                specialDash = gameObject.AddComponent<SpecialDash>();
+            }
+
+            return specialDash.TryBegin(context, effect);
         }
 
         // 물리 갱신에서 지속 접촉 피해와 이동·점프를 처리한다.
@@ -389,7 +496,7 @@ namespace Mech.Function
 
             float deltaTime = Time.fixedDeltaTime;
             Vector2 velocity = playerBody.linearVelocity;
-            velocity.x = NextHorizontalSpeed(velocity.x, deltaTime);
+            velocity.x = specialDash != null && specialDash.IsRunning ? 0f : NextHorizontalSpeed(velocity.x, deltaTime);
             bool grounded = velocity.y <= 0f && IsGrounded();
 
             if (grounded) {
@@ -400,7 +507,10 @@ namespace Mech.Function
                 coyoteTimeRemaining = Mathf.Max(0f, coyoteTimeRemaining - deltaTime);
             }
 
-            bool startedJump = jumpRequested && (grounded || coyoteTimeRemaining > 0f) && jumpForce > 0f && maximumJumpHeight > 0f;
+            // 접지는 직전 물리 단계의 결과이며, 그 단계 안에서 착지한 시점에는 한 단계의 오차가 있다.
+            double previousStepStart = Time.fixedTimeAsDouble - 2d * deltaTime;
+            bool hasBufferedJump = jumpInputExpiresAt >= previousStepStart;
+            bool startedJump = hasBufferedJump && (grounded || coyoteTimeRemaining > 0f) && jumpForce > 0f && maximumJumpHeight > 0f;
 
             if (startedJump) {
                 velocity.y = jumpForce;
@@ -423,8 +533,12 @@ namespace Mech.Function
                 SetJumpDescending(true);
             }
 
-            jumpRequested = false;
+            if (startedJump || !hasBufferedJump) {
+                jumpInputExpiresAt = double.NegativeInfinity;
+            }
+
             playerBody.linearVelocity = velocity;
+            specialDash?.Step(deltaTime);
 
             if (startedJump) {
                 JumpStarted?.Invoke();
@@ -464,7 +578,7 @@ namespace Mech.Function
         }
 
         // 현재 입력이 이어질 때 수평 이동과 점프 높이 상한을 반영한 속도를 예측한다.
-        internal Vector2 PredictJumpVelocity(Vector2 position, Vector2 velocity, float deltaTime)
+        public Vector2 PredictJumpVelocity(Vector2 position, Vector2 velocity, float deltaTime)
         {
             velocity.x = NextHorizontalSpeed(velocity.x, deltaTime);
 
@@ -478,14 +592,16 @@ namespace Mech.Function
         // 비활성화할 때 접촉 목록과 남은 이동·점프 입력을 지운다.
         protected virtual void OnDisable()
         {
+            weaponFocus.Cancel();
             contactColliders.Clear();
             movementInput = 0f;
-            jumpRequested = false;
+            jumpInputExpiresAt = double.NegativeInfinity;
             jumpHeld = false;
             jumpInProgress = false;
             jumpReleaseApplied = false;
             coyoteTimeRemaining = 0f;
             SetJumpDescending(false);
+            specialDash?.Cancel();
         }
 
         // 양수 피해로 체력이 처음 0이 되면 이동을 멈추고 사망을 알린다.
@@ -498,51 +614,81 @@ namespace Mech.Function
             CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
 
             if (IsDead) {
+                weaponFocus.Cancel();
+                jumpInputExpiresAt = double.NegativeInfinity;
+                specialDash?.Cancel();
                 SetJumpDescending(false);
                 playerBody.linearVelocity = Vector2.zero;
                 Died?.Invoke(this);
             }
         }
 
-        // 미조합 조각과 활성 조합 및 남은 특수 사용 횟수를 저장용으로 복사한다.
-        internal PlayerCheckpointState CaptureCheckpointState()
+        // 무기 게이지, 누적 명중, 제작한 무기와 남은 시전 횟수를 저장한다.
+        public PlayerCheckpointState CaptureCheckpointState()
         {
+            FragmentCombination active = ActiveCombination;
             return new PlayerCheckpointState {
-                CollectedA = typeACount,
-                CollectedB = typeBCount,
-                CollectedC = typeCCount,
-                ActiveA = ActiveCombination.ACount,
-                ActiveB = ActiveCombination.BCount,
-                ActiveC = ActiveCombination.CCount,
+                WeaponSystemVersion = PlayerCheckpointState.CurrentWeaponSystemVersion,
+                WeaponGauge = WeaponGauge,
+                HitsTowardFragment = HitsTowardFragment,
+                ActiveA = active.ACount,
+                ActiveB = active.BCount,
+                ActiveC = active.CCount,
                 SpecialUsesRemaining = SpecialUsesRemaining
             };
         }
 
-        // 저장 상태가 게임의 조각 조합과 특수 횟수 규칙에 맞는지 확인한다.
-        internal static bool IsValidCheckpointState(PlayerCheckpointState state)
+        // 저장 형식에 따라 게이지와 무기 사용 횟수 또는 기존 조각 수량을 검증한다.
+        public static bool IsValidCheckpointState(PlayerCheckpointState state)
         {
             if (state == null || state.CollectedA < 0 || state.CollectedB < 0 || state.CollectedC < 0
                 || state.ActiveA < 0 || state.ActiveB < 0 || state.ActiveC < 0
-                || state.SpecialUsesRemaining < 0 || state.SpecialUsesRemaining > SpecialUseCount) {
+                || state.SpecialUsesRemaining < 0) {
                 return false;
             }
 
             long collected = (long)state.CollectedA + state.CollectedB + state.CollectedC;
             long active = (long)state.ActiveA + state.ActiveB + state.ActiveC;
-            return state.SpecialUsesRemaining == 0
-                ? active == 0 && collected < RequiredFragmentCount
-                : active == RequiredFragmentCount && collected == 0;
+            bool hasWeapon = state.SpecialUsesRemaining > 0;
+
+            if (active != (hasWeapon ? FragmentSlotCount : 0)) {
+                return false;
+            }
+
+            if (state.WeaponSystemVersion == PlayerCheckpointState.CurrentWeaponSystemVersion) {
+                return state.SpecialUsesRemaining <= SpecialUseCount && collected == 0
+                    && (state.FragmentOrder == null || state.FragmentOrder.Length == 0)
+                    && state.WeaponGauge is >= 0 and <= WeaponGaugeCapacity
+                    && state.HitsTowardFragment is >= 0 and < WeaponFocus.HitsPerFragment;
+            }
+
+            if (state.WeaponSystemVersion != 0 || state.SpecialUsesRemaining > 3
+                || collected >= FragmentSlotCount || (hasWeapon && collected != 0)) {
+                return false;
+            }
+
+            if (state.FragmentOrder == null || state.FragmentOrder.Length == 0) {
+                return true;
+            }
+
+            FragmentCombination orderCounts = FragmentCombination.FromDirections(state.FragmentOrder);
+            return state.FragmentOrder.Length == active + collected
+                && orderCounts.ACount == state.ActiveA + state.CollectedA
+                && orderCounts.BCount == state.ActiveB + state.CollectedB
+                && orderCounts.CCount == state.ActiveC + state.CollectedC;
         }
 
-        // 새 씬의 플레이어를 배치하고 조각과 특수 횟수 및 지정된 체력을 복원한다.
-        internal void RestoreCheckpointState(PlayerCheckpointState state, Vector3 position, float? currentHealth = null)
+        // 새 씬의 플레이어를 배치하고 무기와 게이지 및 지정된 체력을 복원한다.
+        public void RestoreCheckpointState(PlayerCheckpointState state, Vector3 position, float? currentHealth = null)
         {
-            typeACount = state.CollectedA;
-            typeBCount = state.CollectedB;
-            typeCCount = state.CollectedC;
-            ActiveCombination = new FragmentCombination(state.ActiveA, state.ActiveB, state.ActiveC);
-            SpecialUsesRemaining = state.SpecialUsesRemaining;
+            bool legacy = state.WeaponSystemVersion == 0;
+            int gauge = legacy ? state.CollectedA + state.CollectedB + state.CollectedC : state.WeaponGauge;
+            weaponFocus.Restore(gauge, legacy ? 0 : state.HitsTowardFragment);
+            activeCombination = new FragmentCombination(state.ActiveA, state.ActiveB, state.ActiveC);
+            SpecialUsesRemaining = Math.Min(SpecialUseCount, state.SpecialUsesRemaining);
             CurrentHealth = Mathf.Max(0f, Mathf.Min(currentHealth ?? maxHealth, maxHealth));
+            jumpInputExpiresAt = double.NegativeInfinity;
+            specialDash?.Cancel();
             transform.position = position;
             playerBody.position = (Vector2)position;
             playerBody.linearVelocity = Vector2.zero;

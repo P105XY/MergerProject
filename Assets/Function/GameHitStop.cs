@@ -5,7 +5,7 @@ namespace Mech.Function
 {
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-2)]
-    internal sealed class GameHitStop : MonoBehaviour
+    sealed class GameHitStop : MonoBehaviour
     {
         private const double Duration = 0.01;
         private readonly List<(Animator Animator, float Speed)> pausedAnimators = new();
@@ -13,7 +13,7 @@ namespace Mech.Function
         private int hitFrame;
 
         // 공격자 또는 피격 대상의 Animator를 잠시 정지한다.
-        internal static void Play(MonoBehaviour owner)
+        public static void Play(MonoBehaviour owner)
         {
             if (owner == null || !owner.isActiveAndEnabled) {
                 return;

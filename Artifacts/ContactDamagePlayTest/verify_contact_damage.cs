@@ -74,7 +74,7 @@ try {
     var fragmentPlayer = makePlayer(9);
     makeSource(9, true, -0.75f).AddComponent<Mech.Function.DamagedObstacle>();
     var pickup = makeSource(9, true, 0.75f).AddComponent<Mech.Function.FragmentPickup>();
-    typeof(Mech.Function.FragmentPickup).GetMethod("Initialize", privateInstance).Invoke(pickup, new object[] { Mech.Function.CollectibleType.B });
+    typeof(Mech.Function.FragmentPickup).GetMethod("Initialize").Invoke(pickup, new object[] { Mech.Function.CollectibleType.B });
     var leaver = makePlayer(10);
     var leftHazard = makeSource(10, true, 0.75f);
     leftHazard.AddComponent<Mech.Function.DamagedObstacle>();

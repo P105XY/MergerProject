@@ -76,6 +76,7 @@ namespace Mech.Function
                 chargeDirection = offset.x < 0f ? Vector2.left : Vector2.right;
                 elapsedChargeTime = 0f;
                 TryChangeState(EnemyState.Attack);
+                DropAttackFragment();
                 MoveCharge();
             } else if (now + PhysicsTimeTolerance >= nextWindupTime) {
                 launchTime = now + windupDuration;

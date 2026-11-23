@@ -10,7 +10,7 @@ var progress = typeof(Mech.Function.CheckpointProgress);
 var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic;
 var directory = System.IO.Path.Combine("/private/tmp", "merger-title-verification-" + System.Guid.NewGuid().ToString("N"));
 var storeType = progress.Assembly.GetType("Mech.Function.CheckpointSaveStore", true);
-var isolatedStore = System.Activator.CreateInstance(storeType, flags, null, new object[] { directory }, null);
+var isolatedStore = System.Activator.CreateInstance(storeType, new object[] { directory });
 progress.GetField("saveStore", flags).SetValue(null, isolatedStore);
 int passed = 0;
 
@@ -86,7 +86,7 @@ try {
 string sample = "{\"Version\":1,\"ScenePath\":\"" + stagePath + "\",\"CheckpointId\":\"playtest-middle\","
     + "\"Player\":{\"ActiveA\":1,\"ActiveB\":1,\"ActiveC\":1,\"SpecialUsesRemaining\":2}}";
 var dataType = progress.Assembly.GetType("Mech.Function.CheckpointSaveData", true);
-storeType.GetMethod("Write", flags).Invoke(isolatedStore, new[] { JsonUtility.FromJson(sample, dataType) });
+storeType.GetMethod("Write").Invoke(isolatedStore, new[] { JsonUtility.FromJson(sample, dataType) });
 submit("open-options");
 submit("back-options");
 check("유효한 슬롯의 이어하기 버튼", true, button("continue-game").enabledInHierarchy);

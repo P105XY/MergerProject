@@ -1,0 +1,49 @@
+[SpecialVisuals] 입력 HUD 미조합 조각 수 | 기대 Collected 2/3    D: Special | 실제 Collected 2/3    D: Special
+[SpecialVisuals] 입력 HUD 활성 조합과 횟수 | 기대 D: ABC    Uses 3/3 | 실제 D: ABC    Uses 3/3
+[SpecialVisuals] 입력 AAA 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 AAA 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 AAA 판정 반경과 메시 경계 | 기대 1.8 | 실제 1.8
+[SpecialVisuals] 입력 AAA 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 106
+[SpecialVisuals] 입력 AAB 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 AAB 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 AAB 판정 반경과 메시 경계 | 기대 1.6 | 실제 1.6
+[SpecialVisuals] 입력 AAB 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 136
+[SpecialVisuals] 입력 AAC 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 AAC 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 AAC 판정 반경과 메시 경계 | 기대 3.2 | 실제 3.2
+[SpecialVisuals] 입력 AAC 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 632
+[SpecialVisuals] 입력 AAC 도형 바깥 픽셀 | 기대 RGBA(9, 14, 23, 255) | 실제 RGBA(9, 14, 23, 255)
+[SpecialVisuals] 입력 ABB 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 ABB 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 ABB 투사체 위치·외형 | 기대 이동·자식 렌더러 | 실제 (-39.64, 30.00, 0.00)
+[SpecialVisuals] 입력 ABB 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 100
+[SpecialVisuals] 입력 ABC 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 ABC 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 ABC 판정 반경과 메시 경계 | 기대 1.5 | 실제 1.5
+[SpecialVisuals] 입력 ABC 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 480
+[SpecialVisuals] 입력 ACC 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 ACC 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 ACC 판정 반경과 메시 경계 | 기대 2.5 | 실제 2.5
+[SpecialVisuals] 입력 ACC 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 1168
+[SpecialVisuals] 입력 BBB 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 BBB 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 BBB 투사체 위치·외형 | 기대 이동·자식 렌더러 | 실제 (-39.52, 30.00, 0.00)
+[SpecialVisuals] 입력 BBB 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 74
+[SpecialVisuals] 입력 BBC 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 BBC 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 BBC 투사체 위치·외형 | 기대 이동·자식 렌더러 | 실제 (-39.64, 30.00, 0.00)
+[SpecialVisuals] 입력 BBC 판정 반경과 메시 경계 | 기대 1.8 | 실제 1.8
+[SpecialVisuals] 입력 BBC 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 686
+[SpecialVisuals] 입력 BCC 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 BCC 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 BCC 투사체 위치·외형 | 기대 이동·자식 렌더러 | 실제 (-39.68, 30.00, 0.00)
+[SpecialVisuals] 입력 BCC 판정 반경과 메시 경계 | 기대 3.5 | 실제 3.5
+[SpecialVisuals] 입력 BCC 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 2380
+[SpecialVisuals] 입력 CCC 테스트 진입점 | 기대 True | 실제 True
+[SpecialVisuals] 입력 CCC 실제 조합 횟수 유지 | 기대 3 | 실제 3
+[SpecialVisuals] 입력 CCC 판정 반경과 메시 경계 | 기대 6 | 실제 6
+[SpecialVisuals] 입력 CCC 렌더 픽셀 | 기대 밝은 픽셀 20개 초과 | 실제 6650
+[SpecialVisuals] 입력 CCC 도형 바깥 픽셀 | 기대 RGBA(9, 14, 23, 255) | 실제 RGBA(9, 14, 23, 255)
+[SpecialVisuals] PASS 46/46
+[FragmentSpecials] PASS 114/114
+PASS 42/42; Unity API 대역 검증이며 Unity 물리 실행 결과가 아님.

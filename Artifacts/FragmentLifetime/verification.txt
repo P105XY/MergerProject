@@ -1,0 +1,26 @@
+[FragmentLifetime] 입력 드롭 후 0.000초 Alpha | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 드롭 후 9.999초 Alpha | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 드롭 후 10.000초 Alpha | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 드롭 후 10.075초 Alpha | 기대 0.50000 | 실제 0.50000
+[FragmentLifetime] 입력 드롭 후 10.150초 Alpha | 기대 0.00000 | 실제 0.00000
+[FragmentLifetime] 입력 드롭 후 10.225초 Alpha | 기대 0.50000 | 실제 0.50000
+[FragmentLifetime] 입력 드롭 후 10.300초 Alpha | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 드롭 후 13.000초 Alpha | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 드롭 후 13.025초 Alpha | 기대 0.50000 | 실제 0.50000
+[FragmentLifetime] 입력 드롭 후 13.050초 Alpha | 기대 0.00000 | 실제 0.00000
+[FragmentLifetime] 입력 드롭 후 13.075초 Alpha | 기대 0.50000 | 실제 0.50000
+[FragmentLifetime] 입력 드롭 후 13.100초 Alpha | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 흐림 중 원래 R 채널 | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 흐림 중 원래 G 채널 | 기대 0.76000 | 실제 0.76000
+[FragmentLifetime] 입력 흐림 중 원래 B 채널 | 기대 0.29000 | 실제 0.29000
+[FragmentLifetime] 입력 드롭 후 14.950초 Alpha | 기대 0.00000 | 실제 0.00000
+[FragmentLifetime] 입력 특수 준비 중 수집 거부 | 기대 0.00000 | 실제 0.00000
+[FragmentLifetime] 입력 실패한 수집 시도가 수명에 미치는 영향 | 기대 -14.95000 | 실제 -14.95000
+[FragmentLifetime] 입력 수명 직전 수집 성공 | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 수명 직전 수집한 B 개수 | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 원래 Alpha 0.6의 반절 흐림 | 기대 0.30000 | 실제 0.30000
+[FragmentLifetime] 입력 15초 이후 수집 거부 | 기대 0.00000 | 실제 0.00000
+[FragmentLifetime] 입력 만료된 조각의 B 수집 개수 | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 제거 검증 중 플레이 모드 유지 | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] 입력 15초 경과 후 조각 오브젝트 제거 | 기대 1.00000 | 실제 1.00000
+[FragmentLifetime] PASS 25/25

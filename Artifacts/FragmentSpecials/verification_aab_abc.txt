@@ -1,0 +1,144 @@
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 AAA 강타 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAA 강타 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAA 가까운 단일 적 | 기대 40.000 ± 0.001 | 실제 40.000
+[FragmentSpecials] 입력 AAA 두 번째 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 AAB 늘어나는 칼날 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 늘어나는 칼날 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAB 충돌 표면 기준 첫 적의 기본 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAB 첫 적 뒤에는 관통하지 않음 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 칼날 폭 밖의 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 시전 후 플레이어 위치 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 AAB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 AAB 왼쪽 칼끝 명중 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 왼쪽 칼끝 명중 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAB 칼끝 추가 피해 | 기대 55.000 ± 0.001 | 실제 55.000
+[FragmentSpecials] 입력 AAB 반대 방향의 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 최대 길이 밖의 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB HUD 이름 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAB 칼끝 강조 메시 수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAB 효과의 실제 명중 길이 | 기대 3.500 ± 0.010 | 실제 3.505
+[FragmentSpecials] 입력 AAC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 AAC 넓은 베기 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 AAC 넓은 베기 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAC 전방 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAC 대각선 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAC 후방 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAC 부채꼴 바깥 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 ABB 관통 검기 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABB 관통 검기 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ABB 첫 적 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ABB 관통한 두 번째 적 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ABB 벽 뒤 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 ABC 파편 베기 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 파편 베기 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ABC 첫 적은 베기 피해 한 번 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 ABC 파편은 같은 적의 여러 콜라이더에 한 번 | 기대 80.000 ± 0.001 | 실제 80.000
+[FragmentSpecials] 입력 ABC 부채꼴의 두 번째 적 | 기대 80.000 ± 0.001 | 실제 80.000
+[FragmentSpecials] 입력 ABC 명중점 옆 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABC 명중점 뒤 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABC 파편 거리 밖의 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABC 시전 후 플레이어 위치 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 ABC HUD 이름 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 부채꼴 효과가 시작되는 명중 X | 기대 0.750 ± 0.001 | 실제 0.750
+[FragmentSpecials] 입력 ABC 부채꼴 안의 파편 메시 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 ABC 최초 베기 빗나감 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 최초 베기 빗나감 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ABC 미명중 시 파편 피해 없음 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ABC 미명중 시 파편 시각 효과 없음 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 ABC 왼쪽 치명타와 파편 지형 차단 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ABC 왼쪽 치명타와 파편 지형 차단 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ABC 첫 타격으로 처치 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 ABC 처치 후에도 왼쪽 전방에 파편 피해 | 기대 80.000 ± 0.001 | 실제 80.000
+[FragmentSpecials] 입력 ABC 파편이 벽 뒤 적을 보호 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 ACC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 ACC 회전 베기 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 ACC 회전 베기 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 ACC 앞의 적 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ACC 뒤의 적 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 ACC 범위 바깥 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 BBB 집중탄 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BBB 집중탄 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BBB 단일 표적 | 기대 50.000 ± 0.001 | 실제 50.000
+[FragmentSpecials] 입력 BBB 두 번째 표적 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 BBC 폭발탄 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BBC 폭발탄 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BBC 직접 표적 폭발 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 BBC 인접한 적 폭발 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 BBC 작은 폭발 바깥 적 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BCC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 BCC 확산탄 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BCC 확산탄 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BCC 직접 표적 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 BCC 넓은 범위 표적 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 CCC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 CCC 광역 파동 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 CCC 광역 파동 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 CCC 전방 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 CCC 후방 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 CCC 위쪽 피해 | 기대 75.000 ± 0.001 | 실제 75.000
+[FragmentSpecials] 입력 CCC 범위 밖 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 벽 앞 늘어나는 칼날 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 벽 앞 늘어나는 칼날 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 AAB 칼날이 벽 앞에서 멈춘 길이 | 기대 1.100 ± 0.010 | 실제 1.095
+[FragmentSpecials] 입력 AAB 벽 뒤 적 보호 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 벽에 가린 강타 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 벽에 가린 강타 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 근접 사선 차단 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 폭발의 벽 차단 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 폭발의 벽 차단 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 벽 앞 폭발 표적 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 벽 뒤 폭발 표적 보호 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 왼쪽 집중탄 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 왼쪽 집중탄 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 왼쪽 투사체 피해 | 기대 50.000 ± 0.001 | 실제 50.000
+[FragmentSpecials] 입력 반대쪽 투사체 표적 제외 | 기대 100.000 ± 0.001 | 실제 100.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 2발 장비 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 2발 장비 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 장비 적용 투사체 수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 장비 해제 후 재시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 장비 해제 후 추가된 투사체 수 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 잘못된 보정의 시전 실패 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 실패 시 사용 횟수 보존 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 기본 조합의 전용 장비 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 기본 조합의 전용 장비 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 기본 BBB 조합 전용 장비 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 제외 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 장비의 기능 교체 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 장비의 기능 교체 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 교체된 강타 피해 | 기대 40.000 ± 0.001 | 실제 40.000
+[FragmentSpecials] 입력 기능 교체 후 투사체 수 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 등록 레시피의 기본 효과 우선 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 등록 레시피의 기본 효과 우선 사용 횟수 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] 입력 등록 효과의 전방 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 등록 효과의 후방 피해 | 기대 70.000 ± 0.001 | 실제 70.000
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 특수 첫 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 특수 두 번째 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 특수 세 번째 시전 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 세 번 사용 뒤 남은 횟수 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 세 번 사용 뒤 재시전 | 기대 0.000 ± 0.001 | 실제 0.000
+[FragmentSpecials] 입력 다음 조각 수집 허용 | 기대 1.000 ± 0.001 | 실제 1.000
+[FragmentSpecials] 입력 CCC 순서 무관한 조합 준비 | 기대 3.000 ± 0.001 | 실제 3.000
+[FragmentSpecials] 입력 D 특수 공격 입력 연결 | 기대 2.000 ± 0.001 | 실제 2.000
+[FragmentSpecials] PASS 142/142
+PASS 42/42; Unity API 대역 검증이며 Unity 물리 실행 결과가 아님.

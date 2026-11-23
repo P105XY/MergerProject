@@ -1,11 +1,40 @@
 # 프로젝트 현황과 과거 메카 작업 기록
 
-- 최종 문서 갱신: 2026-11-16 (Asia/Seoul)
+- 최종 문서 갱신: 2026-11-23 (Asia/Seoul)
 - 현재 프로젝트는 메카 프로젝트가 아니다. 아트는 스프라이트 기반 2D이며, 게임 분위기의 참고작은 데드 셀, 할로우 나이트, Hellfurnace다. 할로우 나이트와 Hellfurnace처럼 윤곽선이 있는 그래픽을 게임 전반에 적용한다. 플레이어는 현대 어반 콘셉트의 인간형이며 오른팔과 왼다리가 기계로 대체되어 있고 오른팔로 공격한다. 인게임 스프라이트는 약 5등신을 목표로 한다. [스탠딩 시안 v2](Artifacts/PlayerStandingConcept/PlayerStandingConcept_v2.png)는 검토용이며 외형은 아직 승인되지 않았다.
 - 플레이어 조작감의 참고도 할로우 나이트로 지정되었다. 실제 원작 수치는 측정하지 않았으며, 빠른 반응을 목표로 시험 설정을 비교한다.
 - 아래 메카 모델·리그·조립 관련 내용은 과거 작업 기록이며 현재 프로젝트의 아트 방향이나 구현 목표가 아니다.
 - 이 문서는 현재 규격, 파일 위치, 확인된 결과, 남은 작업을 다음 대화에 전달하는 기준이다.
 - 작업 방식은 [AGENTS.md](AGENTS.md)를 따른다. 모델 제작·임포트 및 이전 조립 검증은 과거 보고서다. 기본 조립 기록은 `Artifacts/AssemblyFoundation/`, 개별 교체·해제의 최신 검증은 `Artifacts/AssemblyPartOperations/`에 기록한다.
+
+## 방향키 무기 조합 (시험 구현)
+
+### 게이지와 조합 조작
+
+1. 플레이어 공격이 적에게 피해를 세 번 줄 때마다 파편 게이지가 한 칸 찬다. 적의 공격·사망과 ABC 투창 명중으로 드롭된 파편을 S 공격으로 수집해도 한 칸이 즉시 찬다. 게이지는 세 칸까지 채우며, 드롭은 게임 시간 15초 뒤에 사라진다.
+2. 게이지가 가득 차고 장착된 무기가 없을 때 D를 누르면 집중한다. 집중 중에는 좌우 이동 입력이 막히고 ←·↓·→가 조합에 들어간다. 게임 속도와 고정 물리 간격은 기존 값의 15%를 적용한다. 집중은 실제 시간으로 최대 5초다.
+3. 최근 세 방향 입력의 개수로 조합을 결정한다. 네 번째부터는 새 입력이 가장 오래된 입력을 교체한다. 세 입력을 채우기 전에 D를 놓으면 입력만 폐기하고 다시 집중할 수 있다.
+4. 완성 상태에서 D를 놓으면 게이지 세 칸을 소비하고 무기 2회를 얻는다. 실제 시간 5초가 지나면 방향을 폐기하고 게이지를 보존한다. 두 경우 모두 원래 게임 속도로 돌아와 실제 시간 3초 동안 집중에 새로 진입할 수 없다.
+5. 무기를 보유한 동안 D를 새로 누르면 한 번 시전한다. 시전이 시작되면 한 번 차감하고, 두 번 다 쓰면 다시 무기를 조합할 수 있다. 무기 보유 중에도 게이지를 채울 수 있다.
+
+아티팩트 효과는 기존 레시피·장비 API를 통해 대응 무기의 동작이나 수치를 보정한다. 아티팩트별 강화 수치와 장착 화면은 후속 항목이다.
+
+### 무기 10종
+
+조합의 A는 ←, B는 ↓, C는 →다. 같은 방향을 여러 번 입력할 수 있다. `← ↓ →`와 `→ ← ↓`는 모두 ABC다. 아래의 세부 수치는 시제품 기준이다.
+
+| 조합 | 입력 예 | 무기 | 발동 효과 |
+| --- | --- | --- | --- |
+| AAA | ← ← ← | 강타 | 바로 앞의 적 하나를 강하게 친다. |
+| AAB | ← ← ↓ | 늘어나는 칼날 | 제자리에서 칼날을 뻗어 첫 적을 찌른다. 칼끝으로 맞히면 추가 피해를 준다. |
+| AAC | ← ← → | 넓은 베기 | 전방을 부채꼴로 베어 범위 안의 적들을 공격한다. |
+| ABB | ← ↓ ↓ | 관통 검기 | 직선으로 검기를 날려 경로상의 적들을 관통한다. |
+| ABC | ← ↓ → | 관통 투창 | 빠른 창을 던져 적들을 관통하고, 맞힌 적마다 수집 가능한 파편 한 개를 떨어뜨린다. |
+| ACC | ← → → | 회전 베기 | 몸 주위를 한 바퀴 베어 가까이 붙은 적들을 공격한다. |
+| BBB | ↓ ↓ ↓ | 5발 사격 | 전방 20°에 직선탄 다섯 발을 동시에 발사한다. |
+| BBC | ↓ ↓ → | 폭발탄 | 탄이 적이나 지형에 명중하면 주변에 폭발 피해를 준다. |
+| BCC | ↓ → → | 산탄 | 전방 총 10°에 산탄 세 발을 동시에 발사한다. |
+| CCC | → → → | 광역 파동 | 플레이어를 중심으로 넓은 범위에 피해를 준다. |
 
 ## 현재 프로젝트 확인 — 2026-10-30
 
@@ -18,36 +47,57 @@ Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더
 - `Jump Force`는 점프 시작 시 적용하는 위쪽 속도(단위/초)다. `Maximum Jump Height`는 이륙 당시 Rigidbody2D 위치에서의 상승 높이 상한이다. `PlayerBase` 소스 초기값은 각각 35와 30이다. 실제 높이는 초기 속도·하향 중력·충돌에도 좌우된다. 높이 또는 점프력 0이면 점프하지 않는다. Dynamic 바디와 하향 중력을 사용한다.
 - `Gravity Scale`과 `Movement Friction`을 Awake에서 Rigidbody2D에 적용한다. `PlayerBase`의 코드 중력 배율은 9.8이다. 배율 9.8은 월드 중력 Y=-9.81에 곱해져 플레이어에 약 -96.14 유닛/초²를 적용한다. 마찰 기본값은 0이며 플레이어별 런타임 PhysicsMaterial2D에 기존 바디 재질의 탄성 값을 복사한다. 런타임 재질은 OnDestroy에서 해제한다. 개별 Collider에 별도 재질을 지정한 다른 구성은 추가 확인이 필요하다.
 - `Coyote Time` 기본 0.12초 동안 발판을 벗어난 뒤에도 한 번 점프할 수 있다. 점프에 사용하면 소진하며 공중 재점프는 허용하지 않는다. 착지하면 다시 점프할 수 있고 버튼을 계속 누르는 것만으로 자동 재점프하지 않는다.
-- 점프 최고점에 도달하거나 상승 중 A를 놓으면 `jumpFallGravityMultiplier` 기본값 1.75를 해당 시점의 Rigidbody2D 중력 배율에 곱한다. 기본 배율 9.8에서는 17.15를 적용하고 착지 시 기존 배율을 복원한다. 물리 갱신 사이의 빠른 탭에도 적용하며 점프 경로 예측에도 같은 중력 전환을 반영한다.
+- A의 점프 입력 버퍼 기본값은 0.01초다. 착지 직전 입력은 첫 접지 판정에서 한 번 사용하고, 만료된 입력은 버린다. 접지는 직전 물리 단계의 결과이므로 착지 시점을 한 물리 단계 범위에서 보정한다. 현재 물리 단계 간격은 0.02초다. 사망, 비활성화, 체크포인트 복원 시 버퍼를 지운다.
+- 점프 최고점에 도달하거나 상승 중 A를 놓으면 `jumpFallGravityMultiplier` 기본값 1.55를 해당 시점의 Rigidbody2D 중력 배율에 곱한다. 기본 배율 9.8에서는 15.19를 적용하고 착지 시 기존 배율을 복원한다. 물리 갱신 사이의 빠른 탭에도 적용하며 점프 경로 예측에도 같은 중력 전환을 반영한다.
 - `PlayerBase`의 능력치·이동·점프·공격·특수 목록은 비직렬화 private 필드다. 두 테스트 씬을 불러오면 소스 초기값을 사용한다.
 - 위 이동·점프 수치는 `PlayerBase`와 두 테스트 씬의 공통 기준이다. 사용자가 해당 수치 변경을 명시적으로 요청할 때만 수정한다.
-- S를 누르고 있으면 `Attacks Per Second` 횟수/초로 마지막 좌우 이동 방향의 사각 범위를 검사하고 각 `EnemyBase`에 `AttackPower`만큼 피해를 한 번씩 적용한 뒤 `AttackRequested` 이벤트를 발생시킨다. 적의 여러 Collider가 겹쳐도 한 공격에서 중복 피해를 주지 않으며 트리거는 검사하지 않는다. 공격 범위와 레이어는 `PlayerBase` 코드에서 설정한다. D는 준비된 조합의 특수 시전을 시도한다.
+- S를 누르고 있으면 `Attacks Per Second` 횟수/초로 조준 방향에 맞춘 회전 사각 범위를 검사한다. 적은 일반 Collider로 피해를 판정하고 조각은 일반 Collider와 Trigger 모두로 수집을 판정한다. 적의 여러 Collider가 겹쳐도 피해는 한 번만 적용한다. 처리 후 `AttackRequested` 이벤트를 발생시킨다. 공격 범위와 레이어는 `PlayerBase` 코드에서 설정한다. D는 게이지가 찼을 때 집중을, 이미 무기를 얻었을 때 시전을 시작한다.
+- 집중 밖에서 S 일반 공격과 방향성 D 무기는 누른 방향키의 상·하·좌·우 방향을 사용한다. 상하와 좌우가 동시에 입력되면 상하가 우선이고 반대 방향 두 개는 해당 축에서 상쇄된다. 조준에 사용할 입력이 없으면 마지막으로 바라본 좌우를 사용한다. 점프 후 ↓를 누른 채 S 또는 D를 입력하면 아래를 공격한다. 집중 중 방향키는 기존 조합에 사용한다.
 - 시작 시 현재 체력을 코드의 최대 체력 100으로 초기화한다. `ApplyDamage`로 체력이 처음 0이 되면 사망 상태에서 입력·조각 수집·특수 사용을 멈추고 마지막 체크포인트를 불러온다. 유효한 저장이 없으면 사망 상태로 남는다. 넉백·사망 및 피격 연출은 후속 작업이다.
 - 활성화된 적에 닿으면 적의 `Attack Power`만큼 체력이 줄어든다. 사망 상태이거나 비활성화된 적은 접촉 피해를 주지 않는다. 적과 장애물은 일반 충돌과 트리거를 모두 지원하며, 피해 컴포넌트는 Collider가 달린 오브젝트 또는 그 부모에서 찾는다.
 - 환경에 접촉 피해를 주려면 [DamagedObstacle](Assets/Function/Environment/DamagedObstacle.cs)을 붙이고 Inspector에서 `Damage`(기본 10)를 설정한다. 같은 오브젝트 또는 자식에 `Collider2D`가 필요하며, 플레이어와 장애물의 물리 레이어 간 충돌을 허용해야 한다. `Is Trigger`를 켜면 통과하면서 피해를 받고, 끄면 일반 물리 충돌과 함께 피해를 받는다.
 - 플레이어의 `contactDamageCooldown`은 코드에서 0.75초다. 적과 장애물이 이 간격을 공유하므로 여러 콜라이더에 한꺼번에 닿아도 한 번만 피해를 받는다. 접촉이 이어지면 간격이 지난 뒤 다시 피해를 받고, 접촉이 끝나면 추가 피해를 받지 않는다. 외부의 직접 `ApplyDamage` 호출에는 이 간격을 적용하지 않는다.
-- 드롭된 조각에 닿으면 A/B/C별 개수를 누적한다. `TypeACount`, `TypeBCount`, `TypeCCount`는 아직 조합되지 않은 수집 개수다. 기존 Inspector `GameObject` 배열은 런타임 수집 개수로 대체했으며 배열에 입력했던 참조는 자동 이전되지 않는다. 현재 Assets의 씬·프리팹·데이터 에셋에서 해당 필드 저장은 발견되지 않았다.
-- 총 3개를 모으면 순서와 무관한 `ActiveCombination`의 A/B/C 개수로 조합이 확정되고 수집 개수는 0으로 바뀌며 `SpecialUsesRemaining`이 3이 된다. 준비 중에는 추가 조각을 수집하지 않으며, 조각은 월드에 남는다. 세 번 사용하면 조합이 초기화되고 다시 수집한다. `IsSpecialAvailable`은 UI 활성화에 사용할 수 있다.
-- `TryCollectFragment`와 `TryUseSpecial`은 외부 코드에서 호출할 수 있다. `TryUseSpecial`은 효과가 실행에 성공한 뒤에만 횟수를 한 번 줄이고 `SpecialUsed`와 `SpecialRequested`를 발행한다. `SpecialUsed`는 세 번째 사용에도 해당 시전의 `FragmentCombination`을 전달한다. 등록된 조합이나 효과가 없거나 실행이 실패하면 횟수를 보존한다.
+- `WeaponFocus`는 방향 조합 입력, 세 칸의 파편 게이지, 명중 진행도와 실제 시간 제한을 관리한다. S 근접 공격으로 드롭된 파편을 수집하며 파편의 기존 A/B/C 분류는 게이지 충전량에 영향을 주지 않는다.
+- 드롭된 조각은 게임 시간 기준 15초 동안 유지된다. 0~10초는 원래 모습으로 표시하고, 10~13초에는 0.3초마다 원래 Alpha에서 0으로 흐려졌다 돌아온다. 13~15초에는 같은 왕복을 0.1초마다 반복하고 15초에 제거한다. `Time.timeAsDouble`을 사용해 게임 시간 배율에 따라 수명과 흐림이 함께 진행된다.
+- 게이지가 가득 찼을 때 추가 파편은 수명이 끝날 때까지 월드에 남는다. 집중이 만료되거나 플레이어가 사망·비활성화되거나 저장 상태를 복원하면 집중과 임시 방향 입력을 해제하고 게임 속도를 복원한다.
+- `TryCollectFragment`와 `TryUseSpecial`은 외부 코드에서 호출할 수 있다. `TryUseSpecial`은 효과가 실행에 성공한 뒤에만 횟수를 한 번 줄이고 `SpecialUsed`와 `SpecialRequested`를 발행한다. `SpecialUsed`는 마지막 사용에도 해당 시전의 `FragmentCombination`을 전달한다. 유효한 효과를 선택하지 못하거나 실행이 실패하면 횟수를 보존한다.
 - 새 Input System 키보드를 직접 읽는다. 키 변경, 게임패드, 캐릭터 프리팹 연결 및 애니메이션은 미구현이다. Rigidbody2D는 Dynamic 및 적절한 회전 고정과 지형 충돌 설정이 필요하다.
 
 ### 특수 효과와 장비 보정
 
-- `Assets/Function/Special/`의 `SpecialRecipe`는 A/B/C 개수와 기본 효과를 설정하는 에셋이다. Create → Special → Recipe로 생성하고 개수 합을 3으로 지정한다. 플레이어의 비직렬화 `specialRecipes` 목록은 현재 빈 배열이다. 같은 개수 조합을 중복 등록하면 배열의 첫 레시피를 사용한다.
-- `SpecialEffectDefinition`의 파생 클래스는 `CreateCast`에서 매번 새로운 `ISpecialEffect` 인스턴스를 반환한다. `SpecialContext`에는 시전자, 조합, 시전 시점의 위치·방향이 들어간다. `ISpecialEffect.TryExecute`는 실제 효과를 시작했을 때 성공을 반환한다. `SpecialModifierDefinition`은 `ISpecialModifier`를 구현하며 호환되는 시전 인스턴스의 수치나 동작을 변경한다.
-- Create → Special → Equipment로 생성한 장비 에셋은 실행 중 `SetSpecialEquipment`로 장착 목록을 교체한다. `Target Recipe`를 비우면 모든 조합에 적용한다. 교체 효과가 여러 개면 `Replacement Priority`가 가장 높은 장비를 선택하고, 동점이면 장착 목록에서 앞선 장비를 선택한다. 최종 효과를 생성한 뒤 적용 대상인 장비의 보정을 장착 순서와 각 장비의 보정 목록 순서대로 적용한다.
-- 실제 투사체·광선 등 효과 구현, 조합·장비 에셋, 장비 인벤토리·저장 및 특수 UI는 후속 작업이다. 체크포인트는 기존처럼 조각과 사용 횟수를 복원한다.
+- `Assets/Function/Special/`의 `SpecialRecipe`는 A/B/C 개수와 기본 효과를 설정하는 에셋이다. Create → Special → Recipe로 생성하고 개수 합을 3으로 지정한다. 플레이어의 비직렬화 `specialRecipes` 목록은 현재 빈 배열이며, 등록된 레시피가 해당 조합에 없으면 10종의 기본 조합 공격을 사용한다. 같은 개수 조합을 중복 등록하면 배열의 첫 레시피를 사용한다.
+- `SpecialEffectDefinition`의 파생 클래스는 `CreateCast`에서 매번 새로운 `ISpecialEffect` 인스턴스를 반환한다. `SpecialContext`는 시전자, 조합, 시전 위치, 좌우 바라보는 방향과 공격 조준 벡터를 보관한다. 방향성 근접 판정과 투사체는 시전 순간의 조준을 사용한다. 산탄과 다발탄은 그 방향을 중심으로 퍼지고 회전 베기와 광역 파동은 시전자를 중심으로 원형 판정을 사용한다. `ISpecialEffect.TryExecute`는 실제 효과를 시작했을 때 성공을 반환한다. `SpecialModifierDefinition`은 `ISpecialModifier`를 구현하며 호환되는 시전 인스턴스의 수치나 동작을 변경한다.
+- Create → Special → Equipment로 생성한 장비 에셋은 실행 중 `SetSpecialEquipment`로 장착 목록을 교체한다. `Target Recipe`를 비우면 모든 조합에 적용한다. 기본 조합 공격에는 대상 레시피의 A/B/C 개수가 일치하는 장비도 적용한다. 교체 효과가 여러 개면 `Replacement Priority`가 가장 높은 장비를 선택하고, 동점이면 장착 목록에서 앞선 장비를 선택한다. 최종 효과를 생성한 뒤 적용 대상인 장비의 보정을 장착 순서와 각 장비의 보정 목록 순서대로 적용한다.
+- `FragmentSpecialEffect`는 `ISpecialEffect`를 구현하고 피해 배수, 사거리, 칼날 폭과 칼끝 피해, 파편 각도와 피해, 투사체 개수와 속도, 관통, 폭발 반경의 변경 가능한 프로퍼티를 제공한다. `ISpecialModifier.Apply`에서 타입을 확인해 이번 시전의 수치를 수정할 수 있다. Create → Special → Fragment Effect의 `FragmentSpecialDefinition`은 등록 레시피나 장비에서 사용할 조합 공격을 선택한다.
+- `SpecialEffectVisual`은 10종 특수 공격의 범위와 탄두·꼬리, 명중점 폭발을 월드 공간에 그린다. 베기와 파동은 피해 판정에 전달한 반경·각도, 폭발은 같은 중심과 반경을 사용한다. 범위 표시는 지형에 가려진 부분을 포함한 판정 시도 범위이며, 실제 타격에는 지형 차단 검사도 적용한다. 장비로 범위나 투사체 개수를 바꾸면 시각 효과에도 반영된다. 캐릭터 공격 애니메이션과 장비 화면은 후속 작업이다.
+
+기본 조합의 아래 수치는 구현 초기값이다. 피해량은 시전 시점 플레이어 공격력의 배수이며 `FragmentSpecialEffect.cs`에서 기본값을 조정한다. 칼날과 범위 공격은 지형에 가려진 적을 제외한다.
+
+| 조합 | 공격 | 피해 배수 | 기본 범위와 동작 |
+| --- | --- | --- | --- |
+| AAA | 강타 | 6배 | 전방 사거리 1.8, 가장 가까운 적 한 개 |
+| AAB | 늘어나는 칼날 (`Extending Blade`) | 기본 3배, 칼끝 4.5배 | 제자리에서 전방 4 × 0.55까지 첫 적을 찌른다. 충돌 지점이 끝쪽 25%에 있으면 칼끝 피해를 준다. |
+| AAC | 넓은 베기 | 3배 | 전방 반경 3.2, 부채꼴 120도 |
+| ABB | 관통 검기 | 3배 | 속도 18, 사거리 14, 적 관통 |
+| ABC | 관통 투창 (`Piercing Spear`) | 적마다 2.5배 | 속도 32, 사거리 18. 적을 관통하며 적마다 파편 한 개를 생성한다. |
+| ACC | 회전 베기 | 3배 | 시전자 중심 반경 2.5 |
+| BBB | 5발 사격 (`Five Shot`) | 탄당 1배 | 속도 24, 사거리 20. 20도에 직선탄 다섯 발을 동시에 발사한다. |
+| BBC | 폭발탄 | 3배 | 속도 18, 사거리 16, 명중점 반경 1.8 폭발 |
+| BCC | 산탄 (`Buckshot`) | 탄당 1배 | 속도 16, 사거리 16. -5°, 0°, +5°로 산탄 세 발을 동시에 발사한다. |
+| CCC | 광역 파동 | 2.5배 | 시전자 중심 반경 6 |
+
+BBC는 탄 하나를 발사하며 적이나 지형에 닿으면 직접 명중한 적을 포함한 범위에 한 번 폭발 피해를 준다. ABB와 ABC는 적마다 한 번씩 피해를 주고 지형에서 멈춘다. BBB와 BCC의 개별 탄은 처음 맞힌 적에서 멈춘다. 시전 성공은 적 명중 여부와 별개로 효과가 시작되었는지를 기준으로 한다.
 
 `Mech.Function.EnemyBase`는 Inspector에서 최대 체력, 그로기 수치, 그로기 저항, 공격력, 공격 속도를 설정한다. 기본값은 각각 100, 0, 0, 10, 1이며 수치 단위와 밸런스는 아직 확정되지 않았다. 현재 체력은 Awake에서 최대 체력으로 초기화하고 `ApplyDamage`는 양수 유한 피해를 적용하여 0 이상으로 제한한다. 파생 클래스에서 Awake를 재정의하면 `base.Awake()`를 호출해야 한다.
 
-적마다 Inspector의 `Held Object Type`에서 A/B/C 중 하나를 선택하고 `Held Object`에 드롭할 조각 프리팹을 지정한다. 체력이 0이 되는 유효한 피해를 받으면 적 위치에 프리팹을 한 번 생성하고, 루트의 `FragmentPickup`을 추가 또는 초기화해 해당 종류를 전달한 뒤 `FragmentDropped` 이벤트를 발생시킨다. 미지정이면 경고하고 드롭하지 않는다. 개발자가 선택한 종류가 수집 종류의 기준이다.
+적마다 Inspector의 `Held Object Type`에서 A/B/C 중 하나를 선택하고 `Held Object`에 드롭할 조각 프리팹을 지정한다. 공격 동작을 실행하거나 체력이 0이 되면 파편을 드롭한다. 접촉형 적은 플레이어에게 접촉 피해를 실제로 줬을 때 드롭한다. 지상 보스는 기존 패턴별 보상 수량을 적용한다. 원본 미지정 시 기본 표시와 트리거가 있는 파편이 생성되며, 일반 드롭은 아래쪽 바닥을 찾으면 그 근처에 배치한다. `Held Object Type`은 기존 드롭 분류와 이벤트 호환에 사용한다.
 
-조각 프리팹에는 활성 `Collider2D`가 필요하다. 플레이어와 조각이 겹칠 때 `OnTriggerStay2D`가 호출되도록 적어도 한 Collider를 Trigger로 설정하고, 물리 레이어 충돌 설정도 허용해야 한다. 플레이어의 `Rigidbody2D`는 기존 코드가 요구한다. 수집 성공 시 조각 오브젝트를 제거하며, 특수 기능이 준비된 동안 겹쳐 있는 조각은 사용 종료 후에도 계속 겹쳐 있으면 수집을 다시 시도한다. 보스 테스트 구역에는 B 조각 드롭 프리팹이 연결되어 있다. [BossFragmentB.prefab](Assets/Prefabs/PlayTest/BossFragmentB.prefab)
+조각 프리팹에는 플레이어의 공격 레이어에 속한 활성 `Collider2D`가 필요하다. Trigger를 사용하면 조각을 통과할 수 있고 S 공격으로 수집한다. Trigger 조각을 공격 범위 쿼리에 포함하려면 현재 프로젝트처럼 `Queries Hit Triggers`를 켠다. 수집 성공 시 조각 오브젝트를 제거한다. 게이지가 가득 차 있으면 파편은 월드에 남으며, 수명 안에 게이지를 소비하고 다시 공격하면 수집할 수 있다. 보스 테스트 구역에는 B 조각 드롭 프리팹이 연결되어 있다. [BossFragmentB.prefab](Assets/Prefabs/PlayTest/BossFragmentB.prefab)
 
 적 FSM은 초기 `Idle`과 `Patrol`, `Chase`, `Attack`, `Groggy`, `Dead`, `Windup` 상태를 제공한다. `TryChangeState`로 수동 전환하며 정의되지 않은 값과 동일 상태는 거부하고, 성공 시 `StateChanged` 이벤트에 이전·새 상태를 전달한다. 치명적인 피해는 `Dead`로 전환하고 `IsDefeated`를 설정하며 `Defeated` 이벤트를 한 번 발생시킨다. 처치 후 재피해·다른 상태 전환은 거부한다. 단순한 수동 `Dead` 전환은 처치·드롭을 실행하지 않는다. 공통 적 오브젝트 자동 제거와 그로기 누적·회복·저항 계산은 미구현이다.
 
 - 플레이어의 근접 공격은 `ApplyPlayerDamage(damage, attacker)`를 호출한다. 유효한 피해가 명중하면 적 스프라이트는 실제 시간 기준 0.03초 동안 밝은 회색 sRGB `(230, 230, 230)`을 표시한다. 투명도와 실루엣을 유지하고 시간이 지난 뒤 첫 갱신 또는 비활성화 시 원래 머티리얼을 복원한다. [EnemyWhiteFlash](Assets/Function/Enemy/EnemyWhiteFlash.cs)
-- 명중하면 공격자와 피격 대상의 `Animator` 재생 속도를 0으로 설정하고 실제 시간 기준 0.01초 뒤 기존 속도로 복원한다. 직교 메인 카메라에는 렌더링 중 화면 기준 상하좌우 방향으로 약 5픽셀의 흔들림을 0.005초 적용한다. 두 효과의 표시와 복원은 프레임 단위로 처리한다. 투사체나 특수 효과에서 공격자의 `Animator`도 정지하려면 `attacker`를 전달한다. 일반 `ApplyDamage`는 체력과 처치만 처리한다. [GameHitStop](Assets/Function/GameHitStop.cs), [AttackCameraShake](Assets/Function/AttackCameraShake.cs)
+- 명중하면 공격자와 피격 대상의 `Animator` 재생 속도를 0으로 설정하고 실제 시간 기준 0.01초 뒤 기존 속도로 복원한다. 직교 메인 카메라에는 렌더링 중 화면 기준 상하좌우 방향으로 약 5픽셀의 흔들림을 현재 소스 기준 0.03초 적용하며, 이동량은 지정한 화면 경계까지 제한한다. 두 효과의 표시와 복원은 프레임 단위로 처리한다. 투사체나 특수 효과에서 공격자의 `Animator`도 정지하려면 `attacker`를 전달한다. 일반 `ApplyDamage`는 체력과 처치만 처리한다. [GameHitStop](Assets/Function/GameHitStop.cs), [AttackCameraShake](Assets/Function/AttackCameraShake.cs)
 - 기존 등급 클래스는 `FragmentEnemy`, `NormalEnemy`, `AdvancedEnemy : NormalEnemy`, `BossEnemy`다. 조각 적은 실제 플레이어 피해를 기준으로 Inspector 체력을 조절해야 한두 번에 처치할 수 있다. 아래 행동 클래스는 별도로 `EnemyBase`의 능력치·처치·조각 드롭을 상속한다.
 - [TestEnemy](Assets/Function/Enemy/TestEnemy.cs)는 `EnemyBase`를 직접 상속한다. Inspector에서 `Held Object Type`과 `Held Object`를 지정하면 Player 공격으로 체력이 0이 될 때 공통 처치 처리로 조각 하나가 드롭된다. 미지정 시 경고만 발생한다.
 - 조합에 필요한 조각 수와 특수 사용 횟수는 현재 각각 코드 상수 3이다. N개로의 확장과 조합별 실제 효과·UI는 후속 작업이다.
@@ -56,12 +106,14 @@ Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더
 
 [BossEnemy](Assets/Function/Enemy/BossEnemy.cs)의 최대 체력과 시작 체력은 2250이다. 활성화 3초 뒤 살아 있는 플레이어가 있으면 돌진을 시작한다. 일반 공격은 돌진 → 내려찍기 → 광역 순서로 반복하며, 일반 공격 두 번을 완료할 때마다 다음 패턴으로 조각 적 소환을 실행한다. 패턴을 끝낸 시점부터 일반 공격 뒤에는 3초, 소환 뒤에는 5초를 기다린다.
 
-| 패턴 | 동작 |
-| --- | --- |
-| 돌진 | 사거리 제한 없이 시작 순간 플레이어가 있는 좌우 방향을 정하고 벽까지 수평으로 돌진한다. 기본 속도는 초당 20 Unity 단위다. 경로의 플레이어에게 피해를 주며 적과 트리거를 벽으로 취급하지 않는다. |
-| 내려찍기 | 발밑 높이부터 전방에 기본 2 × 2.5 크기의 공격 트리거를 열어 한 번 판정한다. |
-| 광역 공격 | 같은 방식으로 전방에 기본 6 × 2.5 크기의 공격 트리거를 열어 한 번 판정한다. |
-| 조각 적 소환 | 보스의 발밑 높이에서 벽 안쪽의 빈 바닥을 찾아 조각 적 3마리를 소환한다. 소환 적은 고정된 장애물로 동작하며 접촉 피해를 주고, 처치하면 지정한 조각을 떨어뜨린다. |
+| 패턴 | 동작 | 패턴 종료 시 조각 드롭 |
+| --- | --- | --- |
+| 돌진 | 사거리 제한 없이 시작 순간 플레이어가 있는 좌우 방향을 정하고 벽까지 수평으로 돌진한다. 기본 속도는 초당 20 Unity 단위다. 경로의 플레이어에게 피해를 준다. | 벽 충돌 후 1개 |
+| 내려찍기 | 발밑 높이부터 전방에 기본 2 × 2.5 크기의 공격 트리거를 열어 한 번 판정한다. | 1개 |
+| 광역 공격 | 같은 방식으로 전방에 기본 6 × 2.5 크기의 공격 트리거를 열어 한 번 판정한다. | 2개 |
+| 조각 적 소환 | 보스의 발밑 높이에서 벽 안쪽의 빈 바닥을 찾아 조각 적 3마리를 소환한다. 소환 적은 고정된 장애물로 동작하며 접촉 피해를 주고, 처치하면 지정한 조각을 떨어뜨린다. | 소환 적 처치 시 지정 조각 |
+
+패턴 보상 조각은 보스의 `Held Object`와 `Held Object Type`을 우선 사용한다. 보스의 `Held Object`가 비어 있으면 `Fragment Enemy Prefab`의 드롭 설정을 사용한다. 현재 테스트 보스는 B 조각을 드롭한다. 돌진 후에는 벽 반대쪽, 나머지 공격 후에는 보스가 바라보는 쪽에 조각을 배치하며 배치 방향에 벽이 있으면 반대쪽을 사용한다. 보상 조각도 S 공격으로 수집하고 15초 수명을 적용한다.
 
 보스와 조각 적을 포함한 모든 살아 있는 적은 접촉 시 각자의 `Attack Power`만큼 피해를 준다. 보스의 돌진·내려찍기·광역 공격도 같은 피해량과 플레이어의 공통 재피격 간격을 사용한다. 보스의 Inspector에서 `Fragment Enemy Prefab`에 고체 Collider2D와 `Held Object`·`Held Object Type`이 설정된 조각 적을 연결한다. `Environment Layers`에는 고체 바닥·벽 레이어를 포함하고, `Fragment Spawn Spacing`에 맞춰 세 마리가 설 바닥을 확보한다. 프리팹이 비어 있거나 빈 바닥이 부족하면 경고를 기록한다. PlayTestScene에는 테스트용 보스와 소환 적 프리팹을 연결했다. 확정 외형과 공격 애니메이션은 후속 작업이다.
 
@@ -95,19 +147,27 @@ Git 관리: 루트 `.gitignore`의 `.DS_Store` 규칙으로 모든 하위 폴더
 
 ### 플레이 테스트 씬
 
-[PlayTestScene](Assets/Scenes/TestScene/PlayTestScene.unity)을 Unity에서 열고 Play를 누른 뒤 Game 화면을 클릭한다. 방향키로 이동, A로 점프, S를 누르고 있으면 정면 공격, 조각 3개 수집 후 D로 특수 시전을 시도할 수 있다. 현재 씬은 레시피가 연결되기 전이므로 D를 눌러도 준비된 횟수를 보존한다. 시작 구역의 적 세 마리는 각각 체력 30이며 씬 안의 원본에서 A/B/C 조각을 드롭한다. 플레이어의 코드 공격력은 10이며 초당 한 번 공격할 수 있다. 씬 전용 [PlayTestDisplay.cs](Assets/Scenes/TestScene/PlayTestDisplay.cs)는 시작 구역의 임시 도형·상태 표시와 적 외형 비활성화를 담당한다.
+[PlayTestScene](Assets/Scenes/TestScene/PlayTestScene.unity)을 Unity에서 열고 Play를 누른 뒤 Game 화면을 클릭한다. 방향키로 이동하고 A로 점프하며 S로 공격한다. 공격 명중이나 파편 수집으로 게이지를 채운 뒤 D를 누른 상태에서 방향 세 번을 입력하고 놓는다. 다음 D 입력으로 획득한 무기를 시전한다. 시작 구역의 적 세 마리는 각각 체력 30이며 씬 안의 원본에서 A/B/C 조각을 드롭한다. 플레이어의 코드 공격력은 10이며 초당 한 번 공격할 수 있다. 씬 전용 [PlayTestDisplay.cs](Assets/Scenes/TestScene/PlayTestDisplay.cs)는 시작 구역의 임시 도형·상태 표시와 적 외형 비활성화를 담당한다.
 
-시작 구역에서 오른쪽으로 이동하면 `BOSS ARENA` 표지와 입구 체크포인트가 나온다. 오른쪽으로 이동하면서 A를 길게 눌러 낮은 입구 벽을 넘는다. 카메라는 플레이어를 수평으로 따라간다. 보스가 벽에서 방 안을 바라볼 때 바닥의 빨간 표식은 내려찍기, 주황 표식은 광역 공격 범위를 가리킨다. 테스트 보스는 씬 시작 뒤 기존 패턴을 자동으로 진행한다.
+PlayTestScene과 FlyingBossTestScene의 화면 왼쪽 아래에 정사각형 네 칸을 표시한다. 1~3번은 평상시 파편 게이지와 명중 진행도를, 집중 중에는 최근 방향 입력을 표시한다. 4번은 집중 가능 여부·집중 상태나 활성 무기의 이름과 남은 사용 횟수를 표시한다. 장비가 효과를 바꾸면 교체된 무기 이름을 표시한다.
+
+[PlayTestScene 게임 화면](Artifacts/FragmentSlots/PlayTestScene/03-cab.png)과 [조각 획득부터 세 번째 시전까지의 HUD 캡처](Artifacts/FragmentSlots/PlayTestScene/hud_sequence.png)는 2026-11-19 당시 조각 조합 방식의 Unity macOS 플레이어 화면이다.
+
+시작 구역에서 오른쪽으로 이동하면 `BOSS ARENA` 표지와 입구 체크포인트가 나온다. 오른쪽으로 이동하면서 A를 길게 눌러 낮은 입구 벽을 넘는다. 보스가 벽에서 방 안을 바라볼 때 바닥의 빨간 표식은 내려찍기, 주황 표식은 광역 공격 범위를 가리킨다. 테스트 보스는 씬 시작 뒤 기존 패턴을 자동으로 진행한다.
+
+씬을 불러올 때 메인 직교 카메라는 [PlayerCameraFollow](Assets/Function/PlayerCameraFollow.cs)의 공통 기본값을 사용한다. 직교 크기는 10이고 같은 씬의 플레이어를 `Smooth Time` 0.3초로 수평 추적한다. 두 테스트 씬은 고정 Y 높이와 X 오프셋 +2를 사용한다. 별도 설정이 필요한 씬은 메인 카메라의 `Player Camera Follow` 컴포넌트에서 `Orthographic Size`, `Follow Offset`, `Follow Vertical`을 지정한다.
+
+월드 좌표의 경계를 적용하려면 `Limit To Bounds`를 켜고 `World Bounds` 사각형의 왼쪽 아래 X·Y 및 폭·높이를 입력한다. 씬 뷰에서 카메라를 선택하면 경계를 확인할 수 있다. 화면 비율과 실제 표시 영역을 기준으로 카메라 위치와 명중 흔들림을 제한한다. 경계가 화면보다 작은 축에서는 직교 크기와 오브젝트의 화면 배율을 유지하고 그 축의 표시 영역을 잘라낸다. 두 테스트 씬의 경계는 기준 좌표가 정해지기 전까지 꺼 둔다.
 
 보스 프리팹은 시작 체력 2250이며, 소환 적은 체력 20·접촉 피해 10으로 설정했다. 소환 적은 기본 공격 두 번에 처치되고 B 조각을 떨어뜨린다. [TestBoss.prefab](Assets/Prefabs/PlayTest/TestBoss.prefab), [BossFragmentEnemy.prefab](Assets/Prefabs/PlayTest/BossFragmentEnemy.prefab)
 
 A로 점프가 시작되면 게임 화면에 민트색 실선으로 지나온 경로를, 노란 점으로 현재 입력 기준의 예상 경로를 표시한다. 방향을 바꾸거나 A를 일찍 놓으면 예측을 갱신하며, 예측은 첫 충돌 또는 최대 1.8초까지만 표시한다. 착지 후 실선은 1.25초 동안 남는다. [점프 경로 코드](Assets/Scenes/TestScene/JumpPathDisplay.cs), [게임 화면 예시](Artifacts/JumpTrajectory/jump_path_centered.png)
 
-테스트 화면 상단의 HP는 현재 체력과 최대 체력을 표시한다. 배치된 A/B/C 적의 접촉 피해는 각 10이며, 적에게 계속 닿아 있으면 기본 0.75초 간격으로 체력이 줄어든다. [피격 화면 예시](Artifacts/PlayTestEnemyContact/contact_damage.png)
+배치된 A/B/C 적의 접촉 피해는 각 10이며, 적에게 계속 닿아 있으면 기본 0.75초 간격으로 체력이 줄어든다.
 
 플레이어가 적을 처치하면 테스트 표시 코드가 적의 충돌체를 끄고 WhiteFlash가 끝나면 외형을 숨긴다.
 
-다음 작업은 사망 UI와 오디오 믹서를 연결하는 것이다. 세 적과 위험 장애물의 씬 배치, 투사체 외형, 플레이어 피격·사망 연출, 조합별 특수 효과와 실제 캐릭터·조각 에셋 연결도 남아 있다.
+다음 작업은 사망 UI와 오디오 믹서를 연결하는 것이다. 세 적과 위험 장애물의 씬 배치, 플레이어 피격·사망 연출, 실제 캐릭터·조각 에셋과 공격 애니메이션 연결도 남아 있다.
 
 이동 구현 당시의 [C# 대역 검증](Artifacts/PlayerMovement/verification.txt), [이전 비교 측정](Artifacts/PlayerMovementPlayTest/results.json), [설정 적용 후 최신 PlayMode 검증](Artifacts/ResponsiveMovementApplied/verification.json)을 구분한다. 최신 측정은 저장된 씬을 MCP로 실행·일시 정지한 뒤 PlayerBase.FixedUpdate와 실제 PhysicsScene2D를 고정 간격으로 진행한 결과다. OS 키보드·마우스를 사용하지 않았으며 Update의 실제 입력 수신과 사용자의 주관적인 조작감은 검증하지 않았다.
 
@@ -115,12 +175,12 @@ A로 점프가 시작되면 게임 화면에 민트색 실선으로 지나온 �
 
 ### 자동 저장·이어하기
 
-살아 있는 플레이어가 [Checkpoint](Assets/Function/Progress/Checkpoint.cs) 트리거에 진입하면 자동 저장을 예약한다. 같은 프레임의 충돌과 아이템 획득을 처리한 뒤 플레이어가 살아 있으면 **진행 슬롯 하나**를 갱신한다. 마지막으로 저장한 씬과 체크포인트 ID, 미조합 A/B/C 조각, 활성 조합과 남은 특수 사용 횟수, 일회성 아이템의 획득 ID를 기록한다.
+살아 있는 플레이어가 [Checkpoint](Assets/Function/Progress/Checkpoint.cs) 트리거에 진입하면 자동 저장을 예약한다. 같은 프레임의 충돌과 아이템 획득을 처리한 뒤 플레이어가 살아 있으면 **진행 슬롯 하나**를 갱신한다. 마지막으로 저장한 씬과 체크포인트 ID, 파편 게이지와 누적 명중, 활성 무기 조합과 남은 사용 횟수, 일회성 아이템 획득 ID를 기록한다. 이전 저장에서 미조합 파편 개수는 게이지로, 활성 조합은 새 무기로 옮긴다. 이전 사용 횟수는 최대 2회까지 복원한다.
 
 - 체크포인트 외에도 중요 아이템 획득 직후, 실제 플레이 시간 누적 3분마다, 지역 이동을 마쳤을 때, 플레이 중 정상 종료할 때 같은 슬롯에 저장한다. 주기 타이머는 타이틀·사망·일시 정지·로드 중에는 멈춘다. 정상 종료 저장은 활성 지역에서 살아 있는 플레이어의 진행을 기록한다. [ProgressAutosave.cs](Assets/Function/Progress/ProgressAutosave.cs)
 - 중요 아이템·주기·종료 저장은 현재 지역의 마지막 체크포인트를 복귀 지점으로 사용한다. 현재 지역에서 체크포인트에 닿은 기록이 없으면 지역 시작 위치를 저장한다. 지역 이동은 도착 씬의 지정 체크포인트나 시작 위치를 저장한다.
 - [CheckpointProgress](Assets/Function/Progress/CheckpointProgress.cs)의 `HasSave()`로 저장 유무를 확인하고 `TryContinue()`로 이어하기를 시작한다. `TryContinue()`의 반환값은 로드 요청을 시작했는지 나타내며, 실제 복원 성공 여부는 `LoadFinished`로 받을 수 있다. 사망 후 다시하기도 같은 경로를 자동으로 호출한다.
-- 복원 시 씬을 다시 불러 일반 적을 초기 체력과 위치에 리스폰한다. 체크포인트에 배치한 플레이어는 최대 체력을 얻고 저장 시점의 조각과 특수 횟수를 복원한다. 리스폰한 적의 조각은 다시 획득할 수 있다. 별도 보스 처치나 문 상태를 영구 보관하는 기능은 아직 없다.
+- 복원 시 씬을 다시 불러 일반 적을 초기 체력과 위치에 리스폰한다. 체크포인트에 배치한 플레이어는 최대 체력을 얻고 저장 시점의 게이지·명중 진행도·무기와 남은 횟수를 복원한다. 리스폰한 적의 조각은 다시 획득할 수 있다. 별도 보스 처치나 문 상태를 영구 보관하는 기능은 아직 없다.
 - 진행 파일은 `Application.persistentDataPath/checkpoint.json`이다. 임시 파일로 쓰고 이전 정상 저장은 `checkpoint.json.bak`에 보관한다. 주 파일이 없거나 손상되면 정상 백업을 읽는다. 동일한 스냅샷을 다시 저장할 때는 파일을 교체하지 않는다. 그래픽·사운드 옵션은 별도 저장을 사용한다.
 - 씬에 활성 플레이어 한 명을 두고, 체크포인트마다 씬 내에서 고유한 `Checkpoint Id`와 활성 `BoxCollider2D` 트리거를 지정한다. `Spawn Point`가 없으면 체크포인트 위치에서 시작한다. 씬은 빌드 목록에 등록해야 한다.
 - PlayTestScene에는 시작 부근 X=-3.5, 중간 X=0.5, 보스 입구 X=6.5에 체크포인트가 있다. 빌드 목록에는 `SampleScene`에 이어 `PlayTestScene`을 등록했다. 새 게임에서 첫 자동 저장 전에 사망하면 사망 상태로 남는다. 사망 UI는 후속 작업이다.
@@ -1103,3 +1163,90 @@ YYYY-MM-DD — 작업명
 
 - `EnemyWhiteFlash.cs`에서 최소 3프레임 조건을 제거하고 실제 시간 0.03초가 지나면 복원하도록 조정했다. `PlayerBase.cs`에서 A에 점프 시작·유지 입력을, S에 공격 입력을 연결했다. `PlayTestDisplay.cs` 조작 안내와 `MovementChecks.cs`의 점프 입력도 갱신했다.
 - Unity 6000.6.6f1 명령줄 PlayMode에서 가상 키 입력으로 A의 점프 요청과 유지·해제, S의 실제 피해 적용, WhiteFlash의 0.03초 예약 및 종료 조건에서 머티리얼 복원을 확인했다. 명중 연출 검사 25개를 통과했다. [검증 결과](Artifacts/EnemyWhiteFlash/key_mapping_and_duration_verification.txt)
+
+### 2026-11-17 — 드롭 조각을 공격으로 수집
+
+- `PlayerBase.cs`에서 접촉 수집을 제거하고 S 근접 공격의 `OverlapBox` 결과로 조각 수집을 시도한다. 조회 시점 이후에 생성된 조각은 새 공격에 맞아야 수집된다. `PlayTestDisplay.cs`의 조작 안내와 `UnityTestDoubles.cs`의 Collider2D 대역을 맞췄다. [Unity PhysicsScene2D.OverlapBox](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/physicsscene2d/overlapbox), [Unity ContactFilter2D.useTriggers](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/contactfilter2d/usetriggers)
+- Unity 6000.6.6f1 명령줄 PlayMode에서 가상 S 입력과 기존 B 조각 프리팹을 사용해 별도 공격 수집, 접촉과 반대 방향 공격의 수집 방지, 중복 수집 방지, 특수 소진 후 재공격 수집을 15/15 확인했다. Trigger 조각은 프로젝트의 `Queries Hit Triggers`가 꺼진 조건에서 공격 쿼리에 잡히지 않았으며, 저장된 설정은 활성화 상태다. [검증 결과](Artifacts/FragmentAttack/verification.txt)
+
+### 2026-11-18 — 착지 직전 점프 입력 버퍼
+
+- `PlayerBase.cs`에 0.01초의 점프 입력 만료 시각을 추가했다. 물리 단계 안에서 착지한 시점을 고려해 첫 접지 판정에서 입력을 한 번 소비한다. `MovementChecks.cs` 및 `UnityTestDoubles.cs`에서 입력 시각과 고정 시각을 따로 진행하도록 했으며 기존 하강 중력 배율의 기대값도 소스의 1.55에 맞췄다. [Unity 고정 시각](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/time/fixedtimeasdouble), [Unity 2D 물리 갱신 순서](https://docs.unity3d.com/6000.6/Documentation/ScriptReference/SimulationMode2D.FixedUpdate.html)
+- Unity 명령줄 PlayMode에서 가상 A 입력과 수동 물리 단계로 실제 바닥 접촉 뒤 점프 시작 속도 35와 입력 소비를 7/7 확인했다. C# 대역 검사에서는 0.02초의 물리 갱신 사이에 착지 0.01초 전 입력이 들어온 경우, 만료와 중복 소비 방지, 코요테 타임을 포함해 42/42를 확인했다. [검증 결과](Artifacts/JumpInputBuffer/verification.txt)
+
+### 2026-11-19 — 드롭 조각 수명과 단계별 흐림
+
+- `FragmentPickup.cs`에서 드롭 초기화 시 게임 시각과 자식 스프라이트의 원래 Alpha를 기록한다. 0~10초에는 원래 모습을 표시하고 10~13초에는 0.3초, 13~15초에는 0.1초마다 흐림과 선명함을 한 번 왕복한다. 15초에 오브젝트를 제거하고 만료 이후의 수집을 거부한다. 이동 검사의 `UnityTestDoubles.cs`에도 사용한 렌더러·투명도·왕복 계산 API를 추가했다. [Unity Mathf.PingPong](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/mathf/pingpong), [Unity 게임 시각](https://docs.unity.com/en-us/engine/6000.6/script-reference/unityengine/time/timeasdouble)
+- Unity 6000.6.6f1 명령줄 PlayMode에서 경과 시각을 지정해 투명도 주기와 전환 경계, 원래 색 보존, 수명 직전 수집 및 만료 수집 거부를 검사했다. 만료 처리 후 프레임을 진행해 실제 오브젝트 제거까지 25/25를 확인했다. 이동 대역 검사도 42/42를 통과했다. [검증 코드](Artifacts/FragmentLifetime/verify_fragment_lifetime.cs), [검증 결과](Artifacts/FragmentLifetime/verification.txt), [이동 검사](Artifacts/FragmentLifetime/movement_regression.txt)
+
+### 2026-11-19 — 지상 보스의 패턴 보상 조각
+
+- `BossEnemy.cs`에서 돌진이 벽에 충돌하면 1개, 내려찍기를 마치면 1개, 광역 공격을 마치면 2개의 조각을 드롭한다. 보스의 드롭 설정을 우선 사용하고 비어 있으면 소환 조각 적의 설정을 사용해 현재 테스트 보스에는 B 조각이 나온다. `EnemyBase.cs`의 조각 생성·초기화를 공통 메서드로 추출해 패턴 보상에도 기존 수집과 15초 수명을 적용했다.
+- Unity 6000.6.6f1 명령줄 PlayMode에서 보스의 실제 패턴과 2D 벽 충돌로 수량, 벽 반대쪽 드롭, 중복 드롭 방지, 지정 조각 우선 적용, 저장된 보스 프리팹의 B 조각 수집을 포함해 32/32를 확인했다. 검증에서 패턴 대기는 앞당겼으며 종료 후 3초·5초의 예약값도 확인했다. 기존 이동 대역 검사는 42/42를 통과했다. [검증 코드](Artifacts/BossPatterns/verify_boss_patterns.cs), [검증 결과](Artifacts/BossPatterns/pattern_fragment_verification.txt)
+
+### 2026-11-19 — A/B/C 10종 조합 특수 공격
+
+- `FragmentSpecialEffect.cs`에 AAA~CCC의 기본 조합 선택과 조정 가능한 초기 수치를 두고 `FragmentSpecialDefinition.cs`로 레시피·장비의 효과 선택을 연결했다. `SpecialHitQuery.cs`, `SpecialDash.cs`, `SpecialProjectile.cs`에서 단일·부채꼴·원형 범위, 짧은 돌진, 관통·단일·폭발 투사체를 처리한다. `PlayerBase.cs`는 기본 조합을 D 입력에 연결하고 돌진을 기존 물리 갱신과 함께 진행한다.
+- `SpecialRecipe.cs`와 `SpecialEquipment.cs`에서 기본 조합에도 효과 교체와 보정을 적용한다. 기존 등록 레시피가 해당 조합에 있으면 우선 사용하고 시전 성공 시 한 번만 차감한다. 초기 피해 배수와 사거리는 위의 조합 표에 기록했으며, 시각 이펙트·투사체 외형과 애니메이션은 후속 연결 대상이다.
+- Unity 6000.6.6f1 명령줄 PlayMode에서 실제 2D 쿼리와 수동 물리 단계로 10종 조합의 피해·범위, 돌진과 관통, 벽과 폭발, 장비 2발 보정·기능 교체·조합 제한, 등록 레시피 우선, 3회 사용과 가상 D 입력을 114/114 확인했다. 기존 이동 검사는 새 Unity 전용 공격 컴포넌트를 대역으로 분리해 42/42를 통과했다. [검증 코드](Artifacts/FragmentSpecials/verify_fragment_specials.cs), [검증 결과](Artifacts/FragmentSpecials/verification.txt), [이동 검사](Artifacts/FragmentSpecials/movement_regression.txt)
+
+### 2026-11-19 — 특수 공격 10종의 시각 효과와 조각 HUD
+
+- `SpecialEffectVisual.cs`와 URP 셰이더에서 기본 도형과 색으로 베기·돌진·파동의 범위, 날아가는 투사체, 명중점 폭발을 표시한다. `FragmentSpecialEffect.cs`, `SpecialDash.cs`, `SpecialProjectile.cs`가 기존 판정에 사용한 위치·방향과 범위로 도형을 표시한다. 캐릭터의 공격 모션은 기존 상태로 재생한다.
+- `PlayTestDisplay.cs`는 미조합 A/B/C 개수와 활성 조합·남은 횟수를 표시한다. 테스트 버튼은 `PlayTestScene.unity`에서 활성화했으며 실제 보유량을 사용하지 않고 선택한 기본 공격을 즉시 실행한다.
+- Unity 6000.6.6f1의 PlayTestScene 복사본에서 HUD 상태 문구·10종 테스트 진입점, 투사체 이동, 효과의 범위와 실제 렌더 픽셀을 46/46 확인했다. 기존 조합 공격 기능 114/114와 이동 대역 검사 42/42를 재실행했다. 미리보기는 효과를 별도 카메라로 촬영했으며, 왼쪽부터 행 순서대로 AAA~CCC다. [검증 코드](Artifacts/SpecialEffectVisual/verify_special_effect_visuals.cs), [검증 결과](Artifacts/SpecialEffectVisual/verification.txt), [효과 미리보기](Artifacts/SpecialEffectVisual/preview.png)
+
+### 2026-11-19 — 왼쪽 아래 조각 및 특수 슬롯
+
+- `PlayTestDisplay.cs`의 기존 HP·조작 안내·조각 집계·테스트 버튼을 제거하고 두 테스트 씬에 정사각형 네 칸을 표시한다. 첫 세 칸은 획득 순서의 조각, 마지막 칸은 장비 교체를 반영한 특수 공격 이름과 남은 횟수다.
+- `PlayerBase.cs`와 `PlayerCheckpointState.cs`에 최대 3개인 조각 큐와 저장 순서를 적용했다. 세 번째 시전 성공 시 큐를 비운다. 순서 필드가 없는 구버전 저장은 A, B, C 순서로 복원한다. `SpecialRecipe.cs`는 실제 시전과 HUD에서 효과 선택 규칙을 공유한다.
+- 키보드·마우스 조작 없이 Unity 6000.6.6f1 명령줄 PlayMode의 PlayTestScene에서 큐의 순서·용량, 3회 사용, JSON 복원·구버전 호환, 장비 교체 이름과 두 해상도의 슬롯 위치를 30/30 확인했다. 특수 공격 회귀 검사 114/114, 이동 대역 검사 42/42를 통과했다. 게임 화면의 실제 렌더링은 별도로 검증하지 않았다. [검증 코드](Artifacts/FragmentSlots/verify_fragment_slots.cs), [검증 결과](Artifacts/FragmentSlots/verification.txt)
+
+### 2026-11-19 — PlayTestScene 조각 HUD 렌더 검증
+
+- 현재 프로젝트의 복사본에서 Unity 6000.6.6f1로 macOS 플레이어를 만들어 포커스를 가져오지 않고 실행했다. 검증 코드로 플레이어를 적 앞에 배치하고 실제 근접 공격 판정을 호출했다. C·A·B 적을 순서대로 처치하고, 드롭된 조각을 별도 공격으로 수집했다. 실제 특수 시전 메서드도 세 번 호출했다. 원본 씬과 게임 코드는 수정하지 않았다.
+- 1280×720 게임 프레임 일곱 장에서 1~3번의 C→A→B 표시, 4번의 `Explosive Thrust`와 3→2→1회 표시, 세 번째 시전 후 네 칸의 내용이 비워지는 것을 확인했다. 근접 처치·별도 공격 수집·시전·슬롯 테두리·글자 픽셀 검사는 106/106 통과했다. 배치 모드에서는 프레임 캡처가 되지 않아 macOS 백그라운드 실행으로 전환했고, 공격 전에는 위치 이동이 반영되도록 한 물리 갱신을 기다렸다. 도중에 URP 후처리 셰이더 스트리핑 경고가 기록됐다. [검증 코드](Artifacts/FragmentSlots/verify_fragment_slots_render.cs), [검증 결과](Artifacts/FragmentSlots/PlayTestScene/verification.txt), [게임 화면](Artifacts/FragmentSlots/PlayTestScene/03-cab.png), [단계별 HUD](Artifacts/FragmentSlots/PlayTestScene/hud_sequence.png)
+
+### 2026-11-20 — 공통 카메라 크기·추적·경계
+
+- `PlayerCameraFollow.cs`가 씬 로드 시 메인 직교 카메라에 공통 설정을 적용한다. 두 테스트 씬의 수평 `PositionConstraint`를 0.3초 보간으로 교체했고 타이틀과 2D 씬 템플릿에도 기본 직교 크기 10을 저장했다. 카메라가 따라가는 축과 가로 오프셋은 기존 테스트 씬과 같게 설정했다. [Unity Vector2.SmoothDamp](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Vector2.SmoothDamp.html), [Unity Camera.orthographicSize](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Camera-orthographicSize.html)
+- 사각 경계를 활성화하면 화면 모서리와 명중 흔들림을 제한한다. 경계가 화면보다 좁은 경우 뷰포트와 직교 투영을 함께 조정해 배율을 유지한다. Unity 6000.6.6f1 실행에서는 뷰포트 변경 시 보고되는 `Camera.aspect`도 바뀌어, 원래 비율을 픽셀 뷰포트로 복원하도록 수정했다. 기존 테스트 씬은 경계를 지정하면 사용할 수 있다.
+- 키보드·마우스 없이 macOS 빌드에서 타이틀 자동 적용과 두 테스트 씬의 실제 추적 메서드·3개 종횡비·경계·흔들림·크기 재설정을 61/61 확인했다. 1280×720 렌더 프레임에서 좁은 경계 바깥의 월드가 가려지고 HUD와 오브젝트의 배율이 유지되는 것도 확인했다. [검증 코드](Artifacts/PlayerCamera/VerifyPlayerCamera.cs), [검증 결과](Artifacts/PlayerCamera/verification.txt), [기본 화면](Artifacts/PlayerCamera/wide.png), [좁은 경계 화면](Artifacts/PlayerCamera/cropped.png)
+
+### 2026-11-21 — AAB 늘어나는 칼날과 ABC 파편 베기
+
+- `FragmentSpecialEffect.cs`의 AAB와 ABC 기본 조합에 `ExtendingBlade`와 `ShardSlash`를 연결했다. 기존 효과 유형의 직렬화 번호와 명시적으로 선택하는 레시피·장비 효과는 호환성을 위해 유지했다. 첫 피해와 후속 피해의 기본 배수 및 판정 범위는 위의 조합 표에 기록했다.
+- `SpecialHitQuery.cs`는 칼날의 박스 캐스트로 가장 먼저 닿는 적과 지형을 비교한다. 파편은 근접 명중점부터 전방으로 검사하며 첫 적과 이미 피해를 받은 적은 제외한다. `SpecialEffectVisual.cs`는 실제로 뻗은 칼날과 밝은 끝부분, 명중점의 전방 파편을 표시한다. [Unity PhysicsScene2D.BoxCast](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/PhysicsScene2D.BoxCast.html)
+- Unity 6000.6.6f1 명령줄 PlayMode에서 실제 2D 판정으로 양방향 명중·칼끝 보너스·벽과 범위 차단·파편 중복 제거·처치 직후 파편·빗나감, 시각 효과 메시와 HUD 이름, 기존 조합과 장비 동작을 142/142 확인했다. 박스 캐스트 거리 검사는 계산한 기하 거리와 엔진 관측값 차이 0.005를 반영해 0.01 허용 오차로 재실행했다. 이동 대역 검사는 42/42를 통과했다. 새 시각 효과 검증은 메시와 위치까지 수행했다. [검증 코드](Artifacts/FragmentSpecials/verify_fragment_specials.cs), [검증 결과](Artifacts/FragmentSpecials/verification_aab_abc.txt)
+
+### 2026-11-21 — C# 접근 제한자 정리
+
+- `Assets/Function/`과 `Assets/Scenes/TestScene/JumpPathDisplay.cs`에서 명시적 `internal` 88곳을 제거했다. 최상위 보조 클래스는 선언을 생략해 기본 접근 범위를 사용한다. 클래스 간 호출에 필요한 멤버는 `public`으로 바꾸고, 공개된 체크포인트 API가 사용하는 `PlayerCheckpointState`도 `public`으로 맞췄다. [C# 접근 제한자](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/access-modifiers)
+- `Artifacts/`의 이동 대역과 저장·접촉·특수 공격 검증 코드를 새 멤버 접근 범위에 맞췄다. 클래스 이름과 저장 필드 및 기존 직렬화 참조를 유지했다.
+- `Assets/`, `Packages/`, `Artifacts/`의 관리 대상 C# 소스에서 `internal` 표기가 0건임을 확인했다. Unity 6000.6.6f1의 임시 프로젝트에서 컴파일, 조각 저장·복원 30/30, 특수 공격 142/142를 확인했다. 이동 대역 검사는 42/42를 통과했다. [검증 결과](Artifacts/AccessModifiers/verification.txt)
+
+### 2026-11-23 — 방향키 무기 조합표 작성
+
+- 요청에 따라 `Readme.md`에 방향키 세 번으로 만드는 10종 무기의 기획표를 추가했다. 기존 무기 대응은 조합 기호를 기준으로 삼고, ABC·BBB·BBC·BCC의 효과는 최신 기획을 따랐다.
+- 기획표의 조합과 방향키 대응을 대조했다. 변경 범위는 문서이며, 후속 결정 사항은 ABC의 파편 세부 동작과 BBB의 발사 방식이다.
+
+### 2026-11-23 — 무기 조합 입력과 감속 규칙 정리
+
+- 요청에 따라 `Readme.md`의 무기표 앞에 파편 게이지, 조합 중 이동 제한, 약 15% 속도와 실제 5초 제한, 버튼 해제 시 취소·획득 조건을 기록했다. 아티팩트 강화와 보스 패턴별 무기 선택도 함께 정리했다.
+- 무기표의 방향키 대응과 대조하고 `Assets/Function/Player/PlayerBase.cs`의 기존 D 입력·특수 사용 경로를 확인했다. 문서 변경으로 Unity 실행 검증은 생략했다. 게이지 수치와 재진입 시 감속 처리 등 미정 항목은 ‘게이지와 조합 조작’ 절에서 이어간다.
+
+### 2026-11-23 — 파편 충전과 집중 종료 규칙 갱신
+
+- `Readme.md`에 적 3회 명중과 드롭 파편 1개 획득의 충전량을 기록했다. 집중 만료 후에도 조합을 이어가던 이전 기획을 수정해, 실제 시간 5초 만료 또는 무기 확정 시 집중을 끝내고 3초간 조합을 제한하도록 정리했다.
+- 드롭 파편의 게임 시간 기준 수명 15초는 `Assets/Function/Player/FragmentPickup.cs`, 기존 특수 사용 횟수 3회는 `Assets/Function/Player/PlayerBase.cs`와 대조했다. 문서만 변경했다. 새 무기 사용 횟수 2회는 시험 제안이며, 게이지 차감과 취소·만료 시 세부 처리는 후속 결정 사항이다.
+
+### 2026-11-23 — 방향키 무기 조합과 파편 게이지 구현
+
+- `WeaponFocus.cs`, `PlayerBase.cs`, `PlayerCheckpointState.cs`와 테스트 HUD에 게이지·누적 명중, D 집중, 최근 방향 세 개, 무기 확정과 2회 시전을 연결했다. 시험 규칙으로 확정 시 세 칸을 차감하며, 미완성 조기 해제는 재진입을 허용하고 만료 시에는 입력을 폐기한다. 새 저장은 게이지와 명중 진행도·무기·남은 횟수를 보관한다. 이전 저장은 같은 조합 기호를 적용하고 남은 횟수를 최대 2회로 변환한다.
+- 적의 공격·사망 경로에 `FragmentDrop.cs`를 연결했다. 관통 투창은 적마다 드롭 한 개를 생성한다. 5발 사격은 전방 20° 동시 직선탄으로, 산탄은 전방 10° 동시 세 발로 설정했다. 기존 `SpecialRecipe`의 장비 효과 선택·보정을 사용하며 아티팩트별 강화 수치와 장착 화면은 후속 작업이다.
+- Unity 6000.6.6f1 명령줄 PlayMode에서 PlayTestScene의 가상 키 입력·충전·드롭·저장 변환을 59/59, 실제 2D 물리를 사용한 10종 무기와 장비 보정을 133/133 확인했다. 5초 만료와 3초 쿨타임은 실제 시각 기반 예약값과 경계 갱신을 검사했다. 이동 대역 42/42도 통과했다. HUD는 씬 연결까지 확인했다. [집중 검증 코드](Artifacts/WeaponFocus/VerifyWeaponFocus.cs), [무기 검증 코드](Artifacts/FragmentSpecials/verify_fragment_specials.cs), [검증 결과](Artifacts/WeaponFocus/verification.txt)
+
+### 2026-11-23 — 방향키 조준과 공중 하향 공격
+
+- `PlayerBase.cs`가 상·하·좌·우 입력을 근접 쿼리와 시전의 조준 벡터로 전달한다. `SpecialContext.cs`, 특수 판정·투사체 생성 및 이펙트는 시전 시점의 방향을 사용한다. `PlayTestDisplay.cs`는 실제 근접 판정의 중심·회전·크기에 맞춰 표시한다. 상하를 우선하고 무입력에서는 마지막 수평 방향을 따른다. [Unity PhysicsScene2D.OverlapBox](https://docs.unity3d.com/6000.0/Documentation/ScriptReference/PhysicsScene2D.OverlapBox.html)
+- Unity 6000.6.6f1 명령줄 PlayMode에서 가상 키보드로 실제 점프 뒤 ↓ 근접 타격, 범위 표시의 회전과 크기, 상·하·좌·우 및 집중 입력 분리, 투창의 방향 고정과 관통, 산탄 각도를 32/32 확인했다. 기존 특수 공격 133/133과 이동 대역 42/42도 통과했다. [검증 코드](Artifacts/AttackDirection/VerifyAttackDirection.cs), [검증 결과](Artifacts/AttackDirection/verification.txt)

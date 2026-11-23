@@ -1,0 +1,115 @@
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 AAA 강타 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 AAA 강타 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 AAA 가까운 단일 적 | 기대 40.000 | 실제 40.000
+[FragmentSpecials] 입력 AAA 두 번째 적 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 AAB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 AAB 돌진 찌르기 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 AAB 돌진 찌르기 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 진행 중 돌진의 중복 시전 거부 | 기대 0.000 | 실제 0.000
+[FragmentSpecials] 입력 중복 돌진 거부 시 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 AAB 돌진 찌르기 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 AAB 플레이어 전진 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 AAC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 AAC 넓은 베기 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 AAC 넓은 베기 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 AAC 전방 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 AAC 대각선 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 AAC 후방 제외 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 AAC 부채꼴 바깥 제외 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 ABB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 ABB 관통 검기 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 ABB 관통 검기 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 ABB 첫 적 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 ABB 관통한 두 번째 적 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 ABB 벽 뒤 적 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 ABC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 ABC 폭발 찌르기 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 ABC 폭발 찌르기 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 ABC 직접 표적 | 기대 55.000 | 실제 55.000
+[FragmentSpecials] 입력 ABC 주위 적 폭발 | 기대 80.000 | 실제 80.000
+[FragmentSpecials] 입력 ACC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 ACC 회전 베기 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 ACC 회전 베기 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 ACC 앞의 적 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 ACC 뒤의 적 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 ACC 범위 바깥 적 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 BBB 집중탄 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 BBB 집중탄 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 BBB 단일 표적 | 기대 50.000 | 실제 50.000
+[FragmentSpecials] 입력 BBB 두 번째 표적 제외 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 BBC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 BBC 폭발탄 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 BBC 폭발탄 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 BBC 직접 표적 폭발 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 BBC 인접한 적 폭발 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 BBC 작은 폭발 바깥 적 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 BCC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 BCC 확산탄 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 BCC 확산탄 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 BCC 직접 표적 | 기대 75.000 | 실제 75.000
+[FragmentSpecials] 입력 BCC 넓은 범위 표적 | 기대 75.000 | 실제 75.000
+[FragmentSpecials] 입력 CCC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 CCC 광역 파동 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 CCC 광역 파동 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 CCC 전방 피해 | 기대 75.000 | 실제 75.000
+[FragmentSpecials] 입력 CCC 후방 피해 | 기대 75.000 | 실제 75.000
+[FragmentSpecials] 입력 CCC 위쪽 피해 | 기대 75.000 | 실제 75.000
+[FragmentSpecials] 입력 CCC 범위 밖 제외 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 AAB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 벽 앞 돌진 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 벽 앞 돌진 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 돌진 벽 통과 방지 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 돌진의 벽 뒤 적 보호 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 벽에 가린 강타 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 벽에 가린 강타 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 근접 사선 차단 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 BBC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 폭발의 벽 차단 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 폭발의 벽 차단 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 벽 앞 폭발 표적 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 벽 뒤 폭발 표적 보호 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 왼쪽 집중탄 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 왼쪽 집중탄 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 왼쪽 투사체 피해 | 기대 50.000 | 실제 50.000
+[FragmentSpecials] 입력 반대쪽 투사체 표적 제외 | 기대 100.000 | 실제 100.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 2발 장비 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 2발 장비 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 장비 적용 투사체 수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 장비 해제 후 재시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 장비 해제 후 추가된 투사체 수 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 잘못된 보정의 시전 실패 | 기대 0.000 | 실제 0.000
+[FragmentSpecials] 입력 실패 시 사용 횟수 보존 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 기본 조합의 전용 장비 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 기본 조합의 전용 장비 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 기본 BBB 조합 전용 장비 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 다른 조합 전용 장비 제외 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 BBB 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 장비의 기능 교체 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 장비의 기능 교체 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 교체된 강타 피해 | 기대 40.000 | 실제 40.000
+[FragmentSpecials] 입력 기능 교체 후 투사체 수 | 기대 0.000 | 실제 0.000
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 등록 레시피의 기본 효과 우선 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 등록 레시피의 기본 효과 우선 사용 횟수 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] 입력 등록 효과의 전방 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 등록 효과의 후방 피해 | 기대 70.000 | 실제 70.000
+[FragmentSpecials] 입력 AAA 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 특수 첫 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 특수 두 번째 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 특수 세 번째 시전 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 세 번 사용 뒤 남은 횟수 | 기대 0.000 | 실제 0.000
+[FragmentSpecials] 입력 세 번 사용 뒤 재시전 | 기대 0.000 | 실제 0.000
+[FragmentSpecials] 입력 다음 조각 수집 허용 | 기대 1.000 | 실제 1.000
+[FragmentSpecials] 입력 CCC 순서 무관한 조합 준비 | 기대 3.000 | 실제 3.000
+[FragmentSpecials] 입력 D 특수 공격 입력 연결 | 기대 2.000 | 실제 2.000
+[FragmentSpecials] PASS 114/114

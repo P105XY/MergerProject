@@ -18,7 +18,7 @@ namespace Mech.Function
         private bool isFlying;
 
         // 발사 방향과 속도, 피해량 및 선택적 낙하 가속도로 투사체를 초기화한다.
-        internal void Initialize(Vector2 launchDirection, float launchSpeed, float attackDamage, float fallAcceleration = 0f)
+        public void Initialize(Vector2 launchDirection, float launchSpeed, float attackDamage, float fallAcceleration = 0f)
         {
             velocity = launchDirection * launchSpeed;
             gravity = Mathf.Max(0f, fallAcceleration);

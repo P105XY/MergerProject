@@ -12,7 +12,7 @@ var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingF
 string directory = System.IO.Path.Combine("/private/tmp", "merger-pickup-verification-" + System.Guid.NewGuid().ToString("N"));
 string primary = System.IO.Path.Combine(directory, "checkpoint.json");
 var storeType = progressType.Assembly.GetType("Mech.Function.CheckpointSaveStore", true);
-var isolatedStore = System.Activator.CreateInstance(storeType, flags, null, new object[] { directory }, null);
+var isolatedStore = System.Activator.CreateInstance(storeType, new object[] { directory });
 progressType.GetField("saveStore", flags).SetValue(null, isolatedStore);
 var idField = typeof(Mech.Function.OneTimePickup).GetField("itemId", flags);
 var eventField = typeof(Mech.Function.OneTimePickup).GetField("onCollected", flags);

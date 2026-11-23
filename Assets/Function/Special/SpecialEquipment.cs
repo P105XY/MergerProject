@@ -11,17 +11,17 @@ namespace Mech.Function
         [SerializeField] private int replacementPriority;
         [SerializeField] private SpecialModifierDefinition[] modifiers = Array.Empty<SpecialModifierDefinition>();
 
-        internal SpecialEffectDefinition ReplacementEffect => replacementEffect;
-        internal int ReplacementPriority => replacementPriority;
+        public SpecialEffectDefinition ReplacementEffect => replacementEffect;
+        public int ReplacementPriority => replacementPriority;
 
         // 장비가 모든 조합에 적용되거나 지정한 조합에 적용되는지 확인한다.
-        internal bool AppliesTo(SpecialRecipe recipe)
+        public bool AppliesTo(SpecialRecipe recipe, FragmentCombination combination)
         {
-            return targetRecipe == null || targetRecipe == recipe;
+            return targetRecipe == null || targetRecipe == recipe || (recipe == null && targetRecipe.Matches(combination));
         }
 
         // 장비에 설정된 보정을 순서대로 시전 효과에 적용한다.
-        internal void ApplyModifiers(ISpecialEffect effect)
+        public void ApplyModifiers(ISpecialEffect effect)
         {
             foreach (SpecialModifierDefinition modifier in modifiers) {
                 if (modifier != null) {

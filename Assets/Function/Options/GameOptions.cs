@@ -18,7 +18,7 @@ namespace Mech.Function
         public float EffectsVolume;
 
         // UI에서 수정할 수 있도록 현재 값의 복사본을 만든다.
-        internal GameOptionValues Copy()
+        public GameOptionValues Copy()
         {
             return (GameOptionValues)MemberwiseClone();
         }

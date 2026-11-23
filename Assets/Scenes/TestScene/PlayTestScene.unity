@@ -434,7 +434,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.5
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -465,26 +465,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1818360608 &150388060
-PositionConstraint:
+--- !u!114 &150388060
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150388056}
   m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 1.5, z: -10}
-  m_TranslationOffset: {x: 2, y: 0, z: 0}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 0
-  m_AffectTranslationZ: 0
-  m_Active: 1
-  m_IsLocked: 1
-  m_Sources:
-  - sourceTransform: {fileID: 818428880}
-    weight: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4e63091e1c45cb8a54d0f5179fd469, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Mech.Function.PlayerCameraFollow
+  orthographicSize: 10
+  target: {fileID: 818428880}
+  followOffset: {x: 2, y: 0}
+  smoothTime: 0.3
+  followVertical: 0
+  limitToBounds: 0
+  worldBounds:
+    serializedVersion: 2
+    x: -25
+    y: -10
+    width: 50
+    height: 20
 --- !u!1 &273204601
 GameObject:
   m_ObjectHideFlags: 0
